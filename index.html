@@ -1508,161 +1508,161 @@ body.light-mode .wm { /* brand colors kept */ }
 <div class="sheet-overlay" id="log-overlay" onclick="closeLogSheet()"></div>
 <div class="log-sheet" id="log-sheet">
   <div class="sheet-handle"><div class="sheet-handle-bar"></div></div>
+
+  <!-- HEADER -->
   <div class="sheet-top">
     <div class="sheet-title-row">
-      <span class="sheet-title">LOG FOOD</span>
+      <div>
+        <span class="sheet-title">LOG FOOD</span>
+        <div id="log-sheet-sub" style="font-size:11px;color:rgba(255,255,255,0.75);margin-top:2px;font-family:-apple-system,sans-serif;">Loading...</div>
+      </div>
       <button class="sheet-close" onclick="closeLogSheet()">✕</button>
-    </div>
-    <!-- Search -->
-    <div class="search-wrap">
-      <span class="search-icon">🔍</span>
-      <input class="search-inp" id="log-search" type="text" placeholder="Type food or describe your meal..." oninput="logSearchInput(this.value)" onkeydown="if(event.key==='Enter'){event.preventDefault();logDoSearch();}">
-    </div>
-    <!-- Cooking chips -->
-    <div class="chips-row" id="log-chips">
-      <span class="chip" onclick="addChip(this,'grilled')">🔥 Grilled</span>
-      <span class="chip" onclick="addChip(this,'boiled')">💧 Boiled</span>
-      <span class="chip" onclick="addChip(this,'fried')">🍳 Fried</span>
-      <span class="chip" onclick="addChip(this,'steamed')">♨️ Steamed</span>
-      <span class="chip" onclick="addChip(this,'baked')">🫕 Baked</span>
-      <span class="chip" onclick="addChip(this,'no oil')">No oil</span>
-      <span class="chip" onclick="addChip(this,'with sauce')">With sauce</span>
-      <span class="chip" onclick="addChip(this,'skinless')">Skinless</span>
-      <span class="chip" onclick="addChip(this,'half portion')">Half portion</span>
-      <span class="chip" onclick="addChip(this,'restaurant')">🍽 Restaurant</span>
-      <span class="chip" onclick="addChip(this,'homemade')">🏠 Homemade</span>
-    </div>
-    <!-- Accordion tabs -->
-    <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:2px;">
-      <button id="ltab-photo" onclick="logSwitchTab('photo')" style="width:100%;display:flex;align-items:center;justify-content:space-between;padding:11px 14px;border-radius:11px;border:1.5px solid #2d8fff;background:rgba(45,143,255,0.1);cursor:pointer;text-align:left;">
-        <div><div style="font-family:monospace;font-size:11px;font-weight:900;color:#2d8fff;letter-spacing:0.5px;">📸 SNAP A PHOTO</div><div style="font-size:11px;color:#fff;margin-top:2px;">Take or upload — AI identifies every item on your plate</div></div>
-        <span id="ltab-arrow-photo" style="color:#2d8fff;font-size:14px;transition:transform 0.2s;">▲</span>
-      </button>
-      <button id="ltab-top10" onclick="logSwitchTab('top10')" style="width:100%;display:flex;align-items:center;justify-content:space-between;padding:11px 14px;border-radius:11px;border:1.5px solid rgba(255,255,255,0.15);background:transparent;cursor:pointer;text-align:left;">
-        <div><div style="font-family:monospace;font-size:11px;font-weight:900;color:#fff;letter-spacing:0.5px;">⭐ MY MEALS</div><div style="font-size:11px;color:#fff;margin-top:2px;">Your most logged meals — one tap to add instantly</div></div>
-        <span id="ltab-arrow-top10" style="color:#fff;font-size:14px;transition:transform 0.2s;">▼</span>
-      </button>
-      <button id="ltab-search" onclick="logSwitchTab('search')" style="width:100%;display:flex;align-items:center;justify-content:space-between;padding:11px 14px;border-radius:11px;border:1.5px solid rgba(255,255,255,0.15);background:transparent;cursor:pointer;text-align:left;">
-        <div><div style="font-family:monospace;font-size:11px;font-weight:900;color:#fff;letter-spacing:0.5px;">🔍 SEARCH FOOD</div><div style="font-size:11px;color:#fff;margin-top:2px;">178 foods built-in + AI search for anything not found</div></div>
-        <span id="ltab-arrow-search" style="color:#fff;font-size:14px;transition:transform 0.2s;">▼</span>
-      </button>
     </div>
   </div>
 
+  <!-- ACCORDION TABS -->
+  <div style="padding:8px 14px 4px;">
+    <button id="ltab-photo" onclick="logSwitchTab('photo')" style="width:100%;display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-radius:11px;border:1.5px solid #2d8fff;background:rgba(45,143,255,0.08);cursor:pointer;text-align:left;margin-bottom:5px;">
+      <div><div style="font-family:monospace;font-size:11px;font-weight:900;color:#2d8fff;letter-spacing:0.5px;">📸 SNAP A PHOTO</div><div style="font-size:11px;color:rgba(255,255,255,0.75);margin-top:1px;">AI identifies every item on your plate</div></div>
+      <span id="ltab-arrow-photo" style="color:#2d8fff;font-size:13px;">▲</span>
+    </button>
+    <button id="ltab-top10" onclick="logSwitchTab('top10')" style="width:100%;display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-radius:11px;border:1.5px solid rgba(255,255,255,0.12);background:transparent;cursor:pointer;text-align:left;margin-bottom:5px;">
+      <div><div style="font-family:monospace;font-size:11px;font-weight:900;color:rgba(255,255,255,0.8);letter-spacing:0.5px;">⭐ MY MEALS</div><div style="font-size:11px;color:rgba(255,255,255,0.75);margin-top:1px;">Your most logged meals — one tap to add</div></div>
+      <span id="ltab-arrow-top10" style="color:rgba(255,255,255,0.75);font-size:13px;">▼</span>
+    </button>
+    <button id="ltab-search" onclick="logSwitchTab('search')" style="width:100%;display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-radius:11px;border:1.5px solid rgba(255,255,255,0.12);background:transparent;cursor:pointer;text-align:left;">
+      <div><div style="font-family:monospace;font-size:11px;font-weight:900;color:rgba(255,255,255,0.8);letter-spacing:0.5px;">🔍 SEARCH FOOD</div><div style="font-size:11px;color:rgba(255,255,255,0.75);margin-top:1px;">178 foods built-in + AI for anything else</div></div>
+      <span id="ltab-arrow-search" style="color:rgba(255,255,255,0.75);font-size:13px;">▼</span>
+    </button>
+  </div>
+
+  <!-- SCROLLABLE BODY -->
   <div class="sheet-body">
 
-    <!-- PHOTO TAB -->
-    <div id="log-tab-photo">
-      <!-- Description FIRST — most important for accuracy -->
-      <div style="margin-bottom:12px;">
-        <div style="font-family:monospace;font-size:9px;font-weight:900;color:#ffb300;letter-spacing:1px;margin-bottom:6px;">📝 DESCRIBE YOUR MEAL FIRST — HIGHEST PRIORITY</div>
-        <input type="text" id="log-photo-desc" placeholder="e.g. grilled chicken breast, no oil, with white rice" style="width:100%;background:#0f1014;border:2px solid #ffb300;border-radius:10px;color:#fff;font-size:13px;padding:11px 14px;outline:none;" onfocus="this.style.borderColor='#ffb300'" onblur="this.style.borderColor='rgba(255,179,0,0.6)'">
-        <div style="font-size:11px;color:#ffb300;margin-top:5px;line-height:1.5;">Description beats the photo — AI ignores what it sees and uses your words first. The more specific, the more accurate.</div>
+    <!-- ── PHOTO TAB ── -->
+    <div id="log-tab-photo" style="padding:12px 14px;">
+
+      <!-- 1. CAMERA + GALLERY FIRST -->
+      <div style="display:flex;gap:8px;margin-bottom:12px;">
+        <div onclick="document.getElementById('log-file-camera').click()" style="flex:1;background:#0a0b0f;border:1.5px dashed rgba(45,143,255,0.4);border-radius:12px;padding:18px 10px;text-align:center;cursor:pointer;">
+          <div style="font-size:26px;margin-bottom:4px;">📷</div>
+          <div style="font-family:monospace;font-size:10px;font-weight:900;color:#2d8fff;letter-spacing:0.5px;">CAMERA</div>
+          <input id="log-file-camera" type="file" accept="image/*" capture="environment" style="display:none;" onchange="logAnalyzePhoto(this)">
+        </div>
+        <div onclick="document.getElementById('log-file-input').click()" style="flex:1;background:#0a0b0f;border:1.5px dashed rgba(255,255,255,0.15);border-radius:12px;padding:18px 10px;text-align:center;cursor:pointer;">
+          <div style="font-size:26px;margin-bottom:4px;">🖼️</div>
+          <div style="font-family:monospace;font-size:10px;font-weight:900;color:rgba(255,255,255,0.7);letter-spacing:0.5px;">GALLERY</div>
+          <input id="log-file-input" type="file" accept="image/*" style="display:none;" onchange="logAnalyzePhoto(this)">
+        </div>
       </div>
-      <!-- Photo upload -->
+
+      <!-- 2. DESCRIPTION -->
       <div style="margin-bottom:10px;">
-        <div style="font-family:monospace;font-size:9px;font-weight:900;color:#fff;letter-spacing:1px;margin-bottom:6px;">📸 THEN TAKE OR UPLOAD A PHOTO</div>
-        <div style="display:flex;gap:8px;margin-bottom:8px;">
-          <div style="flex:1;border:2px dashed rgba(255,255,255,0.15);border-radius:12px;padding:16px 10px;text-align:center;cursor:pointer;" onclick="document.getElementById('log-file-camera').click()">
-            <div style="font-size:24px;margin-bottom:4px;">📷</div>
-            <div style="font-size:11px;font-weight:600;color:#fff;">Camera</div>
-            <input id="log-file-camera" type="file" accept="image/*" capture="environment" style="display:none;" onchange="logAnalyzePhoto(this)">
+        <div style="font-family:monospace;font-size:9px;font-weight:900;color:#ffb300;letter-spacing:1px;margin-bottom:5px;">📝 DESCRIBE YOUR MEAL (helps AI be more accurate)</div>
+        <input type="text" id="log-photo-desc" placeholder="e.g. grilled chicken, no oil, with rice" style="width:100%;background:#0a0b0f;border:1.5px solid #ffb300;border-radius:10px;color:#fff;font-size:13px;padding:10px 13px;outline:none;font-family:inherit;" onfocus="this.style.borderColor='#ffb300'" onblur="this.style.borderColor='rgba(255,179,0,0.5)'">
+      </div>
+
+      <!-- 3. CHIPS -->
+      <div style="font-family:monospace;font-size:9px;font-weight:900;color:rgba(255,255,255,0.75);letter-spacing:1px;margin-bottom:6px;">TAP TO ADD TO DESCRIPTION</div>
+      <div class="chips-row" style="margin-bottom:12px;">
+        <span class="chip" onclick="logAddChip(this,'Skinless')">Skinless</span>
+        <span class="chip" onclick="logAddChip(this,'No oil')">No oil</span>
+        <span class="chip" onclick="logAddChip(this,'Grilled')">Grilled</span>
+        <span class="chip" onclick="logAddChip(this,'Half portion')">Half portion</span>
+        <span class="chip" onclick="logAddChip(this,'With sauce')">With sauce</span>
+        <span class="chip" onclick="logAddChip(this,'Homemade')">Homemade</span>
+        <span class="chip" onclick="logAddChip(this,'Restaurant')">Restaurant</span>
+      </div>
+
+      <!-- 4. ANALYZE BUTTON -->
+      <button class="analyze-btn" id="log-analyze-btn" onclick="logDoPhotoAnalysis()">ANALYZE WITH AI →</button>
+
+      <!-- 5. LOADING STATE -->
+      <div class="ai-loading" id="log-loading" style="display:none;">
+        <div class="ai-loading-icon">🔍</div>
+        <div class="ai-loading-txt" id="log-loading-txt">Reading your plate...</div>
+      </div>
+
+      <!-- 6. AI RESULT — compact dark cards -->
+      <div id="log-result" class="ai-result" style="display:none;margin-top:14px;">
+
+        <!-- Confidence + re-analyze row -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+          <div style="font-family:monospace;font-size:9px;font-weight:900;color:rgba(255,255,255,0.75);letter-spacing:1px;">AI BREAKDOWN</div>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div class="conf-row"><span class="conf-lbl">Confidence</span><span class="conf-val" id="log-conf">—</span></div>
+            <button class="reanalyze-btn" onclick="logDoPhotoAnalysis()">↻ RE-ANALYZE</button>
           </div>
-          <div style="flex:1;border:2px dashed rgba(255,255,255,0.15);border-radius:12px;padding:16px 10px;text-align:center;cursor:pointer;" onclick="document.getElementById('log-file-input').click()">
-            <div style="font-size:24px;margin-bottom:4px;">🖼</div>
-            <div style="font-size:11px;font-weight:600;color:#fff;">Gallery</div>
-            <input id="log-file-input" type="file" accept="image/*" style="display:none;" onchange="logAnalyzePhoto(this)">
+        </div>
+
+        <!-- Result items — compact -->
+        <div id="log-items" class="result-items"></div>
+
+        <!-- Add missing item -->
+        <div style="display:flex;gap:8px;margin:8px 0;">
+          <input type="text" id="log-add-item-inp" placeholder="+ Add a missing item..." style="flex:1;background:#0a0b0f;border:1px solid rgba(255,255,255,0.12);border-radius:8px;padding:8px 12px;color:#fff;font-size:12px;font-family:inherit;outline:none;" onfocus="this.style.borderColor='rgba(45,143,255,0.5)'" onblur="this.style.borderColor='rgba(255,255,255,0.12)'">
+          <button onclick="logAddMissingItem()" style="padding:8px 14px;background:rgba(45,143,255,0.1);border:1px solid rgba(45,143,255,0.3);border-radius:8px;color:#2d8fff;font-size:11px;font-weight:900;font-family:monospace;cursor:pointer;">ADD</button>
+        </div>
+
+        <!-- Meal tag -->
+        <div class="meal-tags" style="margin-bottom:10px;">
+          <div class="meal-tag-lbl">Tag this meal:</div>
+          <div class="meal-tag-row">
+            <button class="meal-tag-btn on" onclick="logSetTag(this,'breakfast')">Breakfast</button>
+            <button class="meal-tag-btn" onclick="logSetTag(this,'lunch')">Lunch</button>
+            <button class="meal-tag-btn" onclick="logSetTag(this,'dinner')">Dinner</button>
+            <button class="meal-tag-btn" onclick="logSetTag(this,'snack')">Snack</button>
           </div>
         </div>
-      </div>
-      <div class="photo-tips">
-        <div class="photo-tips-title">📋 PHOTO TIPS FOR BEST ACCURACY</div>
-        <div class="photo-tips-body">
-          • Bird's eye view, 30–40cm above plate<br>
-          • Spread food out — full plate visible<br>
-          • Natural light — no flash<br>
-          • Fork for size reference<br>
-          • Add sauce after the photo
+
+        <!-- Totals bar -->
+        <div class="totals-bar">
+          <div class="totals-item"><div class="totals-val" id="lt-kcal" style="color:#ff6b35;">—</div><div class="totals-lbl">kcal</div></div>
+          <div class="totals-item"><div class="totals-val" id="lt-p" style="color:#34c97a;">—</div><div class="totals-lbl">protein</div></div>
+          <div class="totals-item"><div class="totals-val" id="lt-c" style="color:#2d8fff;">—</div><div class="totals-lbl">carbs</div></div>
+          <div class="totals-item"><div class="totals-val" id="lt-f" style="color:#f5a623;">—</div><div class="totals-lbl">fat</div></div>
         </div>
+        <button class="add-log-btn" onclick="logAddFood()">ADD TO LOG ✓</button>
       </div>
-      <button class="analyze-btn" onclick="logDoPhotoAnalysis()">ANALYZE WITH AI →</button>
+
+      <!-- Restaurant notice -->
+      <div class="restaurant-notice" id="log-rest-notice" style="display:none;">
+        ⚠️ Restaurant meal detected — macros estimated with +25% buffer. Adjust if needed.
+      </div>
+
     </div>
 
-    <!-- TOP 10 TAB -->
-    <div id="log-tab-top10" style="display:none;">
-      <div id="log-top10-list">
-        <div class="top10-empty">Log meals to build your Top 10. Your most used foods appear here automatically.</div>
+    <!-- ── MY MEALS TAB ── -->
+    <div id="log-tab-top10" style="display:none;padding:12px 14px;">
+      <div style="font-family:monospace;font-size:9px;font-weight:900;color:rgba(255,255,255,0.75);letter-spacing:1.5px;margin-bottom:10px;">YOUR MOST LOGGED MEALS</div>
+      <div id="log-top10-list"></div>
+      <div id="log-top10-empty" class="top10-empty" style="display:none;">
+        <div style="text-align:center;padding:30px 0;">
+          <div style="font-size:32px;margin-bottom:10px;">⭐</div>
+          <div style="font-size:14px;font-weight:600;color:#fff;margin-bottom:6px;">No saved meals yet</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.75);">Log your first meal with AI Photo — it saves automatically</div>
+        </div>
       </div>
     </div>
 
-    <!-- SEARCH TAB -->
-    <div id="log-tab-search" style="display:none;">
-      <div style="font-family:monospace;font-size:9px;font-weight:900;color:#fff;letter-spacing:1px;margin-bottom:10px;">SEARCH FOOD DATABASE (500+ foods)</div>
-      <div class="db-results" id="log-db-results">
-        <div style="font-size:13px;color:#fff;text-align:center;padding:20px 0;">Type in the search bar above to find foods</div>
+    <!-- ── SEARCH TAB ── -->
+    <div id="log-tab-search" style="display:none;padding:12px 14px;">
+      <div class="search-wrap" style="margin-bottom:10px;">
+        <span class="search-icon">🔍</span>
+        <input class="search-inp" id="log-search-inp" type="text" placeholder="Search 178 foods... (typos ok)" oninput="dbSearch(this.value)" autocomplete="off">
       </div>
-      <div style="margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.1);">
-        <div style="font-family:monospace;font-size:9px;font-weight:900;color:#ffb300;letter-spacing:1px;margin-bottom:8px;">CAN'T FIND IT? USE AI SEARCH</div>
-        <button class="analyze-btn" onclick="logSearchAI()">ANALYZE WITH AI →</button>
+      <div id="log-db-results"></div>
+      <div style="height:1px;background:rgba(255,255,255,0.08);margin:12px 0;"></div>
+      <div style="font-family:monospace;font-size:9px;font-weight:900;color:rgba(255,255,255,0.75);letter-spacing:1.5px;margin-bottom:8px;">CAN'T FIND IT? ASK AI</div>
+      <div style="display:flex;gap:8px;margin-bottom:8px;">
+        <input type="text" id="log-ai-search-inp" placeholder="e.g. Big Mac with large fries" style="flex:1;background:#0a0b0f;border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:10px 13px;color:#fff;font-size:13px;font-family:inherit;outline:none;" onfocus="this.style.borderColor='rgba(45,143,255,0.5)'" onblur="this.style.borderColor='rgba(255,255,255,0.12)'">
+        <button onclick="logSearchAI()" style="padding:10px 16px;background:#2d8fff;border:none;border-radius:10px;color:#fff;font-size:12px;font-weight:900;font-family:monospace;cursor:pointer;">ASK AI</button>
       </div>
-    </div>
-
-    <!-- AI LOADING -->
-    <div class="ai-loading" id="log-loading">
-      <div class="ai-loading-icon">⏳</div>
-      <div class="ai-loading-txt">ANALYZING...</div>
-    </div>
-
-    <!-- AI RESULT -->
-    <div class="ai-result" id="log-result">
-      <div class="result-header">
-        <div class="conf-row">
-          <span class="conf-lbl">Confidence:</span>
-          <span class="conf-val" id="log-conf">—</span>
-        </div>
-        <button class="reanalyze-btn" onclick="logReanalyze()">↻ RE-ANALYZE</button>
-      </div>
-      <!-- Refinement chips -->
-      <div class="refine-chips" id="log-refine">
-        <div class="refine-label">REFINE FOR BETTER ACCURACY:</div>
-        <div style="display:flex;gap:6px;flex-wrap:wrap;">
-          <span class="chip" onclick="addRefinement(this,'grilled')">🔥 Grilled</span>
-          <span class="chip" onclick="addRefinement(this,'fried')">🍳 Fried</span>
-          <span class="chip" onclick="addRefinement(this,'boiled')">💧 Boiled</span>
-          <span class="chip" onclick="addRefinement(this,'no oil')">No oil</span>
-          <span class="chip" onclick="addRefinement(this,'with oil')">With oil</span>
-          <span class="chip" onclick="addRefinement(this,'with sauce')">With sauce</span>
-          <span class="chip" onclick="addRefinement(this,'no sauce')">No sauce</span>
-          <span class="chip" onclick="addRefinement(this,'skinless')">Skinless</span>
-          <span class="chip" onclick="addRefinement(this,'restaurant')">🍽 Restaurant</span>
-        </div>
-      </div>
-      <div class="restaurant-notice" id="log-rest-notice">🍽 Restaurant meal — 25% buffer added for hidden oils and portions.</div>
-      <div class="result-items" id="log-items"></div>
-      <button class="add-item-btn" onclick="logAddItem()">+ Add missing item</button>
-      <!-- Meal tag -->
-      <div class="meal-tag-row">
-        <div class="meal-tag-lbl">MEAL</div>
-        <div class="meal-tags">
-          <button class="meal-tag-btn" id="mt-breakfast" onclick="setMealTag('breakfast')">🌅 Breakfast</button>
-          <button class="meal-tag-btn" id="mt-lunch" onclick="setMealTag('lunch')">☀️ Lunch</button>
-          <button class="meal-tag-btn" id="mt-dinner" onclick="setMealTag('dinner')">🌙 Dinner</button>
-          <button class="meal-tag-btn" id="mt-snack" onclick="setMealTag('snack')">🍎 Snack</button>
-        </div>
-      </div>
-      <!-- Totals -->
-      <div class="totals-bar">
-        <div class="totals-item"><div class="totals-val" id="lt-kcal" style="color:#ff6b35;">—</div><div class="totals-lbl">kcal</div></div>
-        <div class="totals-item"><div class="totals-val" id="lt-p" style="color:#34c97a;">—</div><div class="totals-lbl">protein</div></div>
-        <div class="totals-item"><div class="totals-val" id="lt-c" style="color:#2d8fff;">—</div><div class="totals-lbl">carbs</div></div>
-        <div class="totals-item"><div class="totals-val" id="lt-f" style="color:#f5a623;">—</div><div class="totals-lbl">fat</div></div>
-      </div>
-      <button class="add-log-btn" onclick="logAddFood()">ADD TO LOG ✓</button>
+      <div id="log-ai-result" style="margin-top:4px;"></div>
     </div>
 
   </div>
 </div>
-
 <!-- BF ESTIMATOR SHEET -->
 <div class="bf-sheet" id="bf-sheet">
   <div class="sheet-handle"><div class="sheet-handle-bar"></div></div>
@@ -2125,6 +2125,22 @@ function openLogSheet() {
   document.body.style.overflow = 'hidden';
   logReset();
   loadTop10();
+  logSwitchTab('photo');
+  // Update subtitle
+  var sub = document.getElementById('log-sheet-sub');
+  if (sub && APP.profile) {
+    var day = APP.today && APP.today.isTraining ? 'Training day' : 'Rest day';
+    var target = APP.today && APP.today.isTraining ? (APP.profile.trainKcal||'—') : (APP.profile.restKcal||'—');
+    var logged = APP.today && APP.today.log ? APP.today.log.reduce(function(s,f){return s+(f.kcal||0);},0) : 0;
+    sub.textContent = day + ' · ' + logged + ' / ' + target + ' kcal logged';
+  }
+  // Reset result area
+  var ra = document.getElementById('log-result');
+  if (ra) ra.style.display = 'none';
+  var rl = document.getElementById('log-loading');
+  if (rl) rl.style.display = 'none';
+  var btn = document.getElementById('log-analyze-btn');
+  if (btn) btn.style.display = 'block';
 }
 function closeLogSheet() {
   document.getElementById('log-overlay').classList.remove('open');
@@ -2148,6 +2164,40 @@ function logReset() {
   var h = new Date().getHours();
   var tag = h>=5&&h<11?'breakfast':h>=11&&h<15?'lunch':h>=17&&h<21?'dinner':'snack';
   setMealTag(tag);
+}
+
+function logAddChip(el, text) {
+  el.classList.toggle('active');
+  var desc = document.getElementById('log-photo-desc');
+  if (!desc) return;
+  var cur = desc.value.trim();
+  if (el.classList.contains('active')) {
+    desc.value = cur ? cur + ', ' + text : text;
+  } else {
+    desc.value = desc.value.replace(', ' + text, '').replace(text + ', ', '').replace(text, '').trim().replace(/^,|,$/,'').trim();
+  }
+}
+function logSetTag(el, tag) {
+  document.querySelectorAll('.meal-tag-btn').forEach(function(b){b.classList.remove('on');});
+  el.classList.add('on');
+  APP.logTag = tag;
+}
+function logAddMissingItem() {
+  var inp = document.getElementById('log-add-item-inp');
+  if (!inp || !inp.value.trim()) return;
+  APP.logDraft = APP.logDraft || [];
+  APP.logDraft.push({name:inp.value.trim(),portion:'1 serving',kcal:0,protein:0,carbs:0,fat:0});
+  inp.value = '';
+  renderResultItems();
+}
+function logRecalcItem(i, portionStr) {
+  // Simple scaling — if portion changes and has a number, scale macros proportionally
+  // For now just keep as-is — AI already set them
+}
+function logDeleteItem(i) {
+  APP.logDraft = APP.logDraft || [];
+  APP.logDraft.splice(i, 1);
+  renderResultItems();
 }
 function logSwitchTab(tab) {
   ['photo','top10','search'].forEach(function(t){
@@ -2274,23 +2324,32 @@ function logShowResult(result) {
   renderLogItems();
   logUpdateTotals();
   document.getElementById('log-result').style.display = 'block';
+  document.getElementById('log-analyze-btn').style.display = 'none';
+  document.getElementById('log-loading').style.display = 'none';
 }
 function renderLogItems() {
   var el = document.getElementById('log-items');
-  el.innerHTML = APP.logItems.map(function(item, i){
-    return '<div class="result-item">' +
-      '<div class="result-item-top">' +
-        '<input class="result-item-name-inp" value="' + item.name + '" onchange="APP.logItems[' + i + '].name=this.value">' +
-        '<button class="result-item-del" onclick="logRemoveItem(' + i + ')">✕</button>' +
+  if (!el) return;
+  if (!APP.logItems || !APP.logItems.length) { el.innerHTML = ''; return; }
+  el.innerHTML = APP.logItems.map(function(item, i) {
+    return '<div style="background:#0a0b0f;border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:10px 12px;margin-bottom:7px;">' +
+      '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">' +
+        '<input value="' + (item.name||'') + '" onchange="APP.logItems[' + i + '].name=this.value" style="flex:1;background:transparent;border:none;border-bottom:1px solid rgba(255,255,255,0.12);color:#fff;font-size:13px;font-weight:600;outline:none;padding-bottom:2px;font-family:inherit;">' +
+        '<button onclick="logRemoveItem(' + i + ')" style="width:22px;height:22px;border-radius:50%;background:rgba(255,34,68,0.1);border:1px solid rgba(255,34,68,0.2);color:#ff2244;font-size:13px;cursor:pointer;flex-shrink:0;">×</button>' +
       '</div>' +
-      '<div class="result-item-portion">' + item.portion + '</div>' +
-      '<div class="result-item-macros">' +
-        '<span class="result-item-macro" style="color:#ff6b35;">' + item.kcal + ' kcal</span>' +
-        '<span class="result-item-macro" style="color:#34c97a;margin-left:8px;">P ' + item.protein + 'g</span>' +
-        '<span class="result-item-macro" style="color:#2d8fff;margin-left:8px;">C ' + item.carbs + 'g</span>' +
-        '<span class="result-item-macro" style="color:#f5a623;margin-left:8px;">F ' + item.fat + 'g</span>' +
-      '</div></div>';
+      '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">' +
+        '<span style="font-family:monospace;font-size:9px;color:rgba(255,255,255,0.75);letter-spacing:1px;">PORTION</span>' +
+        '<input value="' + (item.portion||'1 serving') + '" onchange="APP.logItems[' + i + '].portion=this.value" style="background:transparent;border:none;border-bottom:1px solid rgba(45,143,255,0.4);color:#2d8fff;font-size:12px;font-weight:700;width:70px;outline:none;text-align:center;font-family:inherit;">' +
+      '</div>' +
+      '<div style="display:flex;gap:6px;">' +
+        '<div style="flex:1;text-align:center;"><div style="font-size:13px;font-weight:700;color:#34c97a;">' + (item.protein||0) + 'g</div><div style="font-size:9px;font-family:monospace;color:rgba(255,255,255,0.75);">PROT</div></div>' +
+        '<div style="flex:1;text-align:center;"><div style="font-size:13px;font-weight:700;color:#2d8fff;">' + (item.carbs||0) + 'g</div><div style="font-size:9px;font-family:monospace;color:rgba(255,255,255,0.75);">CARBS</div></div>' +
+        '<div style="flex:1;text-align:center;"><div style="font-size:13px;font-weight:700;color:#f5a623;">' + (item.fat||0) + 'g</div><div style="font-size:9px;font-family:monospace;color:rgba(255,255,255,0.75);">FAT</div></div>' +
+        '<div style="flex:1;text-align:center;"><div style="font-size:13px;font-weight:700;color:#ff6b35;">' + (item.kcal||0) + '</div><div style="font-size:9px;font-family:monospace;color:rgba(255,255,255,0.75);">KCAL</div></div>' +
+      '</div>' +
+    '</div>';
   }).join('');
+  logUpdateTotals();
 }
 function logRemoveItem(i) { APP.logItems.splice(i,1); renderLogItems(); logUpdateTotals(); }
 function logAddItem() {
