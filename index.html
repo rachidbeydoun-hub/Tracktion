@@ -2150,15 +2150,16 @@ function closeLogSheet() {
 function logReset() {
   APP.logItems = []; APP.logMealTag = ''; APP.logIsPhoto = false;
   APP.logPhotoB64 = ''; APP.logPhotoType = ''; APP.logRefinements = [];
-  document.getElementById('log-search').value = '';
-  document.getElementById('log-photo-desc').value = '';
-  document.getElementById('log-result').style.display = 'none';
-  document.getElementById('log-loading').style.display = 'none';
-  document.getElementById('log-refine').style.display = 'none';
-  document.getElementById('log-rest-notice').style.display = 'none';
-  document.getElementById('log-items').innerHTML = '';
+  var srch = document.getElementById('log-search'); if(srch) srch.value = '';
+  var desc = document.getElementById('log-photo-desc'); if(desc) desc.value = '';
+  var res = document.getElementById('log-result'); if(res) res.style.display = 'none';
+  var ldr = document.getElementById('log-loading'); if(ldr) ldr.style.display = 'none';
+  var refine = document.getElementById('log-refine'); if(refine) refine.style.display = 'none';
+  var restNotice = document.getElementById('log-rest-notice'); if(restNotice) restNotice.style.display = 'none';
+  var items = document.getElementById('log-items'); if(items) items.innerHTML = '';
   document.querySelectorAll('.meal-tag-btn').forEach(function(b){b.classList.remove('on');});
-  document.querySelectorAll('#log-chips .chip').forEach(function(c){c.classList.remove('on');});
+  document.querySelectorAll('.chip').forEach(function(c){c.classList.remove('active');});
+  var btn = document.getElementById('log-analyze-btn'); if(btn) btn.style.display = 'block';
   logSwitchTab('photo');
   // Auto-set meal tag by time
   var h = new Date().getHours();
