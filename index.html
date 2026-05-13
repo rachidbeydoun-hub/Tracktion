@@ -38,7 +38,7 @@ body.light-mode {
   --surface2: #f0f1f4;
   --border: rgba(0,0,0,0.1);
   --text: #0a0a0a;
-  --muted: rgba(0,0,0,0.45);
+  --muted: rgba(0,0,0,0.6);
   --card-bg: #ffffff;
 }
 body.light-mode { background: var(--bg) !important; color: var(--text) !important; }
@@ -84,6 +84,39 @@ body.light-mode .bnav { background: var(--surface) !important; border-top-color:
 body.light-mode .bnav-item { color: rgba(0,0,0,0.5) !important; }
 body.light-mode .bnav-item.active { color: #2d8fff !important; }
 body.light-mode .wm { /* brand colors kept */ }
+body.light-mode .td-wm { color: #1a1a1a !important; }
+body.light-mode .mbar-val { color: #1a1a1a !important; }
+body.light-mode .food-log-hdr { color: #1a1a1a !important; }
+body.light-mode .food-empty-txt { color: #1a1a1a !important; }
+body.light-mode .food-empty-sub { color: #444 !important; }
+body.light-mode .tip-label { color: #c87000 !important; }
+body.light-mode .tip-text { color: #1a1a1a !important; }
+body.light-mode .calc-lbl { color: #c87000 !important; }
+body.light-mode .calc-val { color: inherit; }
+body.light-mode .calc-unit { color: #1a1a1a !important; }
+body.light-mode .calc-hint { color: #444 !important; }
+body.light-mode .set-sec-btn { color: #0055cc !important; }
+body.light-mode .set-page-title { color: #1a1a1a !important; }
+body.light-mode .sheet-title { color: #1a1a1a !important; }
+body.light-mode .log-sheet { background: #f0f1f4 !important; }
+body.light-mode .sheet-body { background: #f0f1f4 !important; }
+body.light-mode .analyze-btn { border-color: #0055cc !important; color: #0055cc !important; }
+body.light-mode .add-log-btn { background: #1a9e5c !important; }
+body.light-mode .day-btn { color: #1a1a1a !important; }
+body.light-mode .day-btn.on { color: #0055cc !important; }
+body.light-mode .totals-lbl { color: #444 !important; }
+body.light-mode .prof-lbl { color: #1a1a1a !important; }
+body.light-mode .sec-lbl { color: #1a1a1a !important; letter-spacing: 1.5px; }
+body.light-mode .step-lbl { color: #0055cc !important; }
+body.light-mode .finp { color: #1a1a1a !important; border-color: rgba(0,0,0,0.2) !important; }
+body.light-mode .finp::placeholder { color: rgba(0,0,0,0.35) !important; }
+body.light-mode .btn-ghost { color: #1a1a1a !important; border-color: rgba(0,0,0,0.2) !important; }
+body.light-mode .g-btn { color: #1a1a1a !important; border-color: rgba(0,0,0,0.2) !important; }
+body.light-mode .ovr-inp { color: #1a1a1a !important; background: rgba(0,0,0,0.04) !important; }
+body.light-mode .reset-link { color: #c87000 !important; }
+body.light-mode .override-hint { color: #444 !important; }
+body.light-mode .tagpill { border-color: rgba(0,0,0,0.15) !important; }
+body.light-mode .pdot.off { background: rgba(0,0,0,0.15) !important; }
 
 
 /* ═══════════════════════════════════════════
@@ -271,7 +304,7 @@ body.light-mode .wm { /* brand colors kept */ }
 .tip-actions{display:flex;gap:8px;align-items:center;}
 .tip-refresh{font-size:14px;cursor:pointer;background:none;border:none;color:#ffb300;}
 .tip-dismiss{font-size:14px;cursor:pointer;background:none;border:none;color:#fff;}
-.tip-text{font-size:13px;color:#fff;line-height:1.55;}
+.tip-text{font-size:14px;color:#fff;line-height:1.6;}
 
 /* Log button */
 .log-btn-wrap{padding:12px 20px;flex-shrink:0;}
@@ -282,7 +315,7 @@ body.light-mode .wm { /* brand colors kept */ }
 .food-log-hdr{font-family:monospace;font-size:9px;font-weight:900;color:#fff;letter-spacing:1.5px;margin-bottom:8px;}
 .food-row{display:flex;align-items:center;background:#0f1014;border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:11px 14px;margin-bottom:6px;}
 .food-row-info{flex:1;}
-.food-row-name{font-size:13px;font-weight:600;color:#fff;margin-bottom:3px;}
+.food-row-name{font-size:14px;font-weight:600;color:#fff;margin-bottom:3px;}
 .food-row-macros{display:flex;gap:8px;}
 .food-row-macro{font-family:monospace;font-size:10px;}
 .food-row-del{background:none;border:none;color:rgba(255,34,68,0.8);font-size:16px;cursor:pointer;padding:4px;flex-shrink:0;}
@@ -340,7 +373,7 @@ body.light-mode .wm { /* brand colors kept */ }
 .prof-unit{font-size:13px;color:#fff;margin-left:4px;}
 .prof-sel{background:transparent;border:none;outline:none;font-size:15px;font-weight:600;color:#2d8fff;font-family:inherit;text-align:right;cursor:pointer;-webkit-appearance:none;}
 .prof-sel option{background:#0f1014;color:#fff;}
-.sec-lbl{font-family:monospace;font-size:10px;font-weight:900;letter-spacing:2px;color:#fff;margin-bottom:8px;margin-top:20px;padding:0 2px;}
+.sec-lbl{font-family:monospace;font-size:9px;font-weight:900;letter-spacing:2px;color:rgba(255,255,255,0.75);margin-bottom:8px;margin-top:20px;padding:0 2px;}
 .day-btns{display:flex;gap:6px;flex-wrap:wrap;}
 .day-num{width:36px;height:36px;border-radius:9px;background:#050608;border:1.5px solid rgba(255,255,255,0.15);color:#fff;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;}
 .day-num.on{background:rgba(45,143,255,0.15);border-color:#2d8fff;color:#2d8fff;}
@@ -355,7 +388,7 @@ body.light-mode .wm { /* brand colors kept */ }
   width:100%;max-width:480px;z-index:101;
   background:#0d0d0d;border-radius:20px 20px 0 0;
   border-top:1.5px solid rgba(255,255,255,0.12);
-  max-height:88svh;display:none;flex-direction:column;
+  max-height:92svh;display:none;flex-direction:column;
 }
 .log-sheet.open{display:flex;}
 .sheet-handle{display:flex;justify-content:center;padding:12px 0 4px;}
@@ -769,218 +802,125 @@ body.light-mode .wm { /* brand colors kept */ }
   </div>
 
   <!-- Scrollable body -->
-  <div class="scroll-body" style="padding:0 24px 24px;">
+  <div class="scroll-body" style="padding:0 16px 16px;">
 
-    <!-- Gender -->
-    <div style="font-family:monospace;font-size:9px;font-weight:900;color:#fff;letter-spacing:2px;margin-bottom:8px;">GENDER</div>
-    <div class="g-row" style="margin-bottom:20px;">
-      <button class="g-btn male-on" id="b-gender-m" onclick="bsSetGender('m')">♂ MALE</button>
-      <button class="g-btn" id="b-gender-f" onclick="bsSetGender('f')">♀ FEMALE</button>
-    </div>
-
-    <!-- About You -->
-    <div style="font-family:monospace;font-size:9px;font-weight:900;color:#fff;letter-spacing:2px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;">ABOUT YOU<div style="display:flex;gap:4px;"><button id="bs-unit-metric" onclick="bsSetUnits('metric')" style="font-family:monospace;font-size:9px;font-weight:900;padding:4px 10px;border-radius:7px;border:1.5px solid #2d8fff;background:rgba(45,143,255,0.15);color:#2d8fff;cursor:pointer;">KG·CM</button><button id="bs-unit-imperial" onclick="bsSetUnits('imperial')" style="font-family:monospace;font-size:9px;font-weight:900;padding:4px 10px;border-radius:7px;border:1.5px solid rgba(255,255,255,0.2);background:transparent;color:#fff;cursor:pointer;">LBS·IN</button></div></div>
-    <div style="background:#0f1014;border:1.5px solid rgba(255,255,255,0.15);border-radius:13px;overflow:visible;margin-bottom:20px;">
-
-      <div style="display:flex;align-items:center;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,0.1);">
-        <div style="font-size:15px;font-weight:500;color:#fff;flex:1;">Date of birth</div>
-        <div style="display:flex;gap:6px;flex:1;justify-content:flex-end;">
-          <select id="bs-dob-d" onchange="bsDobChange()" style="background:transparent;border:none;outline:none;font-size:14px;font-weight:700;color:#2d8fff;font-family:inherit;cursor:pointer;-webkit-appearance:none;text-align:right;max-width:44px;">
-            <option value="">DD</option>
-          <option value="01">1</option>
-          <option value="02">2</option>
-          <option value="03">3</option>
-          <option value="04">4</option>
-          <option value="05">5</option>
-          <option value="06">6</option>
-          <option value="07">7</option>
-          <option value="08">8</option>
-          <option value="09">9</option>
-          <option value="10">10</option>
-          <option value="11">11</option>
-          <option value="12">12</option>
-          <option value="13">13</option>
-          <option value="14">14</option>
-          <option value="15">15</option>
-          <option value="16">16</option>
-          <option value="17">17</option>
-          <option value="18">18</option>
-          <option value="19">19</option>
-          <option value="20">20</option>
-          <option value="21">21</option>
-          <option value="22">22</option>
-          <option value="23">23</option>
-          <option value="24">24</option>
-          <option value="25">25</option>
-          <option value="26">26</option>
-          <option value="27">27</option>
-          <option value="28">28</option>
-          <option value="29">29</option>
-          <option value="30">30</option>
-          <option value="31">31</option>
-          </select>
-          <select id="bs-dob-m" onchange="bsDobChange()" style="background:transparent;border:none;outline:none;font-size:14px;font-weight:700;color:#2d8fff;font-family:inherit;cursor:pointer;-webkit-appearance:none;text-align:right;max-width:80px;">
-            <option value="">MMM</option>
-          <option value="01">January</option>
-          <option value="02">February</option>
-          <option value="03">March</option>
-          <option value="04">April</option>
-          <option value="05">May</option>
-          <option value="06">June</option>
-          <option value="07">July</option>
-          <option value="08">August</option>
-          <option value="09">September</option>
-          <option value="10">October</option>
-          <option value="11">November</option>
-          <option value="12">December</option>
-          </select>
-          <select id="bs-dob-y" onchange="bsDobChange()" style="background:transparent;border:none;outline:none;font-size:14px;font-weight:700;color:#2d8fff;font-family:inherit;cursor:pointer;-webkit-appearance:none;text-align:right;max-width:52px;">
-            <option value="">YYYY</option>
-          <option value="1950">1950</option>
-          <option value="1951">1951</option>
-          <option value="1952">1952</option>
-          <option value="1953">1953</option>
-          <option value="1954">1954</option>
-          <option value="1955">1955</option>
-          <option value="1956">1956</option>
-          <option value="1957">1957</option>
-          <option value="1958">1958</option>
-          <option value="1959">1959</option>
-          <option value="1960">1960</option>
-          <option value="1961">1961</option>
-          <option value="1962">1962</option>
-          <option value="1963">1963</option>
-          <option value="1964">1964</option>
-          <option value="1965">1965</option>
-          <option value="1966">1966</option>
-          <option value="1967">1967</option>
-          <option value="1968">1968</option>
-          <option value="1969">1969</option>
-          <option value="1970">1970</option>
-          <option value="1971">1971</option>
-          <option value="1972">1972</option>
-          <option value="1973">1973</option>
-          <option value="1974">1974</option>
-          <option value="1975">1975</option>
-          <option value="1976">1976</option>
-          <option value="1977">1977</option>
-          <option value="1978">1978</option>
-          <option value="1979">1979</option>
-          <option value="1980">1980</option>
-          <option value="1981">1981</option>
-          <option value="1982">1982</option>
-          <option value="1983">1983</option>
-          <option value="1984">1984</option>
-          <option value="1985">1985</option>
-          <option value="1986">1986</option>
-          <option value="1987">1987</option>
-          <option value="1988">1988</option>
-          <option value="1989">1989</option>
-          <option value="1990">1990</option>
-          <option value="1991">1991</option>
-          <option value="1992">1992</option>
-          <option value="1993">1993</option>
-          <option value="1994">1994</option>
-          <option value="1995">1995</option>
-          <option value="1996">1996</option>
-          <option value="1997">1997</option>
-          <option value="1998">1998</option>
-          <option value="1999">1999</option>
-          <option value="2000">2000</option>
-          <option value="2001">2001</option>
-          <option value="2002">2002</option>
-          <option value="2003">2003</option>
-          <option value="2004">2004</option>
-          <option value="2005">2005</option>
-          <option value="2006">2006</option>
-          <option value="2007">2007</option>
-          <option value="2008">2008</option>
-          <option value="2009">2009</option>
-          </select>
+    <!-- Row 1: Gender + Units -->
+    <div style="display:flex;gap:10px;align-items:center;margin-bottom:14px;">
+      <div style="flex:1;">
+        <div style="font-family:monospace;font-size:9px;font-weight:900;color:rgba(255,255,255,0.75);letter-spacing:1.5px;margin-bottom:6px;">GENDER</div>
+        <div class="g-row" style="grid-template-columns:1fr 1fr;gap:6px;">
+          <button class="g-btn male-on" id="b-gender-m" onclick="bsSetGender('m')" style="padding:10px 4px;font-size:13px;">♂ M</button>
+          <button class="g-btn" id="b-gender-f" onclick="bsSetGender('f')" style="padding:10px 4px;font-size:13px;">♀ F</button>
         </div>
       </div>
-
-      <div style="display:flex;align-items:center;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,0.1);">
-        <div style="font-size:15px;font-weight:500;color:#fff;flex:1;">Height</div>
-        <div style="display:flex;align-items:center;gap:6px;">
-          <input id="bs-height" type="text" inputmode="numeric" placeholder="—" oninput="bsCalc()" style="background:transparent;border:none;outline:none;font-size:16px;font-weight:700;color:#2d8fff;font-family:inherit;text-align:right;width:55px;">
-          <span id="bs-height-unit" style="font-size:13px;font-weight:600;color:#fff;cursor:pointer;" onclick="bsToggleUnits()">cm</span>
-        </div>
-      </div>
-
-      <div style="display:flex;align-items:center;padding:14px 16px;">
-        <div style="font-size:15px;font-weight:500;color:#fff;flex:1;">Weight</div>
-        <div style="display:flex;align-items:center;gap:6px;">
-          <input id="bs-weight" type="text" inputmode="numeric" placeholder="—" oninput="bsCalc()" style="background:transparent;border:none;outline:none;font-size:16px;font-weight:700;color:#2d8fff;font-family:inherit;text-align:right;width:60px;">
-          <span id="bs-weight-unit" style="font-size:13px;font-weight:600;color:#fff;cursor:pointer;" onclick="bsToggleUnits()">kg</span>
+      <div style="flex:1;">
+        <div style="font-family:monospace;font-size:9px;font-weight:900;color:rgba(255,255,255,0.75);letter-spacing:1.5px;margin-bottom:6px;">UNITS</div>
+        <div style="display:flex;gap:6px;">
+          <button id="bs-unit-metric" onclick="bsSetUnits('metric')" style="flex:1;font-family:monospace;font-size:9px;font-weight:900;padding:10px 4px;border-radius:9px;border:1.5px solid #2d8fff;background:rgba(45,143,255,0.15);color:#2d8fff;cursor:pointer;">KG·CM</button>
+          <button id="bs-unit-imperial" onclick="bsSetUnits('imperial')" style="flex:1;font-family:monospace;font-size:9px;font-weight:900;padding:10px 4px;border-radius:9px;border:1.5px solid rgba(255,255,255,0.2);background:transparent;color:#fff;cursor:pointer;">LB·IN</button>
         </div>
       </div>
     </div>
 
-    <!-- Lifestyle -->
-    <div style="font-family:monospace;font-size:9px;font-weight:900;color:#fff;letter-spacing:2px;margin-bottom:8px;">LIFESTYLE</div>
-    <div style="background:#0f1014;border:1.5px solid rgba(255,255,255,0.15);border-radius:13px;overflow:hidden;margin-bottom:20px;">
-
-      <div class="bs-field-wrap">
-        <div class="bs-field-lbl">Job type</div>
-        <select class="bs-sel" id="bs-job" onchange="bsCalc()">
-          <option value="">Select your job type...</option>
-          <option value="0">Desk / sedentary</option>
-          <option value="0.05">Light manual work</option>
-          <option value="0.1">Active / on your feet</option>
-          <option value="0.15">Heavy manual labor</option>
+    <!-- Row 2: DOB inline -->
+    <div style="background:#0f1014;border:1.5px solid rgba(255,255,255,0.12);border-radius:11px;padding:10px 14px;margin-bottom:10px;">
+      <div style="font-family:monospace;font-size:9px;font-weight:900;color:rgba(255,255,255,0.75);letter-spacing:1.5px;margin-bottom:6px;">DATE OF BIRTH</div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <select id="bs-dob-d" onchange="bsDobChange()" style="flex:1;background:#1a1a1a;border:1px solid rgba(255,255,255,0.15);border-radius:8px;color:#2d8fff;font-size:14px;font-weight:700;padding:8px 6px;outline:none;font-family:inherit;-webkit-appearance:none;text-align:center;">
+          <option value="">DD</option>
+          <option value="01">1</option><option value="02">2</option><option value="03">3</option><option value="04">4</option><option value="05">5</option><option value="06">6</option><option value="07">7</option><option value="08">8</option><option value="09">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option><option value="26">26</option><option value="27">27</option><option value="28">28</option><option value="29">29</option><option value="30">30</option><option value="31">31</option>
         </select>
-      </div>
-
-      <div class="bs-field-wrap">
-        <div class="bs-field-lbl">Daily steps</div>
-        <select class="bs-sel" id="bs-steps" onchange="bsCalc()">
-          <option value="">Select your step count...</option>
-          <option value="0">Under 3,000 — sedentary</option>
-          <option value="0.025">3,000–5,999 — lightly active</option>
-          <option value="0.05">6,000–9,999 — moderately active</option>
-          <option value="0.075">10,000–12,999 — active</option>
-          <option value="0.1">13,000+ — very active</option>
+        <select id="bs-dob-m" onchange="bsDobChange()" style="flex:2;background:#1a1a1a;border:1px solid rgba(255,255,255,0.15);border-radius:8px;color:#2d8fff;font-size:14px;font-weight:700;padding:8px 6px;outline:none;font-family:inherit;-webkit-appearance:none;text-align:center;">
+          <option value="">Month</option>
+          <option value="01">January</option><option value="02">February</option><option value="03">March</option><option value="04">April</option><option value="05">May</option><option value="06">June</option><option value="07">July</option><option value="08">August</option><option value="09">September</option><option value="10">October</option><option value="11">November</option><option value="12">December</option>
         </select>
-      </div>
-
-      <div class="bs-field-wrap">
-        <div class="bs-field-lbl">Training frequency</div>
-        <select class="bs-sel" id="bs-act" onchange="bsCalc()">
-          <option value="">Select training frequency...</option>
-          <option value="1.2">Sedentary — no exercise</option>
-          <option value="1.375">Light — 1 to 2 days/week</option>
-          <option value="1.55">Moderate — 3 to 4 days/week</option>
-          <option value="1.725">Very active — 5 to 6 days/week</option>
-          <option value="1.9">Athlete — daily or twice daily</option>
-        </select>
-      </div>
-
-      <div class="bs-field-wrap">
-        <div class="bs-field-lbl">Primary goal</div>
-        <select class="bs-sel" id="bs-goal" onchange="bsCalc()">
-          <option value="">Select your goal...</option>
-          <option value="-0.20">Lose fat — aggressive</option>
-          <option value="-0.12">Lose fat — moderate</option>
-          <option value="-0.05">Body recomposition</option>
-          <option value="0">Maintain weight</option>
-          <option value="0.08">Lean muscle gain</option>
-          <option value="0.15">Build muscle</option>
+        <select id="bs-dob-y" onchange="bsDobChange()" style="flex:1.5;background:#1a1a1a;border:1px solid rgba(255,255,255,0.15);border-radius:8px;color:#2d8fff;font-size:14px;font-weight:700;padding:8px 6px;outline:none;font-family:inherit;-webkit-appearance:none;text-align:center;">
+          <option value="">YYYY</option>
+          <option value="2009">2009</option><option value="2008">2008</option><option value="2007">2007</option><option value="2006">2006</option><option value="2005">2005</option><option value="2004">2004</option><option value="2003">2003</option><option value="2002">2002</option><option value="2001">2001</option><option value="2000">2000</option><option value="1999">1999</option><option value="1998">1998</option><option value="1997">1997</option><option value="1996">1996</option><option value="1995">1995</option><option value="1994">1994</option><option value="1993">1993</option><option value="1992">1992</option><option value="1991">1991</option><option value="1990">1990</option><option value="1989">1989</option><option value="1988">1988</option><option value="1987">1987</option><option value="1986">1986</option><option value="1985">1985</option><option value="1984">1984</option><option value="1983">1983</option><option value="1982">1982</option><option value="1981">1981</option><option value="1980">1980</option><option value="1979">1979</option><option value="1978">1978</option><option value="1977">1977</option><option value="1976">1976</option><option value="1975">1975</option><option value="1974">1974</option><option value="1973">1973</option><option value="1972">1972</option><option value="1971">1971</option><option value="1970">1970</option><option value="1969">1969</option><option value="1968">1968</option><option value="1967">1967</option><option value="1966">1966</option><option value="1965">1965</option><option value="1964">1964</option><option value="1963">1963</option><option value="1962">1962</option><option value="1961">1961</option><option value="1960">1960</option><option value="1959">1959</option><option value="1958">1958</option><option value="1957">1957</option><option value="1956">1956</option><option value="1955">1955</option><option value="1954">1954</option><option value="1953">1953</option><option value="1952">1952</option><option value="1951">1951</option><option value="1950">1950</option>
         </select>
       </div>
     </div>
 
-    <!-- Calc box -->
-    <div class="calc-box" style="margin-bottom:20px;">
+    <!-- Row 3: Height + Weight -->
+    <div style="display:flex;gap:10px;margin-bottom:10px;">
+      <div style="flex:1;background:#0f1014;border:1.5px solid rgba(255,255,255,0.12);border-radius:11px;padding:10px 14px;">
+        <div style="font-family:monospace;font-size:9px;font-weight:900;color:rgba(255,255,255,0.75);letter-spacing:1.5px;margin-bottom:6px;">HEIGHT</div>
+        <div style="display:flex;align-items:center;gap:4px;">
+          <input id="bs-height" type="text" inputmode="numeric" placeholder="—" oninput="bsCalc()" style="flex:1;background:transparent;border:none;outline:none;font-size:20px;font-weight:700;color:#2d8fff;font-family:inherit;width:100%;">
+          <span id="bs-height-unit" style="font-size:13px;color:rgba(255,255,255,0.75);" onclick="bsToggleUnits()">cm</span>
+        </div>
+      </div>
+      <div style="flex:1;background:#0f1014;border:1.5px solid rgba(255,255,255,0.12);border-radius:11px;padding:10px 14px;">
+        <div style="font-family:monospace;font-size:9px;font-weight:900;color:rgba(255,255,255,0.75);letter-spacing:1.5px;margin-bottom:6px;">WEIGHT</div>
+        <div style="display:flex;align-items:center;gap:4px;">
+          <input id="bs-weight" type="text" inputmode="numeric" placeholder="—" oninput="bsCalc()" style="flex:1;background:transparent;border:none;outline:none;font-size:20px;font-weight:700;color:#2d8fff;font-family:inherit;width:100%;">
+          <span id="bs-weight-unit" style="font-size:13px;color:rgba(255,255,255,0.75);" onclick="bsToggleUnits()">kg</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 4: Job + Steps -->
+    <div style="display:flex;gap:10px;margin-bottom:10px;">
+      <div style="flex:1;">
+        <div style="font-family:monospace;font-size:9px;font-weight:900;color:rgba(255,255,255,0.75);letter-spacing:1px;margin-bottom:5px;">JOB TYPE</div>
+        <select class="bs-sel" id="bs-job" onchange="bsCalc()" style="font-size:13px;padding:10px 12px;">
+          <option value="">Select...</option>
+          <option value="0">Desk</option>
+          <option value="0.05">Light manual</option>
+          <option value="0.1">On feet</option>
+          <option value="0.15">Heavy labor</option>
+        </select>
+      </div>
+      <div style="flex:1;">
+        <div style="font-family:monospace;font-size:9px;font-weight:900;color:rgba(255,255,255,0.75);letter-spacing:1px;margin-bottom:5px;">DAILY STEPS</div>
+        <select class="bs-sel" id="bs-steps" onchange="bsCalc()" style="font-size:13px;padding:10px 12px;">
+          <option value="">Select...</option>
+          <option value="0">Under 3k</option>
+          <option value="0.025">3k–6k</option>
+          <option value="0.05">6k–10k</option>
+          <option value="0.075">10k–13k</option>
+          <option value="0.1">13k+</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Row 5: Training + Goal -->
+    <div style="display:flex;gap:10px;margin-bottom:10px;">
+      <div style="flex:1;">
+        <div style="font-family:monospace;font-size:9px;font-weight:900;color:rgba(255,255,255,0.75);letter-spacing:1px;margin-bottom:5px;">TRAINING</div>
+        <select class="bs-sel" id="bs-act" onchange="bsCalc()" style="font-size:13px;padding:10px 12px;">
+          <option value="">Select...</option>
+          <option value="1.2">None</option>
+          <option value="1.375">1–2x/wk</option>
+          <option value="1.55">3–4x/wk</option>
+          <option value="1.725">5–6x/wk</option>
+          <option value="1.9">Daily</option>
+        </select>
+      </div>
+      <div style="flex:1;">
+        <div style="font-family:monospace;font-size:9px;font-weight:900;color:rgba(255,255,255,0.75);letter-spacing:1px;margin-bottom:5px;">GOAL</div>
+        <select class="bs-sel" id="bs-goal" onchange="bsCalc()" style="font-size:13px;padding:10px 12px;">
+          <option value="">Select...</option>
+          <option value="-0.20">Lose fast</option>
+          <option value="-0.12">Lose steady</option>
+          <option value="-0.05">Recomp</option>
+          <option value="0">Maintain</option>
+          <option value="0.08">Lean gain</option>
+          <option value="0.15">Build</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Row 6: Calc box -->
+    <div class="calc-box" style="margin-bottom:12px;">
       <div class="calc-hdr">
-        <span class="calc-lbl">YOUR TARGETS — CALCULATED LIVE</span>
+        <span class="calc-lbl">YOUR TARGETS — LIVE</span>
         <button class="ovr-btn" id="bs-ovr-btn" onclick="bsToggleOverride()">✏️ OVERRIDE</button>
       </div>
       <div class="calc-tabs">
         <button class="calc-tab on" id="bs-tab-train" onclick="bsSwitchTab('train')">TRAINING DAY</button>
         <button class="calc-tab" id="bs-tab-rest" onclick="bsSwitchTab('rest')">REST DAY</button>
       </div>
-      <!-- Display mode -->
       <div id="bs-disp-train" class="calc-nums">
         <div class="calc-item"><div class="calc-val" id="bs-t-kcal" style="color:#ff6b35;">—</div><div class="calc-unit">kcal</div></div>
         <div class="calc-item"><div class="calc-val" id="bs-t-p" style="color:#34c97a;">—</div><div class="calc-unit">protein</div></div>
@@ -993,7 +933,6 @@ body.light-mode .wm { /* brand colors kept */ }
         <div class="calc-item"><div class="calc-val" id="bs-r-c" style="color:#2d8fff;">—</div><div class="calc-unit">carbs</div></div>
         <div class="calc-item"><div class="calc-val" id="bs-r-f" style="color:#f5a623;">—</div><div class="calc-unit">fat</div></div>
       </div>
-      <!-- Override mode -->
       <div id="bs-ovr-train" style="display:none;">
         <div class="ovr-grid">
           <div class="ovr-item"><div class="ovr-lbl">KCAL</div><input class="ovr-inp" id="bs-ov-t-kcal" type="text" inputmode="numeric" placeholder="2500"></div>
@@ -1011,16 +950,13 @@ body.light-mode .wm { /* brand colors kept */ }
         </div>
       </div>
       <span class="reset-link" id="bs-reset-link" style="display:none;" onclick="bsResetOverride()">↺ RESET TO CALCULATED</span>
-      <div class="override-hint">Tap Override to set your own · Tap Reset to go back</div>
       <div id="bs-bmr-note" class="calc-hint" style="margin-top:4px;">Fill in your details above to see your targets</div>
     </div>
 
-    <div style="font-family:monospace;font-size:9px;color:#fff;text-align:center;margin-bottom:16px;letter-spacing:0.5px;">Using metric (kg · cm) by default — tap unit to switch</div>
-
-    <button class="btn-primary" onclick="bsFinish()" style="margin-bottom:10px;">FINISH SETUP →</button>
+    <!-- Row 7: Buttons -->
+    <button class="btn-primary" onclick="bsFinish()" style="margin-bottom:8px;">FINISH SETUP →</button>
     <button class="btn-ghost" onclick="go('s-create')">← BACK</button>
-
-    <div style="height:40px;"></div>
+    <div style="height:20px;"></div>
   </div>
 </div>
 
@@ -1031,8 +967,7 @@ body.light-mode .wm { /* brand colors kept */ }
 <div id="s-today" class="screen">
 
   <!-- Header -->
-  <div class="td-header">
-    <button class="td-icon-btn" onclick="go('s-settings')">⚙️</button>
+  <div class="td-header" style="justify-content:center;">
     <div class="td-logo">
       <span class="td-wm" style="color:#2d8fff;">TRACK</span>
       <span class="td-wm" style="color:#ff2244;">TI</span>
@@ -1046,7 +981,6 @@ body.light-mode .wm { /* brand colors kept */ }
       </svg>
       <span class="td-wm" style="color:#ffb300;">N</span>
     </div>
-    <button class="td-icon-btn" onclick="go('s-profile')">👤</button>
   </div>
 
   <!-- Day toggle -->
@@ -1171,8 +1105,12 @@ body.light-mode .wm { /* brand colors kept */ }
       <div class="set-sec-body" id="set-ai">
         <div style="padding:14px 16px;">
           <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;"><span>🔐</span><span class="set-row-lbl">Anthropic API Key</span></div>
-          <input type="password" class="set-api-inp" id="set-api-key" placeholder="sk-ant-api03-..." oninput="saveApiKey(this.value)">
-          <div style="font-size:11px;color:#fff;margin-top:6px;">Used for AI food photo analysis · Never shared · Stored locally</div>
+          <input type="password" class="set-api-inp" id="set-api-key" placeholder="sk-ant-api03-...">
+          <div style="display:flex;gap:8px;margin-top:8px;align-items:center;">
+            <button onclick="validateApiKey()" style="padding:8px 16px;background:#2d8fff;border:none;border-radius:8px;color:#fff;font-family:monospace;font-size:10px;font-weight:900;cursor:pointer;letter-spacing:0.5px;">VALIDATE KEY</button>
+            <span id="api-key-status" style="font-size:12px;font-weight:600;"></span>
+          </div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.75);margin-top:6px;">Used for AI food photo analysis · Never shared · Stored locally</div>
         </div>
         <div class="set-row">
           <div class="set-row-left"><span>📸</span><span class="set-row-lbl">Photo Analysis Quality</span></div>
@@ -2306,9 +2244,18 @@ function callAI(cfg) {
     document.getElementById('log-loading').style.display = 'none';
     var text = d.content && d.content[0] ? d.content[0].text : '';
     try {
-      var result = JSON.parse(text.replace(/```json|```/g,'').trim());
+      // Strip any markdown, whitespace, or extra text
+      var cleaned = text.replace(/```json|```/g,'').trim();
+      // Find JSON object in response
+      var jsonMatch = cleaned.match(/\{[\s\S]*\}/);
+      if (jsonMatch) cleaned = jsonMatch[0];
+      var result = JSON.parse(cleaned);
       logShowResult(result);
-    } catch(e) { alert('Could not parse AI response. Try rephrasing.'); }
+    } catch(e) {
+      // Try to build a basic result from the text
+      console.log('AI raw response:', text);
+      alert('AI could not analyze. Make sure your API key is valid in Settings → AI & Data.');
+    }
   }).catch(function(){
     document.getElementById('log-loading').style.display = 'none';
     alert('AI request failed. Check your API key in Settings.');
@@ -2801,6 +2748,30 @@ function togglePref(key) {
 }
 function saveApiKey(val) {
   localStorage.setItem('tracktion_apikey', val);
+}
+function validateApiKey() {
+  var key = document.getElementById('set-api-key').value.trim();
+  if (!key) { alert('Paste your API key first.'); return; }
+  localStorage.setItem('tracktion_apikey', key);
+  var statusEl = document.getElementById('api-key-status');
+  statusEl.textContent = 'Checking...';
+  statusEl.style.color = '#ffb300';
+  fetch('https://api.anthropic.com/v1/messages', {
+    method:'POST',
+    headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+    body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:10,messages:[{role:'user',content:'hi'}]})
+  }).then(function(r){return r.json();}).then(function(d){
+    if (d.content && d.content[0]) {
+      statusEl.textContent = '✅ Valid — AI features active';
+      statusEl.style.color = '#34c97a';
+    } else if (d.error) {
+      statusEl.textContent = '❌ ' + (d.error.message || 'Invalid key');
+      statusEl.style.color = '#ff2244';
+    }
+  }).catch(function(){
+    statusEl.textContent = '❌ Connection failed';
+    statusEl.style.color = '#ff2244';
+  });
 }
 function loadSettingsScreen() {
   var apiKey = localStorage.getItem('tracktion_apikey') || '';
