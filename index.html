@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TRACKTION — Log Food</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; background:#f4f5f8; color:#1a1a2e; }
+    .page { max-width:430px; margin:0 auto; padding:12px 12px 90px; }
+    .card { background:white; border-radius:14px; padding:14px 16px; margin-bottom:8px; }
+    .red { color:#ff0000; font-weight:700; }
+    .green { color:#34c97a; font-weight:700; }
+
+    /* METHOD TABS */
+    .method-tabs { display:grid; grid-template-columns:repeat(4,1fr); gap:4px; padding:6px; }
+    .method-btn { padding:8px 4px; border-radius:10px; border:1px solid #e0e0e0; background:white; font-size:10px; font-weight:800; color:#888; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:3px; transition:all 0.15s; }
+    .method-btn .icon { font-size:20px; }
+    .method-btn.active { border-color:#0066ff; border-width:1.5px; background:rgba(0,102,255,0.06); color:#0066ff; }
+
+    /* CONTENT */
+    .method-content { display:none; }
+    .method-content.open { display:block; }
+
+    /* PHOTO BTNS */
+    .photo-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:12px; }
+    .photo-btn { padding:20px; border:1px solid #e0e0e0; border-radius:10px; background:#f9f9f9; font-size:13px; font-weight:700; display:flex; flex-direction:column; align-items:center; gap:6px; cursor:pointer; transition:all 0.15s; }
+    .photo-btn:hover { border-color:#0066ff; background:#eef4ff; color:#0066ff; }
+    .photo-btn .icon { font-size:28px; }
+
+    /* PHOTO PREVIEW */
+    #photo-preview-wrap { display:none; margin-bottom:12px; }
+    #photo-label { font-size:12px; color:#0066ff; padding:8px 12px; background:#f0f5ff; border-radius:8px; cursor:pointer; font-weight:600; user-select:none; }
+    #photo-img { width:100%; max-height:300px; object-fit:cover; display:none; border-radius:8px; margin-top:8px; }
+
+    /* CONTEXT */
+    #context-section { display:none; padding-top:12px; border-top:1px solid #f0f0f0; margin-top:4px; }
+    .chips-label { font-size:10px; color:#888; font-weight:800; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:5px; display:block; }
+    .chips-row { display:flex; flex-wrap:wrap; gap:5px; margin-bottom:10px; }
+    .chip { padding:5px 12px; border:1px solid #e0e0e0; border-radius:20px; background:white; font-size:12px; font-weight:600; cursor:pointer; transition:all 0.15s; }
+    .chip.active { background:#0066ff; color:white; border-color:#0066ff; }
+    .desc-textarea { width:100%; padding:8px 10px; border:1px solid #e0e0e0; border-radius:8px; font-size:12px; font-family:inherit; resize:none; height:44px; margin-bottom:10px; }
+    .desc-textarea:focus { outline:none; border-color:#0066ff; }
+    .analyze-btn { width:100%; padding:11px; border:1.5px solid #0066ff; border-radius:8px; background:white; color:#0066ff; font-weight:700; font-size:13px; cursor:pointer; transition:all 0.2s; }
+    .analyze-btn:hover { background:#0066ff; color:white; }
+    .analyze-btn:disabled { border-color:#ccc; color:#ccc; cursor:not-allowed; }
+
+    /* AI RESULTS */
+    #ai-results { display:none; margin-top:12px; padding-top:12px; border-top:1px solid #f0f0f0; }
+    .result-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+    .confidence-badge { font-size:10px; font-weight:800; padding:3px 10px; border-radius:20px; }
+    .confidence-high { background:#f0fff5; color:#34c97a; }
+    .confidence-medium { background:#fff8f0; color:#f5a623; }
+    .confidence-low { background:#fff0f0; color:#ff0000; }
+    .result-item { padding:10px 12px; border:0.5px solid #eee; border-radius:8px; margin-bottom:6px; }
+    .result-name { font-size:13px; font-weight:700; color:#1a1a2e; margin-bottom:3px; }
+    .result-portion { font-size:11px; color:#999; margin-bottom:4px; }
+    .result-macros { font-size:11px; }
+    .result-total { padding:10px 12px; background:#f8f9fa; border-radius:8px; margin-top:8px; }
+
+    /* SEARCH */
+    .search-bar { display:flex; gap:6px; margin-bottom:8px; }
+    .search-input { flex:1; padding:8px 10px; border:1px solid #e0e0e0; border-radius:8px; font-size:13px; font-family:inherit; }
+    .search-input:focus { outline:none; border-color:#0066ff; }
+    .ai-btn { padding:8px 14px; background:#0066ff; color:white; border:none; border-radius:8px; font-weight:700; font-size:12px; cursor:pointer; white-space:nowrap; }
+    .cat-pills { display:flex; gap:4px; flex-wrap:wrap; margin-bottom:10px; }
+    .cat-pill { padding:4px 10px; border-radius:20px; border:1px solid #e0e0e0; background:white; font-size:10px; font-weight:700; cursor:pointer; transition:all 0.15s; }
+    .cat-pill.active { background:#0066ff; color:white; border-color:#0066ff; }
+
+    /* FOOD ITEMS */
+    .food-list { display:flex; flex-direction:column; gap:5px; }
+    .food-item { display:flex; justify-content:space-between; align-items:center; padding:8px 10px; border:0.5px solid #eee; border-radius:8px; }
+    .food-name { font-size:12px; font-weight:700; color:#1a1a2e; margin-bottom:2px; }
+    .food-macros { font-size:10px; }
+    .add-btn { padding:5px 12px; background:#0066ff; color:white; border:none; border-radius:20px; font-size:11px; font-weight:700; cursor:pointer; flex-shrink:0; margin-left:8px; }
+    .add-btn:hover { background:#0055cc; }
+
+    /* SECTION LABEL */
+    .section-label { font-size:10px; font-weight:800; color:#999; letter-spacing:0.5px; text-transform:uppercase; margin-bottom:6px; display:block; }
+
+    /* QUICK ADD */
+    .macro-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:6px; margin-bottom:12px; }
+    .macro-box { text-align:center; }
+    .macro-input { width:100%; padding:10px 4px; border-radius:8px; font-size:18px; font-weight:700; text-align:center; font-family:inherit; }
+    .macro-input:focus { outline:none; }
+    .macro-lbl { font-size:9px; font-weight:800; margin-top:3px; text-transform:uppercase; letter-spacing:0.3px; }
+
+    /* LOADING */
+    .loading { text-align:center; padding:20px; color:#999; font-size:13px; }
+    .spinner { display:inline-block; width:20px; height:20px; border:2px solid #e0e0e0; border-top-color:#0066ff; border-radius:50%; animation:spin 0.8s linear infinite; margin-bottom:8px; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+
+    /* ADD TO LOG BAR */
+    #add-bar { position:fixed; bottom:0; left:0; right:0; background:white; padding:10px 12px; border-top:1px solid #e0e0e0; box-shadow:0 -3px 10px rgba(0,0,0,0.07); z-index:100; }
+    #add-bar .inner { max-width:430px; margin:0 auto; }
+    #add-to-log-btn { width:100%; padding:14px; background:#0066ff; color:white; border:none; border-radius:12px; font-size:15px; font-weight:800; cursor:pointer; transition:all 0.2s; }
+    #add-to-log-btn:hover { background:#0055cc; }
+
+    #file-input { display:none; }
+
+    /* RESULTS POPUP */
+    #results-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:200; display:none; }
+    #results-popup { position:fixed; bottom:0; left:0; right:0; background:white; border-radius:20px 20px 0 0; padding:20px 16px; z-index:201; display:none; max-height:85vh; overflow-y:auto; max-width:430px; margin:0 auto; }
+    #results-popup.open { display:block; }
+    #results-overlay.open { display:block; }
+    .popup-handle { width:40px; height:4px; background:#e0e0e0; border-radius:2px; margin:0 auto 16px; }
+    .popup-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; }
+    .popup-close { width:32px; height:32px; border-radius:50%; border:none; background:#f0f0f0; font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+    .popup-add-btn { width:100%; padding:14px; background:#0066ff; color:white; border:none; border-radius:12px; font-size:15px; font-weight:800; cursor:pointer; margin-top:14px; }
+    .popup-add-btn:hover { background:#0055cc; }
+    .result-item { padding:10px 12px; border:0.5px solid #eee; border-radius:8px; margin-bottom:6px; }
+    .result-name { font-size:13px; font-weight:700; color:#1a1a2e; margin-bottom:3px; }
+    .result-portion { font-size:11px; color:#999; margin-bottom:4px; }
+    .result-macros { font-size:11px; }
+    .result-total { padding:12px; background:#f8f9fa; border-radius:8px; margin-top:8px; border-left:3px solid #0066ff; }
+    .confidence-badge { font-size:10px; font-weight:800; padding:3px 10px; border-radius:20px; }
+    .confidence-High { background:#f0fff5; color:#34c97a; }
+    .confidence-Medium { background:#fff8f0; color:#f5a623; }
+    .confidence-Low { background:#fff0f0; color:#ff0000; }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="card" style="padding:12px 16px;">
+    <div style="font-size:10px;font-weight:800;color:#999;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:3px;">LOG FOOD</div>
+    <div id="header-sub" style="font-size:14px;font-weight:700;">Loading...</div>
+  </div>
+
+  <!-- MEAL TAG -->
+  <div class="card" style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
+    <div style="display:flex;align-items:center;gap:10px;min-width:0;">
+      <div id="tag-emoji-box" style="width:38px;height:38px;background:#fff8e6;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">🌙</div>
+      <div>
+        <div id="tag-name" style="font-size:16px;font-weight:800;color:#1a1a2e;">Dinner</div>
+        <div id="tag-sub" style="font-size:11px;color:#999;">Auto · detecting...</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:4px;flex-shrink:0;">
+      <button onclick="setTag(this,'🌅','Breakfast','#fff3e0')" class="meal-btn" style="width:34px;height:34px;border-radius:8px;border:1px solid #e0e0e0;background:white;font-size:16px;cursor:pointer;">🌅</button>
+      <button onclick="setTag(this,'☀️','Lunch','#fff8e6')" class="meal-btn" style="width:34px;height:34px;border-radius:8px;border:1px solid #e0e0e0;background:white;font-size:16px;cursor:pointer;">☀️</button>
+      <button onclick="setTag(this,'🌙','Dinner','#f0f0ff')" class="meal-btn" style="width:34px;height:34px;border-radius:8px;border:1px solid #e0e0e0;background:white;font-size:16px;cursor:pointer;">🌙</button>
+      <button onclick="setTag(this,'🍎','Snack','#fff0f0')" class="meal-btn" style="width:34px;height:34px;border-radius:8px;border:1px solid #e0e0e0;background:white;font-size:16px;cursor:pointer;">🍎</button>
+    </div>
+  </div>
+
+  <!-- METHOD TABS + CONTENT -->
+  <div class="card" style="padding:0;">
+
+    <!-- TABS ROW -->
+    <div class="method-tabs">
+      <button class="method-btn active" id="btn-snap" onclick="showMethod('snap',this)">
+        <span class="icon">📷</span>SNAP
+      </button>
+      <button class="method-btn" id="btn-search" onclick="showMethod('search',this)">
+        <span class="icon">🔍</span>SEARCH
+      </button>
+      <button class="method-btn" id="btn-meals" onclick="showMethod('meals',this)">
+        <span class="icon">⭐</span>MEALS
+      </button>
+      <button class="method-btn" id="btn-quick" onclick="showMethod('quick',this)">
+        <span class="icon">✍️</span>QUICK
+      </button>
+    </div>
+
+    <div style="height:1px;background:#f0f0f0;"></div>
+
+    <!-- CONTENT WRAPPER -->
+    <div style="padding:14px;">
+
+      <!-- ═══ SNAP ═══ -->
+      <div class="method-content open" id="content-snap">
+        <div class="photo-grid">
+          <button class="photo-btn" onclick="openCamera()">
+            <span class="icon">📷</span>CAMERA
+          </button>
+          <button class="photo-btn" onclick="openGallery()">
+            <span class="icon">🖼️</span>GALLERY
+          </button>
+        </div>
+        <input type="file" id="file-input" accept="image/*" onchange="handlePhoto(this)">
+
+        <!-- Photo preview -->
+        <div id="photo-preview-wrap">
+          <div id="photo-label" onclick="togglePhoto()">📸 — Click to expand</div>
+          <img id="photo-img" alt="meal">
+        </div>
+
+        <!-- Context: chips + description + analyze (appear after photo) -->
+        <div id="context-section">
+          <span class="chips-label">🍳 Cooking</span>
+          <div class="chips-row">
+            <div class="chip" onclick="toggleChip(this)">Grilled</div>
+            <div class="chip" onclick="toggleChip(this)">Fried</div>
+            <div class="chip" onclick="toggleChip(this)">Baked</div>
+            <div class="chip" onclick="toggleChip(this)">Steamed</div>
+            <div class="chip" onclick="toggleChip(this)">Raw</div>
+          </div>
+          <span class="chips-label">🧂 Extras</span>
+          <div class="chips-row">
+            <div class="chip" onclick="toggleChip(this)">With oil</div>
+            <div class="chip" onclick="toggleChip(this)">With sauce</div>
+            <div class="chip" onclick="toggleChip(this)">No oil</div>
+            <div class="chip" onclick="toggleChip(this)">No sauce</div>
+          </div>
+          <span class="chips-label">📏 Portion</span>
+          <div class="chips-row">
+            <div class="chip" onclick="toggleChip(this)">Half</div>
+            <div class="chip" onclick="toggleChip(this)">Normal</div>
+            <div class="chip" onclick="toggleChip(this)">Double</div>
+          </div>
+          <textarea class="desc-textarea" id="description" placeholder="Add details... (restaurant, homemade, extra sauce)"></textarea>
+          <button class="analyze-btn" id="analyze-btn" onclick="analyzePhoto()">ANALYZE THIS PHOTO →</button>
+        </div>
+
+        <!-- AI Results -->
+        <div id="ai-results">
+          <div class="result-header">
+            <span style="font-size:11px;font-weight:800;color:#1a1a2e;text-transform:uppercase;letter-spacing:0.5px;">AI BREAKDOWN</span>
+            <span id="confidence-badge" class="confidence-badge confidence-medium">Medium</span>
+          </div>
+          <div id="result-items"></div>
+          <div class="result-total" id="result-total" style="display:none;">
+            <div style="font-size:11px;font-weight:800;color:#999;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">TOTAL</div>
+            <div id="total-macros" style="font-size:13px;font-weight:700;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ SEARCH ═══ -->
+      <div class="method-content" id="content-search">
+        <div class="search-bar">
+          <input type="text" class="search-input" id="search-input" placeholder="chicken, shawarma, Big Mac..." onkeyup="filterFoods(this.value)">
+          <button class="ai-btn" onclick="askAISearch()">🤖 AI</button>
+        </div>
+        <div class="cat-pills">
+          <button class="cat-pill active" onclick="filterCat('all',this)">All</button>
+          <button class="cat-pill" onclick="filterCat('protein',this)" style="color:#34c97a;">🥩 Proteins</button>
+          <button class="cat-pill" onclick="filterCat('carb',this)" style="color:#2d8fff;">🍚 Carbs</button>
+          <button class="cat-pill" onclick="filterCat('fat',this)" style="color:#f5a623;">🥑 Fats</button>
+          <button class="cat-pill" onclick="filterCat('meal',this)" style="color:#ff2244;">🍽️ Meals</button>
+          <button class="cat-pill" onclick="filterCat('drink',this)" style="color:#888;">🥤 Drinks</button>
+        </div>
+        <div class="food-list" id="food-list"></div>
+        <div id="ai-search-results" style="display:none;margin-top:10px;"></div>
+      </div>
+
+      <!-- ═══ MY MEALS ═══ -->
+      <div class="method-content" id="content-meals">
+        <span class="section-label">⭐ Favourites</span>
+        <div class="food-list" id="fav-list" style="margin-bottom:12px;"></div>
+        <span class="section-label">🕐 Recently Logged</span>
+        <div class="food-list" id="recent-list"></div>
+        <div id="meals-empty" style="text-align:center;padding:20px;color:#999;font-size:12px;display:none;">
+          Log your first meal — it appears here automatically
+        </div>
+      </div>
+
+      <!-- ═══ QUICK ADD ═══ -->
+      <div class="method-content" id="content-quick">
+        <div style="font-size:11px;color:#999;margin-bottom:12px;">Enter macros directly — no food name needed</div>
+        <div class="macro-grid">
+          <div class="macro-box">
+            <input type="number" class="macro-input" id="q-kcal" placeholder="0" style="border:1.5px solid #ff0000;color:#ff0000;">
+            <div class="macro-lbl" style="color:#ff0000;">kcal</div>
+          </div>
+          <div class="macro-box">
+            <input type="number" class="macro-input" id="q-prot" placeholder="0" style="border:1.5px solid #34c97a;color:#34c97a;">
+            <div class="macro-lbl" style="color:#34c97a;">protein</div>
+          </div>
+          <div class="macro-box">
+            <input type="number" class="macro-input" id="q-carbs" placeholder="0" style="border:1.5px solid #2d8fff;color:#2d8fff;">
+            <div class="macro-lbl" style="color:#2d8fff;">carbs</div>
+          </div>
+          <div class="macro-box">
+            <input type="number" class="macro-input" id="q-fat" placeholder="0" style="border:1.5px solid #f5a623;color:#f5a623;">
+            <div class="macro-lbl" style="color:#f5a623;">fat</div>
+          </div>
+        </div>
+        <div style="font-size:11px;color:#999;margin-bottom:8px;">Optional: give it a name</div>
+        <input type="text" id="q-name" placeholder="e.g. My homemade bowl" style="width:100%;padding:8px 10px;border:1px solid #e0e0e0;border-radius:8px;font-size:13px;font-family:inherit;margin-bottom:4px;">
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ADD TO LOG BAR -->
+<div id="add-bar">
+  <div class="inner">
+    <button id="add-to-log-btn" onclick="addToLog()">ADD TO LOG ✓</button>
+  </div>
+</div>
+
+<script>
+
+// ════════════════════════════════════════
+// FOOD DATABASE (sample — 20 items)
+// ════════════════════════════════════════
+const FOODS = [
+  {name:'Chicken breast grilled',portion:'100g',kcal:165,prot:31,carbs:0,fat:3,cat:'protein'},
+  {name:'Chicken thigh grilled',portion:'100g',kcal:209,prot:26,carbs:0,fat:11,cat:'protein'},
+  {name:'Salmon fillet',portion:'100g',kcal:208,prot:20,carbs:0,fat:13,cat:'protein'},
+  {name:'Tuna canned in water',portion:'85g',kcal:100,prot:22,carbs:0,fat:1,cat:'protein'},
+  {name:'Whole egg',portion:'1 egg (50g)',kcal:70,prot:6,carbs:0,fat:5,cat:'protein'},
+  {name:'Greek yogurt 0%',portion:'170g',kcal:100,prot:18,carbs:7,fat:0,cat:'protein'},
+  {name:'Whey protein shake',portion:'1 scoop (30g)',kcal:120,prot:24,carbs:3,fat:2,cat:'protein'},
+  {name:'Ground beef 90% lean',portion:'100g',kcal:176,prot:20,carbs:0,fat:10,cat:'protein'},
+  {name:'White rice cooked',portion:'100g',kcal:130,prot:3,carbs:28,fat:0,cat:'carb'},
+  {name:'Brown rice cooked',portion:'100g',kcal:112,prot:2,carbs:24,fat:1,cat:'carb'},
+  {name:'Sweet potato baked',portion:'200g',kcal:180,prot:4,carbs:41,fat:0,cat:'carb'},
+  {name:'Oats rolled',portion:'80g dry',kcal:303,prot:10,carbs:54,fat:5,cat:'carb'},
+  {name:'Banana medium',portion:'120g',kcal:107,prot:1,carbs:27,fat:0,cat:'carb'},
+  {name:'Whole wheat bread',portion:'2 slices (70g)',kcal:160,prot:8,carbs:30,fat:2,cat:'carb'},
+  {name:'Olive oil',portion:'1 tbsp (14g)',kcal:119,prot:0,carbs:0,fat:14,cat:'fat'},
+  {name:'Avocado half',portion:'70g',kcal:114,prot:1,carbs:6,fat:10,cat:'fat'},
+  {name:'Almonds',portion:'30g',kcal:174,prot:6,carbs:6,fat:15,cat:'fat'},
+  {name:'Chicken shawarma plate',portion:'400g',kcal:680,prot:48,carbs:62,fat:24,cat:'meal'},
+  {name:'Big Mac',portion:'200g',kcal:550,prot:25,carbs:45,fat:30,cat:'meal'},
+  {name:'Whey protein shake (drink)',portion:'350ml',kcal:160,prot:26,carbs:6,fat:3,cat:'drink'},
+];
+
+// ════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════
+let currentPhoto = null; // base64
+let currentFileName = '';
+let pendingFood = null; // food ready to add to log
+let loggedFoods = JSON.parse(localStorage.getItem('tracktion_foods') || '[]');
+let favMeals = JSON.parse(localStorage.getItem('tracktion_favs') || '[]');
+
+// ════════════════════════════════════════
+// HEADER
+// ════════════════════════════════════════
+function updateHeader() {
+  const sub = document.getElementById('header-sub');
+  const targets = JSON.parse(localStorage.getItem('tracktion_targets') || '{"kcal":2500}');
+  const logged = loggedFoods.reduce((sum,f) => sum + (f.kcal||0), 0);
+  const rem = (targets.kcal||2500) - logged;
+  const color = rem > 0 ? '#34c97a' : '#ff0000';
+  const txt = rem > 0 ? rem + ' to go' : Math.abs(rem) + ' over';
+  sub.innerHTML = `Training day · <span class="red">${logged}</span> logged · <span style="color:${color};font-weight:700;">${txt}</span>`;
+}
+
+// ════════════════════════════════════════
+// MEAL TAG
+// ════════════════════════════════════════
+function autoSuggestTag() {
+  const h = new Date().getHours();
+  const now = new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+  let name, emoji, bg, idx;
+  if (h < 10) { name='Breakfast'; emoji='🌅'; bg='#fff3e0'; idx=0; }
+  else if (h < 14) { name='Lunch'; emoji='☀️'; bg='#fff8e6'; idx=1; }
+  else if (h < 20) { name='Dinner'; emoji='🌙'; bg='#f0f0ff'; idx=2; }
+  else { name='Snack'; emoji='🍎'; bg='#fff0f0'; idx=3; }
+  document.getElementById('tag-emoji-box').textContent = emoji;
+  document.getElementById('tag-emoji-box').style.background = bg;
+  document.getElementById('tag-name').textContent = name;
+  document.getElementById('tag-sub').textContent = `Auto · It's ${now}`;
+  const btns = document.querySelectorAll('.meal-btn');
+  btns[idx].style.borderColor = '#0066ff';
+  btns[idx].style.borderWidth = '1.5px';
+  btns[idx].style.background = 'rgba(0,102,255,0.06)';
+}
+
+function setTag(el, emoji, name, bg) {
+  document.getElementById('tag-emoji-box').textContent = emoji;
+  document.getElementById('tag-emoji-box').style.background = bg;
+  document.getElementById('tag-name').textContent = name;
+  document.getElementById('tag-sub').textContent = 'Manual · ' + name;
+  document.querySelectorAll('.meal-btn').forEach(b => {
+    b.style.borderColor = '#e0e0e0';
+    b.style.borderWidth = '1px';
+    b.style.background = 'white';
+  });
+  el.style.borderColor = '#0066ff';
+  el.style.borderWidth = '1.5px';
+  el.style.background = 'rgba(0,102,255,0.06)';
+}
+
+// ════════════════════════════════════════
+// METHOD TABS
+// ════════════════════════════════════════
+function showMethod(name, btn) {
+  ['snap','search','meals','quick'].forEach(m => {
+    document.getElementById('content-'+m).classList.remove('open');
+    document.getElementById('btn-'+m).classList.remove('active');
+  });
+  document.getElementById('content-'+name).classList.add('open');
+  btn.classList.add('active');
+  if (name === 'meals') renderMeals();
+  if (name === 'search') renderFoods('all');
+}
+
+// ════════════════════════════════════════
+// SNAP A PHOTO
+// ════════════════════════════════════════
+function openCamera() {
+  const i = document.getElementById('file-input');
+  i.setAttribute('capture','environment');
+  i.click();
+}
+function openGallery() {
+  const i = document.getElementById('file-input');
+  i.removeAttribute('capture');
+  i.click();
+}
+function handlePhoto(input) {
+  const file = input.files[0];
+  if (!file) return;
+  currentFileName = file.name;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    // Compress
+    const img = new Image();
+    img.onload = function() {
+      const canvas = document.createElement('canvas');
+      const MAX = 1200;
+      let w = img.width, h = img.height;
+      if (w > MAX || h > MAX) {
+        if (w > h) { h = Math.round(h*MAX/w); w = MAX; }
+        else { w = Math.round(w*MAX/h); h = MAX; }
+      }
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img,0,0,w,h);
+      currentPhoto = canvas.toDataURL('image/jpeg',0.8).split(',')[1];
+      // Show preview
+      const preview = document.getElementById('photo-img');
+      const label = document.getElementById('photo-label');
+      const wrap = document.getElementById('photo-preview-wrap');
+      preview.src = 'data:image/jpeg;base64,' + currentPhoto;
+      preview.style.display = 'none';
+      label.textContent = '📸 ' + currentFileName + ' — Click to expand';
+      wrap.style.display = 'block';
+      wrap.setAttribute('data-expanded','false');
+      document.getElementById('context-section').style.display = 'block';
+      document.getElementById('ai-results').style.display = 'none';
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+function togglePhoto() {
+  const img = document.getElementById('photo-img');
+  const label = document.getElementById('photo-label');
+  const wrap = document.getElementById('photo-preview-wrap');
+  const expanded = wrap.getAttribute('data-expanded') === 'true';
+  if (expanded) {
+    img.style.display = 'none';
+    label.textContent = label.textContent.replace('collapse','expand');
+    wrap.setAttribute('data-expanded','false');
+  } else {
+    img.style.display = 'block';
+    label.textContent = label.textContent.replace('expand','collapse');
+    wrap.setAttribute('data-expanded','true');
+  }
+}
+function toggleChip(el) { el.classList.toggle('active'); }
+
+// ════════════════════════════════════════
+// AI PHOTO ANALYSIS
+// ════════════════════════════════════════
+async function analyzePhoto() {
+  if (!currentPhoto) { alert('Please select a photo first'); return; }
+  const apiKey = localStorage.getItem('tracktion_api_key');
+  if (!apiKey) { alert('Please add your Anthropic API key in Settings'); return; }
+  const btn = document.getElementById('analyze-btn');
+  btn.disabled = true;
+  btn.textContent = 'Analyzing...';
+  // Build context from chips + description
+  const chips = [...document.querySelectorAll('.chip.active')].map(c => c.textContent).join(', ');
+  const desc = document.getElementById('description').value;
+  let context = '';
+  if (chips) context += 'Cooking/preparation: ' + chips + '. ';
+  if (desc) context += 'Additional details: ' + desc + '.';
+  const prompt = `You are a professional dietitian and nutrition expert. Analyze this food photo and provide accurate macro estimates.
+
+${context ? 'Context about this meal: ' + context : ''}
+
+IMPORTANT RULES:
+- Photo is the PRIMARY source. Description only modifies/adds context.
+- Be specific about each food item you can identify.
+- Estimate realistic portion sizes based on what you see.
+- Never guess silently — flag uncertainty clearly.
+
+Respond ONLY in this exact JSON format (no markdown, no extra text):
+{
+  "confidence": "High|Medium|Low",
+  "confidence_reason": "brief explanation",
+  "items": [
+    {"name": "Food name", "portion": "estimated portion", "kcal": 0, "prot": 0, "carbs": 0, "fat": 0}
+  ],
+  "total": {"kcal": 0, "prot": 0, "carbs": 0, "fat": 0},
+  "tip": "one actionable tip to improve accuracy"
+}`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{
+          role: 'user',
+          content: [
+            { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: currentPhoto } },
+            { type: 'text', text: prompt }
+          ]
+        }]
+      })
+    });
+    const data = await res.json();
+    const text = data.content[0].text.trim();
+    const result = JSON.parse(text);
+    showAIResults(result);
+    pendingFood = { name: result.items.map(i=>i.name).join(' + '), ...result.total };
+  } catch(e) {
+    alert('Analysis failed. Check your API key and try again.');
+    console.error(e);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'ANALYZE THIS PHOTO →';
+  }
+}
+
+function showAIResults(result) {
+  // Confidence
+  const badge = document.getElementById('popup-confidence');
+  badge.textContent = result.confidence;
+  badge.className = 'confidence-badge confidence-' + result.confidence;
+
+  // Items
+  document.getElementById('popup-items').innerHTML = result.items.map(item => `
+    <div class="result-item">
+      <div class="result-name">${item.name}</div>
+      <div class="result-portion">${item.portion}</div>
+      <div class="result-macros">
+        <span class="red">${item.kcal} kcal</span> · 
+        <span class="green">${item.prot}g P</span> · 
+        <span style="color:#2d8fff;font-weight:700;">${item.carbs}g C</span> · 
+        <span style="color:#f5a623;font-weight:700;">${item.fat}g F</span>
+      </div>
+    </div>
+  `).join('');
+
+  // Total
+  const totalEl = document.getElementById('popup-total');
+  totalEl.style.display = 'block';
+  document.getElementById('popup-total-macros').innerHTML = `
+    <span class="red">${result.total.kcal} kcal</span> · 
+    <span class="green">${result.total.prot}g P</span> · 
+    <span style="color:#2d8fff;font-weight:700;">${result.total.carbs}g C</span> · 
+    <span style="color:#f5a623;font-weight:700;">${result.total.fat}g F</span>
+  `;
+
+  // Tip
+  if (result.tip) {
+    const tipEl = document.getElementById('popup-tip');
+    tipEl.textContent = '💡 ' + result.tip;
+    tipEl.style.display = 'block';
+  }
+
+  // Open popup
+  document.getElementById('results-popup').classList.add('open');
+  document.getElementById('results-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeResults() {
+  document.getElementById('results-popup').classList.remove('open');
+  document.getElementById('results-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function addFromPopup() {
+  if (!pendingFood) return;
+  const tag = document.getElementById('tag-name').textContent;
+  pendingFood.mealTag = tag;
+  pendingFood.time = new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+  loggedFoods.push(pendingFood);
+  localStorage.setItem('tracktion_foods', JSON.stringify(loggedFoods));
+  pendingFood = null;
+  closeResults();
+  updateHeader();
+  showToast('✅ Meal added to log!');
+}
+
+// ════════════════════════════════════════
+// SEARCH FOOD
+// ════════════════════════════════════════
+let currentCat = 'all';
+function renderFoods(cat) {
+  currentCat = cat;
+  const query = document.getElementById('search-input')?.value?.toLowerCase() || '';
+  const filtered = FOODS.filter(f => {
+    const catMatch = cat === 'all' || f.cat === cat;
+    const searchMatch = !query || f.name.toLowerCase().includes(query);
+    return catMatch && searchMatch;
+  });
+  const list = document.getElementById('food-list');
+  if (filtered.length === 0) {
+    list.innerHTML = '<div style="text-align:center;padding:16px;color:#999;font-size:12px;">No foods found. Try AI search above.</div>';
+    return;
+  }
+  list.innerHTML = filtered.slice(0,6).map(f => `
+    <div class="food-item">
+      <div>
+        <div class="food-name">${f.name}</div>
+        <div class="food-macros">
+          <span style="color:#999;">${f.portion}</span> · 
+          <span class="red">${f.kcal} kcal</span> · 
+          <span class="green">${f.prot}g P</span> · 
+          <span style="color:#2d8fff;font-weight:700;">${f.carbs}g C</span> · 
+          <span style="color:#f5a623;font-weight:700;">${f.fat}g F</span>
+        </div>
+      </div>
+      <button class="add-btn" onclick='quickAddFood(${JSON.stringify(f)})'>+ ADD</button>
+    </div>
+  `).join('');
+  if (filtered.length > 6) {
+    list.insertAdjacentHTML('beforeend', `<div style="text-align:center;padding:8px;font-size:11px;color:#0066ff;font-weight:700;">${filtered.length - 6} more — search to narrow</div>`);
+  }
+}
+function filterFoods(query) { renderFoods(currentCat); }
+function filterCat(cat, btn) {
+  document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  renderFoods(cat);
+}
+async function askAISearch() {
+  const query = document.getElementById('search-input').value;
+  if (!query) { alert('Type a food name first'); return; }
+  const apiKey = localStorage.getItem('tracktion_api_key');
+  if (!apiKey) { alert('Add your API key in Settings'); return; }
+  const resultsEl = document.getElementById('ai-search-results');
+  resultsEl.style.display = 'block';
+  resultsEl.innerHTML = '<div class="loading"><div class="spinner"></div><br>Asking AI...</div>';
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 500,
+        messages: [{ role: 'user', content: `Nutrition info for: "${query}". Respond ONLY in JSON: {"name":"","portion":"","kcal":0,"prot":0,"carbs":0,"fat":0}` }]
+      })
+    });
+    const data = await res.json();
+    const food = JSON.parse(data.content[0].text.trim());
+    resultsEl.innerHTML = `
+      <div class="food-item">
+        <div>
+          <div class="food-name">🤖 ${food.name}</div>
+          <div class="food-macros">
+            <span style="color:#999;">${food.portion}</span> · 
+            <span class="red">${food.kcal} kcal</span> · 
+            <span class="green">${food.prot}g P</span> · 
+            <span style="color:#2d8fff;font-weight:700;">${food.carbs}g C</span> · 
+            <span style="color:#f5a623;font-weight:700;">${food.fat}g F</span>
+          </div>
+        </div>
+        <button class="add-btn" onclick='quickAddFood(${JSON.stringify(food)})'>+ ADD</button>
+      </div>`;
+  } catch(e) {
+    resultsEl.innerHTML = '<div style="color:#ff0000;font-size:12px;padding:8px;">AI search failed. Try again.</div>';
+  }
+}
+
+// ════════════════════════════════════════
+// MY MEALS
+// ════════════════════════════════════════
+function renderMeals() {
+  const favEl = document.getElementById('fav-list');
+  const recentEl = document.getElementById('recent-list');
+  const emptyEl = document.getElementById('meals-empty');
+  if (favMeals.length === 0 && loggedFoods.length === 0) {
+    emptyEl.style.display = 'block';
+    favEl.innerHTML = '';
+    recentEl.innerHTML = '';
+    return;
+  }
+  emptyEl.style.display = 'none';
+  // Favourites
+  favEl.innerHTML = favMeals.slice(0,3).map(f => `
+    <div class="food-item">
+      <div>
+        <div class="food-name">${f.name}</div>
+        <div class="food-macros"><span class="red">${f.kcal} kcal</span> · <span class="green">${f.prot}g P</span></div>
+      </div>
+      <button class="add-btn" onclick='quickAddFood(${JSON.stringify(f)})'>+ ADD</button>
+    </div>`).join('') || '<div style="font-size:11px;color:#bbb;padding:6px;">No favourites yet — tap ⭐ when logging</div>';
+  // Recent (last 5 unique)
+  const recent = [...new Map(loggedFoods.slice(-10).reverse().map(f=>[f.name,f])).values()].slice(0,3);
+  recentEl.innerHTML = recent.map(f => `
+    <div class="food-item">
+      <div>
+        <div class="food-name">${f.name}</div>
+        <div class="food-macros"><span class="red">${f.kcal} kcal</span> · <span class="green">${f.prot}g P</span> · <span style="color:#bbb;font-size:10px;">${f.mealTag||''}</span></div>
+      </div>
+      <button class="add-btn" onclick='quickAddFood(${JSON.stringify(f)})'>+ ADD</button>
+    </div>`).join('') || '<div style="font-size:11px;color:#bbb;padding:6px;">No recent meals yet</div>';
+}
+
+// ════════════════════════════════════════
+// ADD FOOD FUNCTIONS
+// ════════════════════════════════════════
+function quickAddFood(food) {
+  food.mealTag = document.getElementById('tag-name').textContent;
+  food.time = new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+  loggedFoods.push(food);
+  localStorage.setItem('tracktion_foods', JSON.stringify(loggedFoods));
+  updateHeader();
+  showToast('✅ ' + food.name + ' added!');
+}
+
+function addToLog() {
+  const active = document.querySelector('.method-btn.active')?.id;
+  const tag = document.getElementById('tag-name').textContent;
+
+  if (active === 'btn-snap') {
+    if (!pendingFood) { alert('Analyze a photo first'); return; }
+    pendingFood.mealTag = tag;
+    pendingFood.time = new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+    loggedFoods.push(pendingFood);
+    localStorage.setItem('tracktion_foods', JSON.stringify(loggedFoods));
+    pendingFood = null;
+    updateHeader();
+    showToast('✅ Meal added to log!');
+  } else if (active === 'btn-quick') {
+    const kcal = parseInt(document.getElementById('q-kcal').value)||0;
+    if (!kcal) { alert('Enter at least calories'); return; }
+    const food = {
+      name: document.getElementById('q-name').value || 'Quick Add',
+      kcal, prot: parseInt(document.getElementById('q-prot').value)||0,
+      carbs: parseInt(document.getElementById('q-carbs').value)||0,
+      fat: parseInt(document.getElementById('q-fat').value)||0,
+      mealTag: tag,
+      time: new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})
+    };
+    loggedFoods.push(food);
+    localStorage.setItem('tracktion_foods', JSON.stringify(loggedFoods));
+    ['q-kcal','q-prot','q-carbs','q-fat','q-name'].forEach(id => document.getElementById(id).value = '');
+    updateHeader();
+    showToast('✅ ' + food.name + ' added!');
+  }
+}
+
+function showToast(msg) {
+  const toast = document.createElement('div');
+  toast.textContent = msg;
+  toast.style.cssText = 'position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#1a1a2e;color:white;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:600;z-index:200;animation:fadeIn 0.2s ease;';
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 2500);
+}
+
+// ════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════
+updateHeader();
+autoSuggestTag();
+renderFoods('all');
+
+</script>
+
+<!-- RESULTS OVERLAY -->
+<div id="results-overlay" onclick="closeResults()"></div>
+
+<!-- RESULTS POPUP -->
+<div id="results-popup">
+  <div class="popup-handle"></div>
+  <div class="popup-header">
+    <div>
+      <div style="font-size:11px;font-weight:800;color:#999;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:2px;">AI BREAKDOWN</div>
+      <span id="popup-confidence" class="confidence-badge"></span>
+    </div>
+    <button class="popup-close" onclick="closeResults()">✕</button>
+  </div>
+  <div id="popup-items"></div>
+  <div id="popup-total" class="result-total" style="display:none;">
+    <div style="font-size:10px;font-weight:800;color:#999;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">TOTAL</div>
+    <div id="popup-total-macros" style="font-size:14px;font-weight:700;"></div>
+  </div>
+  <div id="popup-tip" style="display:none;margin-top:8px;padding:8px 10px;background:#f0f5ff;border-radius:8px;font-size:11px;color:#0066ff;font-weight:600;"></div>
+  <button class="popup-add-btn" onclick="addFromPopup()">ADD TO LOG ✓</button>
+</div>
+
+</body>
+</html>
