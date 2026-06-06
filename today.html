@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>TRACKTION — Today</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f4f5f8;color:#1a1a2e;min-height:100vh;padding-bottom:90px;display:flex;flex-direction:column;align-items:center;}
+.page{width:100%;max-width:430px;margin:0 auto;padding:0 0 90px;}
+
+/* HEADER */
+.header{background:white;padding:16px 16px 13px;display:flex;justify-content:center;align-items:center;border-bottom:0.5px solid #f0f0f0;position:sticky;top:0;z-index:50;width:100%;max-width:430px;}
+.wordmark{display:flex;align-items:center;line-height:1;}
+.wm-track{font-family:monospace;font-size:30px;font-weight:900;color:#0066ff;letter-spacing:-1px;}
+.wm-ti{font-family:monospace;font-size:30px;font-weight:900;color:#ff2244;letter-spacing:-1px;}
+.wm-n{font-family:monospace;font-size:30px;font-weight:900;color:#ffb300;letter-spacing:-1px;}
+
+/* CARD */
+.card{background:white;border-radius:16px;margin:8px 12px;padding:16px;border:0.5px solid rgba(0,0,0,0.06);box-shadow:0 1px 4px rgba(0,0,0,0.04);}
+
+/* DAY TOGGLE */
+.dtoggle{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:8px 12px;}
+.dbtn{padding:11px 8px;border-radius:12px;border:1.5px solid #eee;background:white;font-size:11px;font-weight:800;color:#1a1a2e;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:5px;box-shadow:0 1px 3px rgba(0,0,0,0.04);}
+.dbtn .kc{font-family:monospace;font-weight:900;font-size:13px;color:#1a1a2e;}
+.dbtn.on{background:#0066ff;color:white;border-color:#0066ff;box-shadow:0 4px 12px rgba(0,102,255,0.3);}
+.dbtn.on .kc{color:white !important;}
+
+/* MACRO BARS */
+.mrow{display:grid;grid-template-columns:44px 1fr auto;align-items:center;gap:10px;margin-bottom:11px;}
+.mrow:last-child{margin-bottom:0;}
+.mlbl{font-size:10px;font-weight:800;letter-spacing:0.5px;}
+.btrack{height:8px;background:#e4e6eb;border-radius:10px;overflow:hidden;}
+.bfill{height:100%;border-radius:10px;transition:width 0.5s ease;}
+.mval{font-family:monospace;font-size:11px;font-weight:700;text-align:right;white-space:nowrap;display:flex;flex-direction:column;align-items:flex-end;gap:1px;min-width:76px;}
+.over{font-size:9px;font-weight:800;color:#ff2244;display:none;}
+
+/* COACHING TIP */
+.tip-card{background:linear-gradient(135deg,#f0f7ff,#e8f4ff);border:1px solid rgba(0,102,255,0.1);border-radius:16px;margin:8px 12px;padding:14px 16px;}
+.tip-text{font-size:13px;color:#1a1a2e;line-height:1.65;font-weight:500;}
+
+/* LOG SECTION */
+.log-section{margin:8px 12px 8px;}
+.log-header{font-size:10px;font-weight:800;color:rgba(26,26,46,0.45);letter-spacing:1.2px;text-transform:uppercase;margin-bottom:8px;}
+.empty-log{text-align:center;padding:12px 0;color:rgba(26,26,46,0.35);font-size:13px;font-weight:600;}
+/* EMPTY STATE CARD */
+.empty-state{background:white;border-radius:16px;margin:8px 12px 0;padding:14px 16px 12px;border:0.5px solid rgba(0,0,0,0.06);box-shadow:0 1px 4px rgba(0,0,0,0.04);text-align:center;display:none;}
+.empty-state.show{display:block;}
+.empty-state-title{font-size:14px;font-weight:800;color:#1a1a2e;margin-bottom:4px;}
+.empty-state-sub{font-size:12px;color:#1a1a2e;line-height:1.5;margin-bottom:10px;font-weight:500;}
+.empty-state-arrow{font-size:22px;animation:bounce 1.5s infinite;display:block;}
+@keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(5px);}}
+
+/* MEAL CARD */
+.meal{background:white;border-radius:14px;margin-bottom:8px;padding:13px 12px 13px 18px;border:0.5px solid rgba(0,0,0,0.06);box-shadow:0 1px 4px rgba(0,0,0,0.04);display:flex;align-items:center;justify-content:space-between;position:relative;overflow:hidden;transition:transform 0.1s;}
+.meal:active{transform:scale(0.99);}
+.meal:last-child{margin-bottom:0;}
+.meal-accent{width:4px;position:absolute;left:0;top:0;bottom:0;}
+.meal-left{flex:1;min-width:0;}
+.meal-line1{display:flex;align-items:baseline;gap:8px;margin-bottom:4px;}
+.meal-name{font-size:14px;font-weight:700;color:#1a1a2e;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:175px;}
+.meal-kcal-lbl{font-family:monospace;font-size:13px;font-weight:800;color:#ff0000;white-space:nowrap;flex-shrink:0;}
+.meal-line2{display:flex;align-items:center;gap:6px;}
+.meal-tag-lbl{font-size:10px;font-weight:700;color:rgba(26,26,46,0.4);letter-spacing:0.3px;}
+.meal-dot{width:3px;height:3px;border-radius:50%;background:rgba(26,26,46,0.2);flex-shrink:0;}
+.meal-actions{display:flex;align-items:center;gap:6px;margin-left:8px;flex-shrink:0;}
+.star-btn{background:none;border:none;cursor:pointer;font-size:18px;padding:4px;line-height:1;transition:transform 0.15s;}
+.star-btn:hover{transform:scale(1.2);}
+.star-btn.starred{filter:drop-shadow(0 0 4px rgba(255,179,0,0.7));}
+.del-btn{background:#fff0f2;border:none;cursor:pointer;color:#ff2244;font-size:14px;font-weight:700;padding:5px 9px;border-radius:8px;line-height:1;transition:all 0.15s;}
+.del-btn:hover{background:#ff2244;color:white;}
+
+/* BOTTOM NAV — raised center circle */
+.bnav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:white;border-top:0.5px solid rgba(0,0,0,0.08);z-index:100;}
+.bnav-inner{width:100%;display:grid;grid-template-columns:1fr 1fr 1fr 1fr;padding:8px 4px 14px;}
+.nbtn{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:0.3px;color:#1a1a2e;cursor:pointer;padding:4px 2px;text-decoration:none;-webkit-tap-highlight-color:transparent;}
+.nbtn.on{color:#0066ff;}
+.nav-icon-wrap{padding:7px 14px;border-radius:12px;font-size:20px;line-height:1;border:1.5px solid transparent;transition:all 0.2s;filter:grayscale(0.2);}
+.nbtn.on .nav-icon-wrap{background:#f0f5ff;border-color:#0066ff;filter:none;}
+/* center raised */
+.nbtn-center{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:0.3px;color:#0066ff;cursor:pointer;position:relative;top:-18px;text-decoration:none;}
+.nav-plus{width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,#0066ff,#0044cc);display:flex;align-items:center;justify-content:center;color:white;font-size:26px;font-weight:900;box-shadow:0 6px 20px rgba(0,102,255,0.4);line-height:1;transition:transform 0.15s;}
+.nbtn-center:active .nav-plus{transform:scale(0.93);}
+
+/* TOAST */
+.toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:#1a1a2e;color:white;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:600;z-index:300;white-space:nowrap;pointer-events:none;animation:fadeUp 0.2s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateX(-50%) translateY(8px);}to{opacity:1;transform:translateX(-50%) translateY(0);}}
+
+/* HISTORY SCREEN */
+.history-screen{display:none;position:fixed;inset:0;background:#f4f5f8;z-index:200;overflow-y:auto;padding-bottom:90px;max-width:430px;margin:0 auto;}
+.history-screen.open{display:block;}
+.hist-header{background:white;padding:14px 16px;display:flex;align-items:center;gap:12px;border-bottom:0.5px solid #f0f0f0;position:sticky;top:0;z-index:10;}
+.hist-back{background:none;border:none;font-size:22px;cursor:pointer;color:#0066ff;font-weight:900;padding:0 4px;}
+.hist-title{font-family:monospace;font-size:18px;font-weight:900;color:#1a1a2e;}
+.hist-day-card{background:white;border-radius:16px;margin:8px 12px;padding:14px 16px;border:0.5px solid rgba(0,0,0,0.06);box-shadow:0 1px 4px rgba(0,0,0,0.04);cursor:pointer;}
+.hist-day-card:active{transform:scale(0.99);}
+.hist-date{font-size:13px;font-weight:800;color:#1a1a2e;margin-bottom:6px;}
+.hist-macros{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;}
+.hist-macro{text-align:center;}
+.hist-macro-val{font-family:monospace;font-size:15px;font-weight:700;display:block;}
+.hist-macro-lbl{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:0.3px;display:block;margin-top:2px;}
+.hist-bar{height:4px;border-radius:4px;margin-top:8px;background:#f0f0f0;overflow:hidden;}
+.hist-bar-fill{height:100%;border-radius:4px;background:#0066ff;}
+.hist-tag{font-size:10px;font-weight:800;padding:2px 8px;border-radius:10px;display:inline-block;margin-bottom:8px;}
+.hist-tag.train{background:#eef4ff;color:#0066ff;}
+.hist-tag.rest{background:#f0fff5;color:#1a9e5c;}
+.hist-empty{text-align:center;padding:40px 20px;color:#1a1a2e;font-size:14px;font-weight:600;}
+/* Detail view */
+.hist-detail{display:none;}
+.hist-detail.open{display:block;}
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="wordmark">
+      <span class="wm-track">TRACK</span>
+      <span class="wm-ti">TI</span>
+      <svg id="ring-o" width="52" height="52" viewBox="0 0 52 52" style="margin:0 1px;flex-shrink:0;">
+        <circle cx="26" cy="26" r="23"   fill="none" stroke="#ddeaff" stroke-width="4"/>
+        <circle cx="26" cy="26" r="15.5" fill="none" stroke="#fff5cc" stroke-width="3.5"/>
+        <circle cx="26" cy="26" r="8"    fill="none" stroke="#ffe0e5" stroke-width="3"/>
+        <circle id="r-kcal" cx="26" cy="26" r="23"   fill="none" stroke="#0066ff" stroke-width="4"   stroke-dasharray="144.5" stroke-dashoffset="144.5" stroke-linecap="round" transform="rotate(-90 26 26)" style="transition:stroke-dashoffset 0.5s ease;"/>
+        <circle id="r-prot" cx="26" cy="26" r="15.5" fill="none" stroke="#ffc300" stroke-width="3.5" stroke-dasharray="97.4"  stroke-dashoffset="97.4"  stroke-linecap="round" transform="rotate(-90 26 26)" style="transition:stroke-dashoffset 0.5s ease;"/>
+        <circle id="r-fat"  cx="26" cy="26" r="8"    fill="none" stroke="#ff2244" stroke-width="3"   stroke-dasharray="50.3"  stroke-dashoffset="50.3"  stroke-linecap="round" transform="rotate(-90 26 26)" style="transition:stroke-dashoffset 0.5s ease;"/>
+        <text x="23" y="29" text-anchor="middle" font-family="monospace" font-size="10" font-weight="900" fill="#ffc300">R</text>
+        <text x="29" y="29" text-anchor="middle" font-family="monospace" font-size="10" font-weight="900" fill="#0066ff">B</text>
+      </svg>
+      <span class="wm-n">N</span>
+    </div>
+  </div>
+
+  <!-- DAY TOGGLE -->
+  <div class="dtoggle">
+    <div class="dbtn on" id="btn-train" onclick="setDay('train')">⚡ TRAINING <span class="kc" id="kc-train">2500</span></div>
+    <div class="dbtn" id="btn-rest"  onclick="setDay('rest')">🥗 REST <span class="kc" id="kc-rest">2200</span></div>
+  </div>
+
+  <!-- MACRO BARS -->
+  <div class="card">
+    <div class="mrow">
+      <span class="mlbl" style="color:#ff0000;">KCAL</span>
+      <div class="btrack"><div id="bar-kcal" class="bfill" style="width:0%;background:#ff0000;"></div></div>
+      <div class="mval" style="color:#ff0000;"><span id="val-kcal">0 / 2500</span><span id="over-kcal" class="over"></span></div>
+    </div>
+    <div class="mrow">
+      <span class="mlbl" style="color:#34c97a;">PROT</span>
+      <div class="btrack"><div id="bar-prot" class="bfill" style="width:0%;background:#34c97a;"></div></div>
+      <div class="mval" style="color:#34c97a;"><span id="val-prot">0 / 168g</span><span id="over-prot" class="over"></span></div>
+    </div>
+    <div class="mrow">
+      <span class="mlbl" style="color:#2d8fff;">CARBS</span>
+      <div class="btrack"><div id="bar-carb" class="bfill" style="width:0%;background:#2d8fff;"></div></div>
+      <div class="mval" style="color:#2d8fff;"><span id="val-carb">0 / 260g</span><span id="over-carb" class="over"></span></div>
+    </div>
+    <div class="mrow">
+      <span class="mlbl" style="color:#f5a623;">FAT</span>
+      <div class="btrack"><div id="bar-fat" class="bfill" style="width:0%;background:#f5a623;"></div></div>
+      <div class="mval" style="color:#f5a623;"><span id="val-fat">0 / 68g</span><span id="over-fat" class="over"></span></div>
+    </div>
+  </div>
+
+  <!-- COACHING TIP -->
+  <div class="tip-card">
+    <div id="tip-text" class="tip-text">💡 Loading your tip...</div>
+  </div>
+
+  <!-- EMPTY STATE — shown when no meals logged -->
+  <div class="empty-state" id="empty-state">
+    <div class="empty-state-title">Log your first meal</div>
+    <div class="empty-state-sub">Tap + below — your rings fill as you eat.</div>
+    <span class="empty-state-arrow">↓</span>
+  </div>
+
+  <!-- TODAY'S LOG -->
+  <div class="log-section">
+    <div class="log-header">Today's Log</div>
+    <div id="log-list"><div class="empty-log">No meals logged yet 🍽</div></div>
+  </div>
+
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="bnav">
+  <div class="bnav-inner">
+    <div class="nbtn on" id="nav-today">
+      <div class="nav-icon-wrap">🏠</div>TODAY
+    </div>
+    <a class="nbtn-center" href="index.html" id="nav-log">
+      <div class="nav-plus">+</div>LOG
+    </a>
+    <div class="nbtn" id="nav-profile" onclick="showToast('Profile coming soon')">
+      <div class="nav-icon-wrap">👤</div>PROFILE
+    </div>
+    <div class="nbtn" id="nav-history" onclick="openHistory()">
+      <div class="nav-icon-wrap">📅</div>HISTORY
+    </div>
+  </div>
+</div>
+
+<script>
+const MEAL_COLORS={Breakfast:'#2d8fff',Lunch:'#34c97a',Dinner:'#ff2244',Snack:'#ffb300'};
+const TIPS={
+  empty:  "💡 Training day — fuel up. Hit protein early, don't play catch-up at dinner.",
+  quarter:"💡 Good start. Keep protein consistent — don't let carbs run ahead.",
+  half:   "💡 Halfway through. One more solid meal and you're on target. 🎯",
+  almost: "💡 Almost there. Check what's remaining and close it out clean.",
+  done:   "💡 Full day logged. Protein nailed. Rest and recover — you earned it. ✅",
+  over:   "⚠️ You went over today. Don't compensate tomorrow — just get back on track.",
+  rest_empty:"💡 Rest day — keep it light. Focus on protein, limit carbs. Recovery mode. 🧘",
+  rest_done: "💡 Rest day nailed. Protein on point, carbs controlled. Ready for tomorrow. ✅"
+};
+
+let loggedFoods=[], favMeals=[], day='train';
+let targets={train:{kcal:2500,prot:168,carb:260,fat:68},rest:{kcal:2200,prot:160,carb:130,fat:72}};
+
+function init(){
+  checkRollover();
+  try{loggedFoods=JSON.parse(localStorage.getItem('tracktion_foods')||'[]');}catch(e){loggedFoods=[];}
+  try{favMeals=JSON.parse(localStorage.getItem('tracktion_favs')||'[]');}catch(e){favMeals=[];}
+  day=localStorage.getItem('tracktion_day')||'train';
+  try{
+    const s=JSON.parse(localStorage.getItem('tracktion_targets')||'null');
+    if(s&&s.trainKcal){
+      targets.train={kcal:s.trainKcal,prot:s.trainProt||168,carb:s.trainCarb||260,fat:s.trainFat||68};
+      targets.rest ={kcal:s.restKcal, prot:s.restProt||160, carb:s.restCarb||130, fat:s.restFat||72};
+    }
+  }catch(e){}
+  document.getElementById('kc-train').textContent=targets.train.kcal;
+  document.getElementById('kc-rest').textContent=targets.rest.kcal;
+  document.getElementById('btn-train').className='dbtn'+(day==='train'?' on':'');
+  document.getElementById('btn-rest').className='dbtn'+(day==='rest'?' on':'');
+  document.getElementById('kc-train').style.color=day==='train'?'white':'#1a1a2e';
+  document.getElementById('kc-rest').style.color=day==='rest'?'white':'#1a1a2e';
+  render();
+}
+
+function setDay(d){
+  day=d;
+  localStorage.setItem('tracktion_day',d);
+  document.getElementById('btn-train').className='dbtn'+(d==='train'?' on':'');
+  document.getElementById('btn-rest').className='dbtn'+(d==='rest'?' on':'');
+  document.getElementById('kc-train').style.color=d==='train'?'white':'#1a1a2e';
+  document.getElementById('kc-rest').style.color=d==='rest'?'white':'#1a1a2e';
+  render();
+}
+
+function render(){
+  const t=targets[day];
+  let k=0,p=0,c=0,f=0;
+  loggedFoods.forEach(m=>{k+=m.kcal||0;p+=m.prot||0;c+=m.carbs||0;f+=m.fat||0;});
+  [{id:'kcal',v:k,tg:t.kcal,u:''},{id:'prot',v:p,tg:t.prot,u:'g'},{id:'carb',v:c,tg:t.carb,u:'g'},{id:'fat',v:f,tg:t.fat,u:'g'}]
+  .forEach(({id,v,tg,u})=>{
+    document.getElementById('val-'+id).textContent=v+' / '+tg+u;
+    document.getElementById('bar-'+id).style.width=Math.min(100,tg>0?Math.round(v/tg*100):0)+'%';
+    const oel=document.getElementById('over-'+id);
+    if(v>tg){oel.textContent='+'+(v-tg)+u+' over';oel.style.display='block';}
+    else oel.style.display='none';
+  });
+  const pK=Math.min(100,t.kcal>0?Math.round(k/t.kcal*100):0);
+  const pP=Math.min(100,t.prot>0?Math.round(p/t.prot*100):0);
+  const pF=Math.min(100,t.fat>0?Math.round(f/t.fat*100):0);
+  document.getElementById('r-kcal').setAttribute('stroke-dashoffset',(144.5*(1-pK/100)).toFixed(1));
+  document.getElementById('r-prot').setAttribute('stroke-dashoffset',(97.4*(1-pP/100)).toFixed(1));
+  document.getElementById('r-fat').setAttribute('stroke-dashoffset',(50.3*(1-pF/100)).toFixed(1));
+  const isOver=k>t.kcal||f>t.fat;
+  let tip;
+  if(isOver) tip=TIPS.over;
+  else if(day==='rest') tip=loggedFoods.length===0?TIPS.rest_empty:TIPS.rest_done;
+  else{const pct=t.kcal>0?k/t.kcal:0;tip=pct===0?TIPS.empty:pct<0.35?TIPS.quarter:pct<0.65?TIPS.half:pct<0.9?TIPS.almost:TIPS.done;}
+  document.getElementById('tip-text').textContent=tip;
+  renderLog();
+}
+
+// Normalize meal tags from old Log Food page (handles lowercase, emojis, etc.)
+function normalizeTag(tag){
+  if(!tag) return 'Snack';
+  const t=tag.toString().toLowerCase();
+  if(t.includes('breakfast')) return 'Breakfast';
+  if(t.includes('lunch'))     return 'Lunch';
+  if(t.includes('dinner'))    return 'Dinner';
+  if(t.includes('snack'))     return 'Snack';
+  return 'Snack';
+}
+
+function renderLog(){
+  const list=document.getElementById('log-list');
+  const emptyState=document.getElementById('empty-state');
+  if(!loggedFoods.length){
+    list.innerHTML='';
+    emptyState.classList.add('show');
+    return;
+  }
+  emptyState.classList.remove('show');
+  const favNames=new Set(favMeals.map(f=>f.name));
+  list.innerHTML=loggedFoods.map((m,i)=>{
+    const tag=normalizeTag(m.mealTag);
+    const color=MEAL_COLORS[tag]||'#aaa';
+    const isFav=favNames.has(m.name);
+    return`<div class="meal">
+      <div class="meal-accent" style="background:${color};"></div>
+      <div class="meal-left">
+        <div class="meal-line1">
+          <span class="meal-name">${m.name}</span>
+          <span class="meal-kcal-lbl">${m.kcal} kcal</span>
+        </div>
+        <div class="meal-line2">
+          <span class="meal-tag-lbl">${tag} · ${m.time||''}</span>
+          <div class="meal-dot"></div>
+          <span style="font-size:11px;">
+            <span style="color:#34c97a;font-weight:700;">P${m.prot||0}</span> ·
+            <span style="color:#2d8fff;font-weight:700;">C${m.carbs||0}</span> ·
+            <span style="color:#f5a623;font-weight:700;">F${m.fat||0}</span>
+          </span>
+        </div>
+      </div>
+      <div class="meal-actions">
+        <button class="star-btn${isFav?' starred':''}" onclick="toggleFav(${i})">${isFav?'⭐':'☆'}</button>
+        <button class="del-btn" onclick="removeMeal(${i})">×</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleFav(i){
+  const m=loggedFoods[i];
+  if(!m)return;
+  const idx=favMeals.findIndex(f=>f.name===m.name);
+  if(idx===-1){
+    favMeals.unshift({name:m.name,kcal:m.kcal,prot:m.prot||0,carbs:m.carbs||0,fat:m.fat||0,portion:m.portion||''});
+    showToast('⭐ Saved to My Meals');
+  }else{
+    favMeals.splice(idx,1);
+    showToast('Removed from My Meals');
+  }
+  localStorage.setItem('tracktion_favs',JSON.stringify(favMeals));
+  renderLog();
+}
+
+function removeMeal(i){
+  loggedFoods.splice(i,1);
+  localStorage.setItem('tracktion_foods',JSON.stringify(loggedFoods));
+  render();
+}
+
+function showToast(msg){
+  const ex=document.querySelector('.toast');if(ex)ex.remove();
+  const t=document.createElement('div');t.className='toast';t.textContent=msg;
+  document.body.appendChild(t);
+  setTimeout(()=>{if(t.parentNode)t.remove();},2200);
+}
+
+
+// ═══════════════════════════════════════
+// DATE KEY
+// ═══════════════════════════════════════
+function todayKey(){
+  const d=new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+
+function friendlyDate(key){
+  const d=new Date(key+'T12:00:00');
+  return d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+}
+
+// ═══════════════════════════════════════
+// MIDNIGHT ROLLOVER
+// ═══════════════════════════════════════
+function checkRollover(){
+  const lastDate=localStorage.getItem('tracktion_last_date');
+  const today=todayKey();
+  if(!lastDate){localStorage.setItem('tracktion_last_date',today);return;}
+  if(lastDate!==today){
+    const foods=JSON.parse(localStorage.getItem('tracktion_foods')||'[]');
+    if(foods.length>0){
+      const history=JSON.parse(localStorage.getItem('tracktion_history')||'{}');
+      const tgts=JSON.parse(localStorage.getItem('tracktion_targets')||'{}');
+      const dt=localStorage.getItem('tracktion_day')||'train';
+      const totals=foods.reduce((s,f)=>({kcal:s.kcal+(f.kcal||0),prot:s.prot+(f.prot||0),carbs:s.carbs+(f.carbs||0),fat:s.fat+(f.fat||0)}),{kcal:0,prot:0,carbs:0,fat:0});
+      history[lastDate]={foods,totals,dayType:dt,target:dt==='train'?(tgts.trainKcal||2500):(tgts.restKcal||2200)};
+      localStorage.setItem('tracktion_history',JSON.stringify(history));
+      localStorage.setItem('tracktion_foods','[]');
+    }
+    localStorage.setItem('tracktion_last_date',today);
+  }
+}
+
+// ═══════════════════════════════════════
+// HISTORY SCREEN
+// ═══════════════════════════════════════
+function openHistory(){
+  const screen=document.getElementById('history-screen');
+  screen.classList.add('open');
+  renderHistory();
+}
+function closeHistory(){
+  document.getElementById('history-screen').classList.remove('open');
+}
+
+function renderHistory(){
+  const history=JSON.parse(localStorage.getItem('tracktion_history')||'{}');
+  const keys=Object.keys(history).sort().reverse();
+  const content=document.getElementById('history-content');
+  if(!keys.length){
+    content.innerHTML='<div class="hist-empty">No history yet.<br>Your daily logs save automatically at midnight.</div>';
+    return;
+  }
+  content.innerHTML=keys.map(key=>{
+    const d=history[key];
+    const pct=d.target>0?Math.min(100,Math.round(d.totals.kcal/d.target*100)):0;
+    const over=d.totals.kcal>d.target;
+    return`<div class="hist-day-card" onclick="showDayDetail('${key}')">
+      <span class="hist-tag ${d.dayType}">${d.dayType==='train'?'⚡ TRAINING':'🥗 REST'}</span>
+      <div class="hist-date">${friendlyDate(key)}</div>
+      <div class="hist-macros">
+        <div class="hist-macro">
+          <span class="hist-macro-val" style="color:#ff0000;">${d.totals.kcal}</span>
+          <span class="hist-macro-lbl" style="color:#ff0000;">kcal</span>
+        </div>
+        <div class="hist-macro">
+          <span class="hist-macro-val" style="color:#34c97a;">${d.totals.prot}g</span>
+          <span class="hist-macro-lbl" style="color:#34c97a;">prot</span>
+        </div>
+        <div class="hist-macro">
+          <span class="hist-macro-val" style="color:#2d8fff;">${d.totals.carbs}g</span>
+          <span class="hist-macro-lbl" style="color:#2d8fff;">carbs</span>
+        </div>
+        <div class="hist-macro">
+          <span class="hist-macro-val" style="color:#f5a623;">${d.totals.fat}g</span>
+          <span class="hist-macro-lbl" style="color:#f5a623;">fat</span>
+        </div>
+      </div>
+      <div class="hist-bar"><div class="hist-bar-fill" style="width:${pct}%;background:${over?'#ff2244':'#0066ff'};"></div></div>
+      <div style="font-size:10px;font-weight:700;margin-top:4px;color:${over?'#ff2244':'#34c97a'};">
+        ${over?'+'+( d.totals.kcal-d.target)+' over target':pct+'% of '+d.target+' kcal target'}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function showDayDetail(key){
+  const history=JSON.parse(localStorage.getItem('tracktion_history')||'{}');
+  const d=history[key];if(!d)return;
+  const MEAL_COLORS_LOCAL={Breakfast:'#2d8fff',Lunch:'#34c97a',Dinner:'#ff2244',Snack:'#ffb300'};
+  const content=document.getElementById('history-content');
+  content.innerHTML=`
+    <div style="padding:8px 12px;">
+      <button onclick="renderHistory()" style="background:none;border:none;color:#0066ff;font-size:13px;font-weight:800;cursor:pointer;padding:4px 0;margin-bottom:8px;">← Back to History</button>
+      <div class="card" style="margin:0 0 8px;">
+        <span class="hist-tag ${d.dayType}" style="margin-bottom:8px;">${d.dayType==='train'?'⚡ TRAINING':'🥗 REST'}</span>
+        <div style="font-size:16px;font-weight:800;color:#1a1a2e;margin-bottom:12px;">${friendlyDate(key)}</div>
+        <div class="hist-macros">
+          <div class="hist-macro"><span class="hist-macro-val" style="color:#ff0000;">${d.totals.kcal}</span><span class="hist-macro-lbl" style="color:#ff0000;">kcal</span></div>
+          <div class="hist-macro"><span class="hist-macro-val" style="color:#34c97a;">${d.totals.prot}g</span><span class="hist-macro-lbl" style="color:#34c97a;">prot</span></div>
+          <div class="hist-macro"><span class="hist-macro-val" style="color:#2d8fff;">${d.totals.carbs}g</span><span class="hist-macro-lbl" style="color:#2d8fff;">carbs</span></div>
+          <div class="hist-macro"><span class="hist-macro-val" style="color:#f5a623;">${d.totals.fat}g</span><span class="hist-macro-lbl" style="color:#f5a623;">fat</span></div>
+        </div>
+      </div>
+      ${d.foods.map(m=>{
+        const tag=m.mealTag||'Snack';
+        const color=MEAL_COLORS_LOCAL[tag]||'#ffb300';
+        return`<div class="meal" style="margin-bottom:8px;">
+          <div class="meal-accent" style="background:${color};"></div>
+          <div class="meal-left">
+            <div class="meal-line1"><span class="meal-name">${m.name}</span><span class="meal-kcal-lbl">${m.kcal} kcal</span></div>
+            <div class="meal-line2">
+              <span class="meal-tag-lbl">${tag} · ${m.time||''}</span>
+              <div class="meal-dot"></div>
+              <span style="font-size:11px;"><span style="color:#34c97a;font-weight:700;">P${m.prot||0}</span> · <span style="color:#2d8fff;font-weight:700;">C${m.carbs||0}</span> · <span style="color:#f5a623;font-weight:700;">F${m.fat||0}</span></span>
+            </div>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>`;
+}
+
+init();
+
+document.addEventListener('visibilitychange',()=>{
+  if(document.visibilityState==='visible'){
+    try{loggedFoods=JSON.parse(localStorage.getItem('tracktion_foods')||'[]');}catch(e){loggedFoods=[];}
+    try{favMeals=JSON.parse(localStorage.getItem('tracktion_favs')||'[]');}catch(e){favMeals=[];}
+    render();
+  }
+});
+</script>
+
+<!-- HISTORY SCREEN -->
+<div class="history-screen" id="history-screen">
+  <div class="hist-header">
+    <button class="hist-back" onclick="closeHistory()">←</button>
+    <span class="hist-title">HISTORY</span>
+  </div>
+  <div id="history-content"></div>
+</div>
+</body>
+</html>
