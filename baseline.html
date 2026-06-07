@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes"><title>TRACKTION — Baseline</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+*::-webkit-scrollbar{display:none;}*{scrollbar-width:none;}
+html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;-webkit-font-smoothing:antialiased;background:#f4f5f8;overflow-y:auto;}
+body{display:flex;flex-direction:column;align-items:center;animation:pgIn 0.2s ease;}
+@keyframes pgIn{from{opacity:0;}to{opacity:1;}}
+.page{width:100%;max-width:480px;min-height:100vh;display:flex;flex-direction:column;background:#f4f5f8;}
+.wm{font-family:monospace;font-weight:900;font-size:28px;line-height:1;}
+.brand-row{display:flex;align-items:center;justify-content:center;}
+.scroll-body{flex:1;overflow-y:auto;padding:0 16px 20px;}
+.bs-sel{width:100%;background:#ffffff;border:1.5px solid rgba(0,0,0,0.09);border-radius:12px;color:#1a1a2e;font-size:13px;height:34px;padding:0 8px;outline:none;-webkit-appearance:none;appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;padding-right:28px;}
+.bs-sel:focus{border-color:#0066ff;}
+.bs-sel option{background:#ffffff;color:#1a1a2e;}
+.ovr-inp{background:#eeeff2;border:1px solid rgba(0,0,0,0.09);border-radius:8px;font-family:monospace;font-size:18px;font-weight:800;text-align:center;padding:10px;outline:none;width:100%;}
+.calc-box{background:#ffffff;border:1px solid rgba(0,0,0,0.09);border-radius:14px;padding:14px 16px;margin-top:12px;margin-bottom:16px;}
+.calc-hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;}
+.calc-lbl{font-size:11px;font-weight:700;color:#0066ff;letter-spacing:0.3px;text-transform:uppercase;line-height:1.2;}
+.calc-sub{font-size:11px;color:#555;margin-top:2px;line-height:1.4;}
+.calc-tabs{display:flex;background:rgba(0,0,0,0.06);border-radius:8px;padding:3px;gap:3px;margin-bottom:12px;}
+.calc-tab{flex:1;height:30px;line-height:30px;padding:0;border-radius:6px;border:none;background:transparent;color:#555;font-size:12px;font-weight:600;cursor:pointer;font-family:-apple-system,sans-serif;text-align:center;}
+.calc-tab.on{background:#fff;color:#0066ff;box-shadow:0 1px 2px rgba(0,0,0,0.10);}
+.calc-nums{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;width:100%;}
+.calc-item{background:#eeeff2;border-radius:8px;padding:10px 2px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:56px;overflow:hidden;min-width:0;}
+.calc-val{font-family:monospace;font-size:19px;font-weight:800;line-height:1.1;white-space:nowrap;}
+.calc-unit{font-size:9px;color:#555;font-weight:700;text-transform:uppercase;margin-top:3px;white-space:nowrap;}
+.calc-hint{font-size:11px;color:rgba(0,0,0,0.45);margin-top:6px;line-height:1.5;}
+</style></head><body>
+<div class="page">
+  <div style="padding:16px 16px 10px;flex-shrink:0;">
+    <div style="margin-bottom:20px;"><div class="brand-row"><span class="wm" style="color:#0066ff;">TRACK</span><span class="wm" style="color:#ff2244;">TI</span><svg width="42" height="42" viewBox="0 0 120 120" style="display:inline-block;vertical-align:middle;margin:0 2px;flex-shrink:0;"><circle cx="60" cy="60" r="52" fill="none" stroke="rgba(0,102,255,0.12)" stroke-width="10"/><circle cx="60" cy="60" r="52" fill="none" stroke="#0066ff" stroke-width="10" stroke-dasharray="245 82" stroke-linecap="round" transform="rotate(-90 60 60)"/><circle cx="60" cy="60" r="38" fill="none" stroke="rgba(255,195,0,0.12)" stroke-width="9"/><circle cx="60" cy="60" r="38" fill="none" stroke="#ffc300" stroke-width="9" stroke-dasharray="132 107" stroke-linecap="round" transform="rotate(-90 60 60)"/><circle cx="60" cy="60" r="24" fill="none" stroke="rgba(255,34,68,0.12)" stroke-width="8"/><circle cx="60" cy="60" r="24" fill="none" stroke="#ff2244" stroke-width="8" stroke-dasharray="50 101" stroke-linecap="round" transform="rotate(-90 60 60)"/><text x="52" y="68" text-anchor="middle" font-family="monospace" font-weight="900" font-size="20" fill="#ffc300">R</text><text x="70" y="68" text-anchor="middle" font-family="monospace" font-weight="900" font-size="20" fill="#0066ff">B</text></svg><span class="wm" style="color:#ffc300;">N</span></div></div>
+    <div style="font-size:21px;font-weight:700;color:#1a1a2e;margin-bottom:8px;">Set your baseline</div>
+  </div>
+  <div class="scroll-body">
+    <!-- Gender + Units -->
+    <div style="display:flex;gap:10px;align-items:center;margin-bottom:14px;">
+      <div style="flex:1;">
+        <div style="font-size:10px;font-weight:700;letter-spacing:0.5px;color:#888;margin-bottom:3px;">GENDER</div>
+        <div style="display:flex;gap:6px;">
+          <button id="b-gender-m" onclick="bsSetGender('m')" style="flex:1;height:36px;padding:0 8px;font-size:13px;font-weight:700;border-radius:8px;border:1.5px solid #0066ff;background:#0066ff;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;">&#9794; Male</button>
+          <button id="b-gender-f" onclick="bsSetGender('f')" style="flex:1;height:36px;padding:0 8px;font-size:13px;font-weight:700;border-radius:8px;border:1.5px solid rgba(0,0,0,0.15);background:#fff;color:#555;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;">&#9792; Female</button>
+        </div>
+      </div>
+      <div style="flex:1;">
+        <div style="font-size:10px;font-weight:700;letter-spacing:0.5px;color:#888;margin-bottom:3px;">UNITS</div>
+        <div style="display:flex;gap:6px;">
+          <button id="bs-unit-metric" onclick="bsSetUnits('metric')" style="flex:1;font-family:-apple-system,sans-serif;font-size:12px;font-weight:700;height:34px;padding:0;border-radius:8px;border:1.5px solid #0066ff;background:#0066ff;color:#fff;cursor:pointer;box-sizing:border-box;">KG-CM</button>
+          <button id="bs-unit-imperial" onclick="bsSetUnits('imperial')" style="flex:1;font-family:-apple-system,sans-serif;font-size:12px;font-weight:700;height:34px;padding:0;border-radius:8px;border:1.5px solid rgba(0,0,0,0.15);background:#fff;color:#555;cursor:pointer;box-sizing:border-box;">LB-IN</button>
+        </div>
+      </div>
+    </div>
+    <!-- DOB -->
+    <div style="display:grid;grid-template-columns:1fr 1.6fr 1.3fr;gap:6px;margin-bottom:8px;">
+      <div><div style="font-size:10px;font-weight:700;letter-spacing:0.5px;color:#888;margin-bottom:3px;">DAY</div>
+        <select id="bs-dob-d" onchange="bsDobChange()" style="width:100%;height:34px;padding:0 6px;border-radius:8px;border:1.5px solid rgba(0,0,0,0.09);font-size:14px;font-weight:600;color:#1a1a2e;background:#fff;box-sizing:border-box;font-family:inherit;text-align:center;">
+          <option value="">DD</option><option value="01">1</option><option value="02">2</option><option value="03">3</option><option value="04">4</option><option value="05">5</option><option value="06">6</option><option value="07">7</option><option value="08">8</option><option value="09">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option><option value="26">26</option><option value="27">27</option><option value="28">28</option><option value="29">29</option><option value="30">30</option><option value="31">31</option>
+        </select></div>
+      <div><div style="font-size:10px;font-weight:700;letter-spacing:0.5px;color:#888;margin-bottom:3px;">MONTH</div>
+        <select id="bs-dob-m" onchange="bsDobChange()" style="width:100%;height:34px;padding:0 6px;border-radius:8px;border:1.5px solid rgba(0,0,0,0.09);font-size:14px;font-weight:600;color:#1a1a2e;background:#fff;box-sizing:border-box;font-family:inherit;text-align:center;">
+          <option value="">Month</option><option value="01">January</option><option value="02">February</option><option value="03">March</option><option value="04">April</option><option value="05">May</option><option value="06">June</option><option value="07">July</option><option value="08">August</option><option value="09">September</option><option value="10">October</option><option value="11">November</option><option value="12">December</option>
+        </select></div>
+      <div><div style="font-size:10px;font-weight:700;letter-spacing:0.5px;color:#888;margin-bottom:3px;">YEAR</div>
+        <select id="bs-dob-y" onchange="bsDobChange()" style="width:100%;height:34px;padding:0 6px;border-radius:8px;border:1.5px solid rgba(0,0,0,0.09);font-size:14px;font-weight:600;color:#1a1a2e;background:#fff;box-sizing:border-box;font-family:inherit;text-align:center;">
+          <option value="">YYYY</option><option value="2009">2009</option><option value="2008">2008</option><option value="2007">2007</option><option value="2006">2006</option><option value="2005">2005</option><option value="2004">2004</option><option value="2003">2003</option><option value="2002">2002</option><option value="2001">2001</option><option value="2000">2000</option><option value="1999">1999</option><option value="1998">1998</option><option value="1997">1997</option><option value="1996">1996</option><option value="1995">1995</option><option value="1994">1994</option><option value="1993">1993</option><option value="1992">1992</option><option value="1991">1991</option><option value="1990">1990</option><option value="1989">1989</option><option value="1988">1988</option><option value="1987">1987</option><option value="1986">1986</option><option value="1985">1985</option><option value="1984">1984</option><option value="1983">1983</option><option value="1982">1982</option><option value="1981">1981</option><option value="1980">1980</option><option value="1979">1979</option><option value="1978">1978</option><option value="1977">1977</option><option value="1976">1976</option><option value="1975">1975</option><option value="1974">1974</option><option value="1973">1973</option><option value="1972">1972</option><option value="1971">1971</option><option value="1970">1970</option><option value="1969">1969</option><option value="1968">1968</option><option value="1967">1967</option><option value="1966">1966</option><option value="1965">1965</option><option value="1964">1964</option><option value="1963">1963</option><option value="1962">1962</option><option value="1961">1961</option><option value="1960">1960</option><option value="1959">1959</option><option value="1958">1958</option><option value="1957">1957</option><option value="1956">1956</option><option value="1955">1955</option><option value="1954">1954</option><option value="1953">1953</option><option value="1952">1952</option><option value="1951">1951</option><option value="1950">1950</option>
+        </select></div>
+    </div>
+    <!-- Height + Weight -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+      <div id="bs-height-metric-wrap">
+        <div style="font-size:10px;font-weight:700;letter-spacing:0.5px;color:#888;margin-bottom:3px;">HEIGHT</div>
+        <div style="display:flex;align-items:center;height:34px;border:1.5px solid rgba(0,0,0,0.09);border-radius:8px;padding:0 10px;background:#fff;box-sizing:border-box;">
+          <input id="bs-height" type="text" inputmode="numeric" placeholder="170" oninput="bsCalc()" style="flex:1;border:none;outline:none;font-size:14px;font-weight:600;color:#1a1a2e;background:transparent;min-width:0;width:0;font-family:inherit;">
+          <span id="bs-height-unit" style="font-size:11px;color:#888;font-weight:600;flex-shrink:0;white-space:nowrap;">cm</span>
+        </div>
+      </div>
+      <div id="bs-height-imperial-wrap" style="display:none;">
+        <div style="font-size:10px;font-weight:700;letter-spacing:0.5px;color:#888;margin-bottom:3px;">HEIGHT</div>
+        <div style="display:flex;gap:5px;">
+          <div style="display:flex;align-items:center;height:34px;border:1.5px solid rgba(0,0,0,0.09);border-radius:8px;padding:0 8px;background:#fff;flex:1;box-sizing:border-box;"><input id="bs-height-ft" type="text" inputmode="numeric" placeholder="5" oninput="bsCalc()" style="flex:1;border:none;outline:none;font-size:14px;font-weight:600;color:#1a1a2e;background:transparent;min-width:0;width:24px;font-family:inherit;"><span style="font-size:11px;color:#888;font-weight:600;flex-shrink:0;">ft</span></div>
+          <div style="display:flex;align-items:center;height:34px;border:1.5px solid rgba(0,0,0,0.09);border-radius:8px;padding:0 8px;background:#fff;flex:1;box-sizing:border-box;"><input id="bs-height-in" type="text" inputmode="numeric" placeholder="10" oninput="bsCalc()" style="flex:1;border:none;outline:none;font-size:14px;font-weight:600;color:#1a1a2e;background:transparent;min-width:0;width:24px;font-family:inherit;"><span style="font-size:11px;color:#888;font-weight:600;flex-shrink:0;">in</span></div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:10px;font-weight:700;letter-spacing:0.5px;color:#888;margin-bottom:3px;">WEIGHT</div>
+        <div style="display:flex;align-items:center;height:34px;border:1.5px solid rgba(0,0,0,0.09);border-radius:8px;padding:0 10px;background:#fff;box-sizing:border-box;">
+          <input id="bs-weight" type="text" inputmode="numeric" placeholder="74.5" oninput="bsCalc()" style="flex:1;border:none;outline:none;font-size:14px;font-weight:600;color:#1a1a2e;background:transparent;min-width:0;width:0;font-family:inherit;">
+          <span id="bs-weight-unit" style="font-size:11px;color:#888;font-weight:600;flex-shrink:0;white-space:nowrap;">kg</span>
+        </div>
+      </div>
+    </div>
+    <!-- Job + Steps -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+      <div><div style="font-size:10px;font-weight:700;letter-spacing:0.5px;color:#888;margin-bottom:3px;">JOB TYPE</div>
+        <select class="bs-sel" id="bs-job" onchange="bsCalc()"><option value="">Select...</option><option value="0">Desk</option><option value="0.05">Light manual</option><option value="0.1">On feet</option><option value="0.15">Heavy labor</option></select></div>
+      <div><div style="font-size:10px;font-weight:700;letter-spacing:0.5px;color:#888;margin-bottom:3px;">DAILY STEPS</div>
+        <select class="bs-sel" id="bs-steps" onchange="bsCalc()"><option value="">Select...</option><option value="0">Under 3k</option><option value="0.025">3k–6k</option><option value="0.05">6k–10k</option><option value="0.075">10k–13k</option><option value="0.1">13k+</option></select></div>
+    </div>
+    <!-- Training + Goal -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+      <div><div style="font-size:10px;font-weight:700;letter-spacing:0.5px;color:#888;margin-bottom:3px;">TRAINING</div>
+        <select class="bs-sel" id="bs-act" onchange="bsCalc()"><option value="">Select...</option><option value="1.2">None</option><option value="1.375">1–2x/wk</option><option value="1.55">3–4x/wk</option><option value="1.725">5–6x/wk</option><option value="1.9">Daily</option></select></div>
+      <div><div style="font-size:10px;font-weight:700;letter-spacing:0.5px;color:#888;margin-bottom:3px;">GOAL</div>
+        <select class="bs-sel" id="bs-goal" onchange="bsCalc()"><option value="">Select...</option><option value="-0.20">Lose fast</option><option value="-0.12">Lose steady</option><option value="-0.05">Recomp</option><option value="0">Maintain</option><option value="0.08">Lean gain</option><option value="0.15">Build</option></select></div>
+    </div>
+    <!-- Calc Box -->
+    <div class="calc-box">
+      <div class="calc-hdr">
+        <div>
+          <div class="calc-lbl">Your daily targets</div>
+          <div class="calc-sub" id="bs-bmr-sub" style="display:none;">At rest your body burns <strong id="bs-bmr-val" style="color:#0066ff;"></strong> &middot; Total daily burn <strong id="bs-tdee-val" style="color:#0066ff;"></strong></div>
+        </div>
+        <span id="bs-ovr-btn" onclick="bsToggleOverride()" style="font-size:12px;font-weight:600;color:#0066ff;cursor:pointer;text-decoration:underline;font-family:-apple-system,sans-serif;flex-shrink:0;margin-left:8px;">Edit</span>
+      </div>
+      <div class="calc-tabs">
+        <button class="calc-tab on" id="bs-tab-train" onclick="bsSwitchTab('train')">Training day</button>
+        <button class="calc-tab" id="bs-tab-rest" onclick="bsSwitchTab('rest')">Rest day</button>
+      </div>
+      <div id="bs-disp-train" class="calc-nums">
+        <div class="calc-item"><div class="calc-val" id="bs-t-kcal" style="color:#ff0000;">—</div><div class="calc-unit">kcal</div></div>
+        <div class="calc-item"><div class="calc-val" id="bs-t-p" style="color:#34c97a;">—</div><div class="calc-unit">protein</div></div>
+        <div class="calc-item"><div class="calc-val" id="bs-t-c" style="color:#0066ff;">—</div><div class="calc-unit">carbs</div></div>
+        <div class="calc-item"><div class="calc-val" id="bs-t-f" style="color:#f5a623;">—</div><div class="calc-unit">fat</div></div>
+      </div>
+      <div id="bs-disp-rest" class="calc-nums" style="display:none;">
+        <div class="calc-item"><div class="calc-val" id="bs-r-kcal" style="color:#ff0000;">—</div><div class="calc-unit">kcal</div></div>
+        <div class="calc-item"><div class="calc-val" id="bs-r-p" style="color:#34c97a;">—</div><div class="calc-unit">protein</div></div>
+        <div class="calc-item"><div class="calc-val" id="bs-r-c" style="color:#0066ff;">—</div><div class="calc-unit">carbs</div></div>
+        <div class="calc-item"><div class="calc-val" id="bs-r-f" style="color:#f5a623;">—</div><div class="calc-unit">fat</div></div>
+      </div>
+      <div id="bs-ovr-train" style="display:none;"><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div><div style="font-size:10px;font-weight:700;color:#555;margin-bottom:3px;">KCAL</div><input class="ovr-inp" id="bs-ov-t-kcal" type="text" inputmode="numeric" style="color:#ff0000;"></div>
+        <div><div style="font-size:10px;font-weight:700;color:#555;margin-bottom:3px;">PROTEIN</div><input class="ovr-inp" id="bs-ov-t-p" type="text" inputmode="numeric" style="color:#34c97a;"></div>
+        <div><div style="font-size:10px;font-weight:700;color:#555;margin-bottom:3px;">CARBS</div><input class="ovr-inp" id="bs-ov-t-c" type="text" inputmode="numeric" style="color:#0066ff;"></div>
+        <div><div style="font-size:10px;font-weight:700;color:#555;margin-bottom:3px;">FAT</div><input class="ovr-inp" id="bs-ov-t-f" type="text" inputmode="numeric" style="color:#f5a623;"></div>
+      </div></div>
+      <div id="bs-ovr-rest" style="display:none;"><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div><div style="font-size:10px;font-weight:700;color:#555;margin-bottom:3px;">KCAL</div><input class="ovr-inp" id="bs-ov-r-kcal" type="text" inputmode="numeric" style="color:#ff0000;"></div>
+        <div><div style="font-size:10px;font-weight:700;color:#555;margin-bottom:3px;">PROTEIN</div><input class="ovr-inp" id="bs-ov-r-p" type="text" inputmode="numeric" style="color:#34c97a;"></div>
+        <div><div style="font-size:10px;font-weight:700;color:#555;margin-bottom:3px;">CARBS</div><input class="ovr-inp" id="bs-ov-r-c" type="text" inputmode="numeric" style="color:#0066ff;"></div>
+        <div><div style="font-size:10px;font-weight:700;color:#555;margin-bottom:3px;">FAT</div><input class="ovr-inp" id="bs-ov-r-f" type="text" inputmode="numeric" style="color:#f5a623;"></div>
+      </div></div>
+      <div id="bs-save-targets" style="display:none;margin-top:10px;">
+        <button onclick="bsSaveOverride()" style="width:100%;padding:10px;background:#0066ff;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:-apple-system,sans-serif;">Save targets</button>
+        <div style="text-align:center;margin-top:6px;"><span id="bs-reset-link" onclick="bsResetOverride()" style="font-size:12px;color:#888;text-decoration:underline;cursor:pointer;">&#8635; Reset to calculated</span></div>
+      </div>
+      <div id="bs-bmr-note" class="calc-hint" style="margin-top:6px;">Fill in all fields above to see your targets</div>
+    </div>
+    <button onclick="bsFinish()" style="width:100%;margin-bottom:8px;border-radius:12px;border:none;background:#0066ff;color:#fff;font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:16px;font-weight:700;padding:14px 16px;cursor:pointer;">Finish Setup &#8594;</button>
+    <div style="text-align:center;margin-bottom:8px;"><span onclick="goTo('signup.html')" style="font-size:13px;color:#888;cursor:pointer;text-decoration:underline;">&#8592; Back</span></div>
+    <div style="height:20px;"></div>
+  </div>
+</div>
+<script>
+var APP={profile:null,targets:{train:{kcal:0,prot:0,carbs:0,fat:0},rest:{kcal:0,prot:0,carbs:0,fat:0}},settings:{units:'metric'},bsGender:'m',bsOverride:false,bsTab:'train'};
+function goTo(u){document.body.style.opacity='0';document.body.style.transition='opacity 0.15s ease';setTimeout(function(){window.location.href=u;},150);}
+function calcTargets(gender,dob,h,w,act,steps,job,goal){
+  var age=dob?(new Date().getFullYear()-new Date(dob).getFullYear()):null;
+  var actNum=parseFloat(act),stepsNum=parseFloat(steps)||0,jobNum=parseFloat(job)||0,goalNum=parseFloat(goal);
+  if(!age||age<10||age>100)return null;if(!h||h<50||h>300)return null;if(!w||w<20||w>500)return null;
+  if(isNaN(actNum)||actNum<1.0)return null;if(isNaN(goalNum))return null;
+  var bmr=gender==='m'?(10*w)+(6.25*h)-(5*age)+5:(10*w)+(6.25*h)-(5*age)-161;
+  if(bmr<800||bmr>5000)return null;
+  var tdeeTrain=bmr*(actNum+stepsNum+jobNum);
+  var trainKcal=Math.round(tdeeTrain*(1+goalNum)/10)*10;
+  var restKcal=Math.round((trainKcal-Math.round(w*3.5))/10)*10;
+  var prot=Math.round(w*(goalNum<=0?2.2:2.0)/5)*5;
+  var fat=Math.round(w*0.9/5)*5;
+  var trainCarbs=Math.max(30,Math.round((trainKcal-prot*4-fat*9)/4/5)*5);
+  var restCarbs=Math.max(20,Math.round((restKcal-prot*4-fat*9)/4/5)*5);
+  return{bmr:Math.round(bmr),tdeeTrain:Math.round(tdeeTrain),
+    train:{kcal:trainKcal,prot:prot,carbs:trainCarbs,fat:fat},
+    rest:{kcal:restKcal,prot:prot,carbs:restCarbs,fat:fat}};
+}
+function bsDobChange(){bsCalc();}
+function bsGetDob(){var d=document.getElementById('bs-dob-d').value,m=document.getElementById('bs-dob-m').value,y=document.getElementById('bs-dob-y').value;return(d&&m&&y)?y+'-'+m+'-'+d:null;}
+function bsGetMissingMsg(){var missing=[],isM=APP.settings.units!=='imperial';if(!bsGetDob())missing.push('Date of birth');if(isM){var hv=parseFloat(document.getElementById('bs-height').value);if(!hv)missing.push('Height');else if(hv<100||hv>220)missing.push('Height (seems off)');}else{var ft=parseFloat(document.getElementById('bs-height-ft').value)||0,inch=parseFloat(document.getElementById('bs-height-in').value)||0;if(!ft&&!inch)missing.push('Height');}var wv=parseFloat(document.getElementById('bs-weight').value);if(!wv)missing.push('Weight');else if(wv<30||wv>300)missing.push('Weight (seems off)');if(!document.getElementById('bs-job').value)missing.push('Job type');if(!document.getElementById('bs-steps').value)missing.push('Daily steps');if(!document.getElementById('bs-act').value)missing.push('Training frequency');if(!document.getElementById('bs-goal').value)missing.push('Goal');if(!missing.length)return'';return'<span style="color:#0066ff;font-weight:600;">Still needed: '+missing.join(' &middot; ')+'</span><br><span style="font-size:11px;color:#888;">You can always update this later in your Profile</span>';}
+function bsValidate(){var isM=APP.settings.units!=='imperial';if(!bsGetDob())return false;if(isM){var hv=parseFloat(document.getElementById('bs-height').value);if(!hv||hv<100||hv>220)return false;}else{var ft=parseFloat(document.getElementById('bs-height-ft').value)||0,inch=parseFloat(document.getElementById('bs-height-in').value)||0;if(!ft&&!inch)return false;}var wv=parseFloat(document.getElementById('bs-weight').value);if(!wv||wv<30||wv>300)return false;if(!document.getElementById('bs-job').value||!document.getElementById('bs-steps').value||!document.getElementById('bs-act').value||!document.getElementById('bs-goal').value)return false;return true;}
+function bsSetUnits(u){var wasM=APP.settings.units==='metric';APP.settings.units=u;var isM=u==='metric';var wEl=document.getElementById('bs-weight');if(wEl&&wEl.value&&wasM!==isM){var wv=parseFloat(wEl.value);if(!isNaN(wv))wEl.value=isM?Math.round(wv*0.4536*10)/10:Math.round(wv/0.4536*10)/10;}if(wasM&&!isM){var hEl=document.getElementById('bs-height');var cm=parseFloat(hEl?hEl.value:'')||0;if(cm>0&&cm<3)cm=Math.round(cm*100);if(cm>0){var ti=cm/2.54;document.getElementById('bs-height-ft').value=Math.floor(ti/12);document.getElementById('bs-height-in').value=Math.round(ti%12);}}else if(!wasM&&isM){var ft=parseFloat(document.getElementById('bs-height-ft').value)||0,inch=parseFloat(document.getElementById('bs-height-in').value)||0;if(ft||inch)document.getElementById('bs-height').value=Math.round((ft*12+inch)*2.54);}document.getElementById('bs-height-metric-wrap').style.display=isM?'block':'none';document.getElementById('bs-height-imperial-wrap').style.display=isM?'none':'block';var base='flex:1;font-family:-apple-system,sans-serif;font-size:12px;font-weight:700;height:34px;padding:0;border-radius:8px;cursor:pointer;box-sizing:border-box;';document.getElementById('bs-unit-metric').style.cssText=base+(isM?'border:1.5px solid #0066ff;background:#0066ff;color:#fff;':'border:1.5px solid rgba(0,0,0,0.15);background:#fff;color:#555;');document.getElementById('bs-unit-imperial').style.cssText=base+(!isM?'border:1.5px solid #0066ff;background:#0066ff;color:#fff;':'border:1.5px solid rgba(0,0,0,0.15);background:#fff;color:#555;');document.getElementById('bs-weight-unit').textContent=isM?'kg':'lbs';bsCalc();}
+function bsSetGender(g){APP.bsGender=g;var base='flex:1;height:36px;padding:0 8px;font-size:13px;font-weight:700;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;';if(g==='m'){document.getElementById('b-gender-m').style.cssText=base+'border:1.5px solid #0066ff;background:#0066ff;color:#fff;';document.getElementById('b-gender-f').style.cssText=base+'border:1.5px solid rgba(0,0,0,0.15);background:#fff;color:#555;';}else{document.getElementById('b-gender-f').style.cssText=base+'border:1.5px solid #ff2244;background:#ff2244;color:#fff;';document.getElementById('b-gender-m').style.cssText=base+'border:1.5px solid rgba(0,0,0,0.15);background:#fff;color:#555;';}var dc=g==='f'?'#ff2244':'#0066ff';['bs-dob-d','bs-dob-m','bs-dob-y'].forEach(function(id){var el=document.getElementById(id);if(el)el.style.color=dc;});bsCalc();}
+function bsCalc(){if(APP.bsOverride)return;if(!bsValidate()){var note=document.getElementById('bs-bmr-note');note.innerHTML=bsGetMissingMsg();note.style.display='block';var sub=document.getElementById('bs-bmr-sub');if(sub)sub.style.display='none';return;}var dob=bsGetDob();var h=null;if(APP.settings.units==='imperial'){var ft2=parseFloat(document.getElementById('bs-height-ft')?document.getElementById('bs-height-ft').value:'')||0,in2=parseFloat(document.getElementById('bs-height-in')?document.getElementById('bs-height-in').value:'')||0;if(ft2||in2)h=Math.round((ft2*12+in2)*2.54);}else{var hRaw=parseFloat(document.getElementById('bs-height').value)||null;if(hRaw&&hRaw<3)hRaw=Math.round(hRaw*100);h=hRaw;}var w=parseFloat(document.getElementById('bs-weight').value)||null;var result=calcTargets(APP.bsGender,dob,h,w,document.getElementById('bs-act').value===''?null:parseFloat(document.getElementById('bs-act').value),document.getElementById('bs-steps').value===''?0:parseFloat(document.getElementById('bs-steps').value),document.getElementById('bs-job').value===''?0:parseFloat(document.getElementById('bs-job').value),document.getElementById('bs-goal').value===''?null:parseFloat(document.getElementById('bs-goal').value));var note=document.getElementById('bs-bmr-note');if(!result){note.innerHTML=bsGetMissingMsg();note.style.display='block';var sub2=document.getElementById('bs-bmr-sub');if(sub2)sub2.style.display='none';return;}note.innerHTML='';note.style.display='none';var sub3=document.getElementById('bs-bmr-sub');if(sub3){sub3.style.display='block';document.getElementById('bs-bmr-val').textContent=result.bmr+' kcal';document.getElementById('bs-tdee-val').textContent=result.tdeeTrain+' kcal';}APP.targets=result;bsRenderTargets(result);}
+function bsRenderTargets(r){var t=r.train,rs=r.rest;document.getElementById('bs-t-kcal').textContent=t.kcal;document.getElementById('bs-t-p').textContent=t.prot+'g';document.getElementById('bs-t-c').textContent=t.carbs+'g';document.getElementById('bs-t-f').textContent=t.fat+'g';document.getElementById('bs-r-kcal').textContent=rs.kcal;document.getElementById('bs-r-p').textContent=rs.prot+'g';document.getElementById('bs-r-c').textContent=rs.carbs+'g';document.getElementById('bs-r-f').textContent=rs.fat+'g';}
+function bsSwitchTab(tab){APP.bsTab=tab;document.getElementById('bs-disp-train').style.display=tab==='train'&&!APP.bsOverride?'grid':'none';document.getElementById('bs-disp-rest').style.display=tab==='rest'&&!APP.bsOverride?'grid':'none';document.getElementById('bs-ovr-train').style.display=APP.bsOverride&&tab==='train'?'block':'none';document.getElementById('bs-ovr-rest').style.display=APP.bsOverride&&tab==='rest'?'block':'none';document.getElementById('bs-tab-train').className='calc-tab'+(tab==='train'?' on':'');document.getElementById('bs-tab-rest').className='calc-tab'+(tab==='rest'?' on':'');}
+function bsToggleOverride(){APP.bsOverride=!APP.bsOverride;var btn=document.getElementById('bs-ovr-btn');btn.textContent=APP.bsOverride?'Auto targets':'Edit';if(APP.bsOverride&&APP.targets){var t=APP.targets.train,r=APP.targets.rest;document.getElementById('bs-ov-t-kcal').value=t.kcal||'';document.getElementById('bs-ov-t-p').value=t.prot||'';document.getElementById('bs-ov-t-c').value=t.carbs||'';document.getElementById('bs-ov-t-f').value=t.fat||'';document.getElementById('bs-ov-r-kcal').value=r.kcal||'';document.getElementById('bs-ov-r-p').value=r.prot||'';document.getElementById('bs-ov-r-c').value=r.carbs||'';document.getElementById('bs-ov-r-f').value=r.fat||'';}document.getElementById('bs-disp-train').style.display=APP.bsOverride||APP.bsTab!=='train'?'none':'grid';document.getElementById('bs-disp-rest').style.display=APP.bsOverride||APP.bsTab!=='rest'?'none':'grid';document.getElementById('bs-ovr-train').style.display=APP.bsOverride&&APP.bsTab==='train'?'block':'none';document.getElementById('bs-ovr-rest').style.display=APP.bsOverride&&APP.bsTab==='rest'?'block':'none';document.getElementById('bs-reset-link').style.display=APP.bsOverride?'inline-block':'none';document.getElementById('bs-save-targets').style.display=APP.bsOverride?'block':'none';document.getElementById('bs-bmr-note').style.display=APP.bsOverride?'none':'block';}
+function bsSaveOverride(){var tab=APP.bsTab;if(tab==='train'){APP.targets.train={kcal:parseInt(document.getElementById('bs-ov-t-kcal').value)||APP.targets.train.kcal,prot:parseInt(document.getElementById('bs-ov-t-p').value)||APP.targets.train.prot,carbs:parseInt(document.getElementById('bs-ov-t-c').value)||APP.targets.train.carbs,fat:parseInt(document.getElementById('bs-ov-t-f').value)||APP.targets.train.fat};}else{APP.targets.rest={kcal:parseInt(document.getElementById('bs-ov-r-kcal').value)||APP.targets.rest.kcal,prot:parseInt(document.getElementById('bs-ov-r-p').value)||APP.targets.rest.prot,carbs:parseInt(document.getElementById('bs-ov-r-c').value)||APP.targets.rest.carbs,fat:parseInt(document.getElementById('bs-ov-r-f').value)||APP.targets.rest.fat};}bsRenderTargets(APP.targets);bsToggleOverride();}
+function bsResetOverride(){APP.bsOverride=false;document.getElementById('bs-ovr-btn').textContent='Edit';document.getElementById('bs-ovr-train').style.display='none';document.getElementById('bs-ovr-rest').style.display='none';document.getElementById('bs-disp-train').style.display=APP.bsTab==='train'?'grid':'none';document.getElementById('bs-disp-rest').style.display=APP.bsTab==='rest'?'grid':'none';document.getElementById('bs-reset-link').style.display='none';bsCalc();}
+function bsFinish(){var dob=bsGetDob();var h;if(APP.settings.units==='imperial'){var ft3=parseFloat(document.getElementById('bs-height-ft')?document.getElementById('bs-height-ft').value:'')||0,in3=parseFloat(document.getElementById('bs-height-in')?document.getElementById('bs-height-in').value:'')||0;h=ft3||in3?String(Math.round((ft3*12+in3)*2.54)):''}else{h=document.getElementById('bs-height').value;if(h&&parseFloat(h)<3)h=String(Math.round(parseFloat(h)*100));}var w=document.getElementById('bs-weight').value,bsAct=document.getElementById('bs-act').value,bsGoal=document.getElementById('bs-goal').value;if(!dob){alert('Please select your date of birth.');return;}if(!h||!w||!bsAct||bsGoal===''){alert('Please fill in all required fields before finishing setup.');return;}if(APP.bsOverride){APP.targets.train={kcal:parseInt(document.getElementById('bs-ov-t-kcal').value)||APP.targets.train.kcal,prot:parseInt(document.getElementById('bs-ov-t-p').value)||APP.targets.train.prot,carbs:parseInt(document.getElementById('bs-ov-t-c').value)||APP.targets.train.carbs,fat:parseInt(document.getElementById('bs-ov-t-f').value)||APP.targets.train.fat};APP.targets.rest={kcal:parseInt(document.getElementById('bs-ov-r-kcal').value)||APP.targets.rest.kcal,prot:parseInt(document.getElementById('bs-ov-r-p').value)||APP.targets.rest.prot,carbs:parseInt(document.getElementById('bs-ov-r-c').value)||APP.targets.rest.carbs,fat:parseInt(document.getElementById('bs-ov-r-f').value)||APP.targets.rest.fat};}var user=JSON.parse(localStorage.getItem('tracktion_user')||'{}');APP.profile={name:user.name||'',email:user.email||'',gender:APP.bsGender,dob:dob,height:h,weight:w,activity:document.getElementById('bs-act').value,steps:document.getElementById('bs-steps').value,job:document.getElementById('bs-job').value,goal:document.getElementById('bs-goal').value,units:APP.settings.units};var tgt={train:APP.targets.train,rest:APP.targets.rest,trainKcal:APP.targets.train.kcal,trainProt:APP.targets.train.prot,trainCarb:APP.targets.train.carbs,trainFat:APP.targets.train.fat,restKcal:APP.targets.rest.kcal,restProt:APP.targets.rest.prot,restCarb:APP.targets.rest.carbs,restFat:APP.targets.rest.fat};localStorage.setItem('tracktion_profile',JSON.stringify(APP.profile));localStorage.setItem('tracktion_targets',JSON.stringify(tgt));localStorage.setItem('tracktion_settings',JSON.stringify(APP.settings));localStorage.setItem('tracktion_units',APP.settings.units);goTo('index.html');}
+(function(){var saved=localStorage.getItem('tracktion_units');if(saved&&saved!=='metric')bsSetUnits(saved);var p=JSON.parse(localStorage.getItem('tracktion_profile')||'null');if(p){if(p.gender)bsSetGender(p.gender);if(p.dob){var parts=p.dob.split('-');if(parts[0])document.getElementById('bs-dob-y').value=parts[0];if(parts[1])document.getElementById('bs-dob-m').value=parts[1];if(parts[2])document.getElementById('bs-dob-d').value=parts[2];}if(p.height)document.getElementById('bs-height').value=p.height;if(p.weight)document.getElementById('bs-weight').value=p.weight;if(p.activity)document.getElementById('bs-act').value=p.activity;if(p.steps)document.getElementById('bs-steps').value=p.steps;if(p.job)document.getElementById('bs-job').value=p.job;if(p.goal)document.getElementById('bs-goal').value=p.goal;bsCalc();}})();
+</script></body></html>

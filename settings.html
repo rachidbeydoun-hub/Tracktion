@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes"><title>TRACKTION — Settings</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+*::-webkit-scrollbar{display:none;}*{scrollbar-width:none;}
+html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f4f5f8;color:#1a1a2e;}
+body{display:flex;flex-direction:column;align-items:center;animation:pgIn 0.2s ease;}
+@keyframes pgIn{from{opacity:0;}to{opacity:1;}}
+.page{width:100%;max-width:480px;height:100vh;display:flex;flex-direction:column;background:#f4f5f8;}
+.scroll-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:80px;}
+.set-hdr-bar{display:flex;align-items:center;padding:14px 16px 12px;background:#ffffff;border-bottom:1px solid rgba(0,0,0,0.09);flex-shrink:0;}
+.set-page-title{font-family:monospace;font-size:14px;font-weight:900;color:#1a1a2e;letter-spacing:1px;margin:0 auto;}
+.back-btn{background:#eeeff2;border:1px solid rgba(0,0,0,0.09);border-radius:10px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;color:#1a1a2e;border:none;text-decoration:none;}
+.set-section{margin:8px 12px 0;}
+.set-sec-btn{width:100%;display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:#ffffff;border:1px solid rgba(0,0,0,0.09);border-radius:12px;cursor:pointer;text-align:left;font-size:13px;font-weight:700;color:#0066ff;font-family:-apple-system,sans-serif;}
+.set-sec-chev{font-size:11px;color:rgba(0,0,0,0.45);transition:transform 0.2s;}
+.set-sec-chev.open{transform:rotate(180deg);}
+.set-sec-body{display:none;background:#ffffff;border:1px solid rgba(0,0,0,0.09);border-top:none;border-radius:0 0 12px 12px;overflow:hidden;margin-bottom:6px;}
+.set-sec-body.open{display:block;}
+.set-row{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid rgba(0,0,0,0.06);cursor:pointer;}
+.set-row:last-child{border-bottom:none;}
+.set-row-left{display:flex;align-items:center;gap:10px;}
+.set-row-lbl{font-size:15px;font-weight:500;color:#1a1a2e;}
+.set-row-sub{font-size:12px;color:rgba(0,0,0,0.45);margin-top:2px;}
+.set-row-val{font-size:13px;color:rgba(0,0,0,0.45);}
+.set-arr{color:rgba(0,0,0,0.45);font-size:14px;}
+.set-pill-row{display:flex;gap:6px;}
+.set-pill{font-family:-apple-system,sans-serif;font-size:12px;font-weight:600;padding:7px 16px;border-radius:8px;border:1.5px solid rgba(0,0,0,0.09);background:transparent;color:#1a1a2e;cursor:pointer;}
+.set-pill.on{background:rgba(0,102,255,0.08);border-color:#0066ff;color:#0066ff;}
+.set-toggle{width:44px;height:26px;border-radius:13px;background:rgba(0,0,0,0.09);border:none;cursor:pointer;position:relative;transition:background 0.2s;flex-shrink:0;}
+.set-toggle.on{background:#1a9e5c;}
+.set-toggle-thumb{position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:left 0.2s;}
+.set-toggle.on .set-toggle-thumb{left:21px;}
+.set-api-inp{width:100%;background:#eeeff2;border:1px solid rgba(0,0,0,0.09);border-radius:8px;color:#1a1a2e;font-size:13px;padding:10px 12px;outline:none;font-family:monospace;}
+.set-api-inp::placeholder{color:rgba(0,0,0,0.45);}
+.cs-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:6px;background:rgba(0,102,255,0.08);color:#0066ff;letter-spacing:0.3px;font-family:monospace;}
+
+.bnav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#ffffff;border-top:1px solid rgba(0,0,0,0.09);z-index:90;display:flex;justify-content:space-around;padding:6px 0 calc(6px + env(safe-area-inset-bottom));}
+.bnav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;font-family:-apple-system,sans-serif;font-size:10px;font-weight:600;color:#1a1a2e;background:none;border:none;cursor:pointer;padding:6px 4px;text-decoration:none;}
+.bnav-item.active{color:#0066ff;}
+.bnav-icon{font-size:20px;line-height:1;}
+
+</style></head><body>
+<div class="page">
+  <div class="set-hdr-bar">
+    <a href="index.html" class="back-btn">←</a>
+    <span class="set-page-title">SETTINGS</span>
+    <div style="width:36px;"></div>
+  </div>
+  <div class="scroll-body" style="padding:12px 0 80px;">
+    <div class="set-section">
+      <button class="set-sec-btn" onclick="toggleSet('set-account')"><span>👤 ACCOUNT</span><span class="set-sec-chev" id="chev-set-account">▼</span></button>
+      <div class="set-sec-body" id="set-account">
+        <div class="set-row"><div class="set-row-left"><span>🔑</span><span class="set-row-lbl">Change Password</span></div><span class="set-arr">›</span></div>
+        <div class="set-row" onclick="if(confirm('Log out?'))window.location.href='welcome.html'"><div class="set-row-left"><span>🚪</span><span class="set-row-lbl">Log Out</span></div></div>
+        <div style="height:1px;background:rgba(255,34,68,0.15);margin:4px 16px;"></div>
+        <div class="set-row" onclick="if(confirm('Delete account? This cannot be undone.')){}"><div class="set-row-left"><span>🗑</span><div><div class="set-row-lbl" style="color:#ff2244;">Delete Account</div><div class="set-row-sub" style="color:rgba(255,34,68,0.6);">Permanently removes all your data</div></div></div></div>
+      </div>
+    </div>
+    <div class="set-section">
+      <button class="set-sec-btn" onclick="toggleSet('set-prefs')"><span>⚙️ PREFERENCES</span><span class="set-sec-chev" id="chev-set-prefs">▼</span></button>
+      <div class="set-sec-body" id="set-prefs">
+        <div class="set-row">
+          <div class="set-row-left"><span>📏</span><div><div class="set-row-lbl">Units</div></div></div>
+          <div class="set-pill-row">
+            <button class="set-pill on" id="pill-metric" onclick="setUnits('metric')">KG · CM</button>
+            <button class="set-pill" id="pill-imperial" onclick="setUnits('imperial')">LBS · IN</button>
+          </div>
+        </div>
+        <div class="set-row">
+          <div class="set-row-left"><span>🕛</span><div><div class="set-row-lbl">Auto-save at midnight</div><div class="set-row-sub">Saves today's log to history</div></div></div>
+          <div class="set-toggle on" id="tog-autosave" onclick="togglePref('autosave')"><div class="set-toggle-thumb"></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="set-section">
+      <button class="set-sec-btn" onclick="toggleSet('set-ai')"><span>🤖 AI &amp; DATA</span><span class="set-sec-chev" id="chev-set-ai">▼</span></button>
+      <div class="set-sec-body" id="set-ai">
+        <div style="padding:14px 16px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;"><span>🔐</span><span class="set-row-lbl">Anthropic API Key</span></div>
+          <input type="password" class="set-api-inp" id="set-api-key" placeholder="sk-ant-api03-...">
+          <div style="display:flex;gap:8px;margin-top:8px;align-items:center;">
+            <button onclick="validateApiKey()" style="padding:8px 16px;background:#0066ff;border:none;border-radius:8px;color:#fff;font-family:monospace;font-size:10px;font-weight:900;cursor:pointer;letter-spacing:0.5px;">VALIDATE KEY</button>
+            <span id="api-key-status" style="font-size:12px;font-weight:600;"></span>
+          </div>
+          <div style="font-size:11px;color:rgba(0,0,0,0.45);margin-top:6px;">Used for AI food photo analysis · Never shared · Stored locally</div>
+        </div>
+        <div class="set-row"><div class="set-row-left"><span>📸</span><span class="set-row-lbl">Photo Analysis Quality</span></div><span style="font-size:12px;color:#1a1a2e;">Standard <span class="set-arr">›</span></span></div>
+      </div>
+    </div>
+    <div class="set-section">
+      <button class="set-sec-btn" onclick="toggleSet('set-health')"><span>❤️ HEALTH &amp; SYNC</span><span class="set-sec-chev" id="chev-set-health">▼</span></button>
+      <div class="set-sec-body" id="set-health">
+        <div class="set-row"><div class="set-row-left"><span>🤖</span><div><div class="set-row-lbl">Health Connect (Android)</div><div style="margin-top:3px;"><span class="cs-badge">COMING SOON</span></div></div></div></div>
+        <div class="set-row"><div class="set-row-left"><span>🍎</span><div><div class="set-row-lbl">Apple Health (iOS)</div><div style="margin-top:3px;"><span class="cs-badge">COMING SOON</span></div></div></div></div>
+        <div class="set-row"><div class="set-row-left"><span>⚖️</span><div><div class="set-row-lbl">Starfit Scale Sync</div><div style="margin-top:3px;"><span class="cs-badge">COMING SOON</span></div></div></div></div>
+      </div>
+    </div>
+    <div class="set-section">
+      <button class="set-sec-btn" onclick="toggleSet('set-notif')"><span>🔔 NOTIFICATIONS</span><span class="set-sec-chev" id="chev-set-notif">▼</span></button>
+      <div class="set-sec-body" id="set-notif">
+        <div class="set-row"><div class="set-row-left"><span>💡</span><div><div class="set-row-lbl">Daily Coaching Tip</div><div class="set-row-sub">Morning tip based on your goal</div></div></div><div class="set-toggle on" id="tog-tips" onclick="togglePref('tips')"><div class="set-toggle-thumb"></div></div></div>
+        <div class="set-row"><div class="set-row-left"><span>⏰</span><div><div class="set-row-lbl">Daily Logging Reminder</div><div style="margin-top:3px;"><span class="cs-badge">COMING SOON</span></div></div></div></div>
+      </div>
+    </div>
+    <div class="set-section">
+      <button class="set-sec-btn" onclick="toggleSet('set-privacy')"><span>🔒 PRIVACY &amp; DATA</span><span class="set-sec-chev" id="chev-set-privacy">▼</span></button>
+      <div class="set-sec-body" id="set-privacy">
+        <div class="set-row"><div class="set-row-left"><span>💾</span><div><div class="set-row-lbl">Export My Data</div><div style="margin-top:3px;"><span class="cs-badge">COMING SOON</span></div></div></div></div>
+        <div class="set-row" onclick="if(confirm('Clear all data?')){localStorage.clear();window.location.href='welcome.html';}"><div class="set-row-left"><span>🗑</span><span class="set-row-lbl" style="color:#ff2244;">Clear All Data</span></div></div>
+        <div class="set-row"><div class="set-row-left"><span>📄</span><span class="set-row-lbl">Privacy Policy</span></div><span class="set-arr">›</span></div>
+        <div class="set-row"><div class="set-row-left"><span>📋</span><span class="set-row-lbl">Terms of Service</span></div><span class="set-arr">›</span></div>
+      </div>
+    </div>
+    <div class="set-section">
+      <button class="set-sec-btn" onclick="toggleSet('set-about')"><span>ℹ️ ABOUT</span><span class="set-sec-chev" id="chev-set-about">▼</span></button>
+      <div class="set-sec-body" id="set-about">
+        <div class="set-row"><div class="set-row-left"><span>🏷</span><span class="set-row-lbl">Version</span></div><span class="set-row-val">1.0.0</span></div>
+        <div class="set-row"><div class="set-row-left"><span>💬</span><span class="set-row-lbl">Send Feedback</span></div><span class="set-arr">›</span></div>
+        <div class="set-row"><div class="set-row-left"><span>⭐</span><div><div class="set-row-lbl">Rate Tracktion</div><div style="margin-top:3px;"><span class="cs-badge">COMING SOON</span></div></div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+<nav class="bnav"><a class="bnav-item" href="index.html"><span class="bnav-icon">🏠</span>TODAY</a><a class="bnav-item" href="history.html"><span class="bnav-icon">📅</span>HISTORY</a><a class="bnav-item" href="log.html"><span class="bnav-icon">➕</span>LOG</a><a class="bnav-item" href="profile.html"><span class="bnav-icon">👤</span>PROFILE</a><a class="bnav-item active" href="settings.html"><span class="bnav-icon">⚙️</span>SETTINGS</a></nav>
+<script>
+var APP={settings:{units:'metric',autosave:true,tips:true}};
+function toggleSet(id){var body=document.getElementById(id),chev=document.getElementById('chev-'+id),isOpen=body.classList.contains('open');body.classList.toggle('open',!isOpen);if(chev)chev.classList.toggle('open',!isOpen);}
+function setUnits(u){APP.settings.units=u;document.getElementById('pill-metric').classList.toggle('on',u==='metric');document.getElementById('pill-imperial').classList.toggle('on',u==='imperial');localStorage.setItem('tracktion_units',u);var s=JSON.parse(localStorage.getItem('tracktion_settings')||'{}');s.units=u;localStorage.setItem('tracktion_settings',JSON.stringify(s));}
+function togglePref(key){APP.settings[key]=!APP.settings[key];var tog=document.getElementById('tog-'+key);if(tog)tog.classList.toggle('on',APP.settings[key]);var s=JSON.parse(localStorage.getItem('tracktion_settings')||'{}');s[key]=APP.settings[key];localStorage.setItem('tracktion_settings',JSON.stringify(s));}
+function validateApiKey(){var key=document.getElementById('set-api-key').value.trim();if(!key){alert('Paste your API key first.');return;}localStorage.setItem('tracktion_apikey',key);var el=document.getElementById('api-key-status');el.textContent='Checking...';el.style.color='#ffc300';fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:10,messages:[{role:'user',content:'hi'}]})}).then(function(r){return r.json();}).then(function(d){if(d.content&&d.content[0]){el.textContent='✅ Valid — AI features active';el.style.color='#34c97a';}else if(d.error){el.textContent='❌ '+(d.error.message||'Invalid key');el.style.color='#ff2244';}}).catch(function(){el.textContent='❌ Connection failed';el.style.color='#ff2244';});}
+(function(){var s=JSON.parse(localStorage.getItem('tracktion_settings')||'{}');if(s.units){APP.settings.units=s.units;document.getElementById('pill-metric').classList.toggle('on',s.units==='metric');document.getElementById('pill-imperial').classList.toggle('on',s.units==='imperial');}if(s.autosave===false){APP.settings.autosave=false;document.getElementById('tog-autosave').classList.remove('on');}if(s.tips===false){APP.settings.tips=false;document.getElementById('tog-tips').classList.remove('on');}var apiKey=localStorage.getItem('tracktion_apikey')||'';document.getElementById('set-api-key').value=apiKey;})();
+</script></body></html>

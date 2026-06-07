@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>TRACKTION — History</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f4f5f8;color:#1a1a2e;min-height:100vh;padding-bottom:90px;display:flex;flex-direction:column;align-items:center;}
+.page{width:100%;max-width:430px;margin:0 auto;}
+.header{background:white;padding:14px 16px 12px;display:flex;justify-content:center;align-items:center;border-bottom:0.5px solid #f0f0f0;position:sticky;top:0;z-index:50;width:100%;max-width:430px;}
+.wordmark{display:flex;align-items:center;line-height:1;}
+.wm-track{font-family:monospace;font-size:30px;font-weight:900;color:#0066ff;letter-spacing:-1px;}
+.wm-ti{font-family:monospace;font-size:30px;font-weight:900;color:#ff2244;letter-spacing:-1px;}
+.wm-n{font-family:monospace;font-size:30px;font-weight:900;color:#ffb300;letter-spacing:-1px;}
+.card{background:white;border-radius:16px;margin:8px 12px;padding:16px;border:0.5px solid rgba(0,0,0,0.06);box-shadow:0 1px 4px rgba(0,0,0,0.04);}
+/* PAGE TITLE */
+.page-title{font-size:10px;font-weight:800;color:#1a1a2e;letter-spacing:1.2px;text-transform:uppercase;margin:12px 12px 4px;display:block;}
+/* WEEK SUMMARY */
+.week-card{background:white;border-radius:16px;margin:8px 12px;padding:14px 16px;border:0.5px solid rgba(0,0,0,0.06);box-shadow:0 1px 4px rgba(0,0,0,0.04);}
+.week-title{font-size:11px;font-weight:800;color:#1a1a2e;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:10px;}
+.week-bars{display:flex;gap:6px;align-items:flex-end;height:50px;}
+.week-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;}
+.week-bar-track{width:100%;background:#f0f0f0;border-radius:6px;overflow:hidden;flex:1;}
+.week-bar-fill{width:100%;border-radius:6px;background:#0066ff;transition:height 0.4s ease;}
+.week-bar-lbl{font-size:8px;font-weight:800;color:#1a1a2e;}
+/* DAY CARDS */
+.day-card{background:white;border-radius:16px;margin:0 12px 8px;padding:14px 16px;border:0.5px solid rgba(0,0,0,0.06);box-shadow:0 1px 4px rgba(0,0,0,0.04);cursor:pointer;transition:transform 0.1s;}
+.day-card:active{transform:scale(0.99);}
+.day-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.day-date{font-size:14px;font-weight:800;color:#1a1a2e;}
+.day-tag{font-size:10px;font-weight:800;padding:3px 10px;border-radius:10px;}
+.day-tag.train{background:#eef4ff;color:#0066ff;}
+.day-tag.rest{background:#f0fff5;color:#1a9e5c;}
+.day-macros{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-bottom:10px;}
+.day-macro{text-align:center;}
+.day-macro-val{font-family:monospace;font-size:16px;font-weight:700;display:block;}
+.day-macro-lbl{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:0.3px;display:block;margin-top:1px;}
+.day-bar{height:5px;border-radius:4px;background:#f0f0f0;overflow:hidden;margin-top:4px;}
+.day-bar-fill{height:100%;border-radius:4px;transition:width 0.4s ease;}
+.day-status{font-size:10px;font-weight:800;margin-top:5px;}
+.day-meals-count{font-size:10px;font-weight:700;color:#1a1a2e;margin-top:3px;}
+/* DETAIL VIEW */
+.detail-view{display:none;}
+.detail-view.open{display:block;}
+.back-btn{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:800;color:#0066ff;cursor:pointer;padding:10px 12px 4px;background:none;border:none;}
+/* MEAL CARD */
+.meal{background:white;border-radius:14px;margin:0 12px 8px;padding:13px 12px 13px 18px;border:0.5px solid rgba(0,0,0,0.06);box-shadow:0 1px 4px rgba(0,0,0,0.04);display:flex;align-items:center;position:relative;overflow:hidden;}
+.meal-accent{width:4px;position:absolute;left:0;top:0;bottom:0;}
+.meal-left{flex:1;min-width:0;}
+.meal-line1{display:flex;align-items:baseline;gap:8px;margin-bottom:4px;}
+.meal-name{font-size:14px;font-weight:700;color:#1a1a2e;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:220px;}
+.meal-kcal-lbl{font-family:monospace;font-size:13px;font-weight:800;color:#ff0000;white-space:nowrap;flex-shrink:0;}
+.meal-line2{display:flex;align-items:center;gap:6px;}
+.meal-tag-lbl{font-size:10px;font-weight:700;color:#1a1a2e;letter-spacing:0.3px;}
+.meal-dot{width:3px;height:3px;border-radius:50%;background:#1a1a2e;flex-shrink:0;}
+/* EMPTY */
+.empty-hist{text-align:center;padding:60px 20px 20px;}
+.empty-hist-icon{font-size:48px;margin-bottom:16px;display:block;}
+.empty-hist-title{font-size:16px;font-weight:800;color:#1a1a2e;margin-bottom:8px;}
+.empty-hist-sub{font-size:13px;color:#1a1a2e;font-weight:500;line-height:1.6;}
+/* NAV */
+.bnav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:white;border-top:0.5px solid rgba(0,0,0,0.08);z-index:100;}
+.bnav-inner{width:100%;display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr;align-items:center;padding:8px 2px 14px;}
+.nbtn{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:0.3px;color:#1a1a2e;cursor:pointer;padding:4px 2px;text-decoration:none;-webkit-tap-highlight-color:transparent;}
+.nbtn.on{color:#0066ff;}
+.nav-icon-wrap{padding:5px 10px;border-radius:10px;font-size:18px;line-height:1;border:1.5px solid transparent;transition:all 0.2s;}
+.nbtn.on .nav-icon-wrap{background:#f0f5ff;border-color:#0066ff;}
+.nbtn-center{display:flex;flex-direction:column;align-items:center;gap:5px;font-size:9px;font-weight:800;text-transform:uppercase;color:#0066ff;cursor:pointer;position:relative;top:-6px;text-decoration:none;-webkit-tap-highlight-color:transparent;}
+.nav-plus{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#0066ff,#0044cc);display:flex;align-items:center;justify-content:center;color:white;font-size:20px;font-weight:900;box-shadow:0 3px 10px rgba(0,102,255,0.4),0 0 0 3px rgba(0,102,255,0.12);line-height:1;transition:transform 0.15s;}
+.nbtn-center:active .nav-plus{transform:scale(0.9);}
+.toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:#1a1a2e;color:white;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:600;z-index:300;white-space:nowrap;pointer-events:none;animation:fadeUp 0.2s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateX(-50%) translateY(8px);}to{opacity:1;transform:translateX(-50%) translateY(0);}}
+
+/* PAGE TRANSITIONS — seamless fade between pages */
+body{animation:fadeIn 0.15s ease;}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+a[href]{transition:opacity 0.1s ease;}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="wordmark">
+      <span class="wm-track">TRACK</span>
+      <span class="wm-ti">TI</span>
+      <svg width="52" height="52" viewBox="0 0 52 52" style="margin:0 1px;flex-shrink:0;">
+        <circle cx="26" cy="26" r="23" fill="none" stroke="#ddeaff" stroke-width="4"/>
+        <circle cx="26" cy="26" r="15.5" fill="none" stroke="#fff5cc" stroke-width="3.5"/>
+        <circle cx="26" cy="26" r="8" fill="none" stroke="#ffe0e5" stroke-width="3"/>
+        <circle cx="26" cy="26" r="23" fill="none" stroke="#0066ff" stroke-width="4" stroke-dasharray="144.5" stroke-dashoffset="72" stroke-linecap="round" transform="rotate(-90 26 26)"/>
+        <circle cx="26" cy="26" r="15.5" fill="none" stroke="#ffc300" stroke-width="3.5" stroke-dasharray="97.4" stroke-dashoffset="40" stroke-linecap="round" transform="rotate(-90 26 26)"/>
+        <circle cx="26" cy="26" r="8" fill="none" stroke="#ff2244" stroke-width="3" stroke-dasharray="50.3" stroke-dashoffset="20" stroke-linecap="round" transform="rotate(-90 26 26)"/>
+        <text x="23" y="29" text-anchor="middle" font-family="monospace" font-size="10" font-weight="900" fill="#ffc300">R</text>
+        <text x="29" y="29" text-anchor="middle" font-family="monospace" font-size="10" font-weight="900" fill="#0066ff">B</text>
+      </svg>
+      <span class="wm-n">N</span>
+    </div>
+  </div>
+
+  <!-- LIST VIEW -->
+  <div id="list-view">
+    <span class="page-title">History</span>
+    <!-- Week summary chart -->
+    <div class="week-card" id="week-summary" style="display:none;">
+      <div class="week-title">This Week — Calories</div>
+      <div class="week-bars" id="week-bars"></div>
+    </div>
+    <div id="history-list"></div>
+  </div>
+
+  <!-- DETAIL VIEW -->
+  <div class="detail-view" id="detail-view">
+    <button class="back-btn" onclick="showList()">← Back</button>
+    <div id="detail-content"></div>
+  </div>
+
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="bnav">
+  <div class="bnav-inner">
+    <a class="nbtn" id="nav-today" href="index.html">
+      <div class="nav-icon-wrap">🏠</div>TODAY
+    </a>
+    <a class="nbtn on" id="nav-history" href="history.html">
+      <div class="nav-icon-wrap">📅</div>HISTORY
+    </a>
+    <a class="nbtn-center" id="nav-log" href="log.html">
+      <div class="nav-plus">+</div>LOG
+    </a>
+    <a class="nbtn" id="nav-profile" href="profile.html">
+      <div class="nav-icon-wrap">👤</div>PROFILE
+    </a>
+    <a class="nbtn" id="nav-settings" href="settings.html">
+      <div class="nav-icon-wrap">⚙️</div>SETTINGS
+    </a>
+  </div>
+</div>
+
+<script>
+const MEAL_COLORS={Breakfast:'#2d8fff',Lunch:'#34c97a',Dinner:'#ff2244',Snack:'#ffb300'};
+
+function friendlyDate(key){
+  const d=new Date(key+'T12:00:00');
+  const days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return days[d.getDay()]+', '+months[d.getMonth()]+' '+d.getDate();
+}
+
+function normalizeTag(tag){
+  if(!tag)return'Snack';
+  const t=tag.toString().toLowerCase();
+  if(t.includes('breakfast'))return'Breakfast';
+  if(t.includes('lunch'))return'Lunch';
+  if(t.includes('dinner'))return'Dinner';
+  return'Snack';
+}
+
+function showList(){
+  document.getElementById('list-view').style.display='block';
+  document.getElementById('detail-view').classList.remove('open');
+}
+
+function showDetail(key){
+  const history=JSON.parse(localStorage.getItem('tracktion_history')||'{}');
+  const d=history[key];if(!d)return;
+  document.getElementById('list-view').style.display='none';
+  const detail=document.getElementById('detail-view');
+  detail.classList.add('open');
+  const over=d.totals.kcal>d.target;
+  document.getElementById('detail-content').innerHTML=`
+    <div class="card" style="margin-top:0;">
+      <div class="day-header">
+        <span class="day-date">${friendlyDate(key)}</span>
+        <span class="day-tag ${d.dayType}">${d.dayType==='train'?'⚡ TRAINING':'🥗 REST'}</span>
+      </div>
+      <div class="day-macros">
+        <div class="day-macro"><span class="day-macro-val" style="color:#ff0000;">${d.totals.kcal}</span><span class="day-macro-lbl" style="color:#ff0000;">kcal</span></div>
+        <div class="day-macro"><span class="day-macro-val" style="color:#34c97a;">${d.totals.prot}g</span><span class="day-macro-lbl" style="color:#34c97a;">prot</span></div>
+        <div class="day-macro"><span class="day-macro-val" style="color:#2d8fff;">${d.totals.carbs}g</span><span class="day-macro-lbl" style="color:#2d8fff;">carbs</span></div>
+        <div class="day-macro"><span class="day-macro-val" style="color:#f5a623;">${d.totals.fat}g</span><span class="day-macro-lbl" style="color:#f5a623;">fat</span></div>
+      </div>
+      <div class="day-bar"><div class="day-bar-fill" style="width:${Math.min(100,Math.round(d.totals.kcal/d.target*100))}%;background:${over?'#ff2244':'#0066ff'};"></div></div>
+      <div class="day-status" style="color:${over?'#ff2244':'#34c97a'};">${over?'⚠ +'+( d.totals.kcal-d.target)+' over target':'✅ '+Math.round(d.totals.kcal/d.target*100)+'% of '+d.target+' kcal target'}</div>
+    </div>
+    <span style="font-size:10px;font-weight:800;color:#1a1a2e;letter-spacing:1px;text-transform:uppercase;margin:4px 12px 8px;display:block;">${d.foods.length} meals logged</span>
+    ${d.foods.map(m=>{
+      const tag=normalizeTag(m.mealTag);
+      const color=MEAL_COLORS[tag]||'#ffb300';
+      return`<div class="meal">
+        <div class="meal-accent" style="background:${color};"></div>
+        <div class="meal-left">
+          <div class="meal-line1"><span class="meal-name">${m.name}</span><span class="meal-kcal-lbl">${m.kcal} kcal</span></div>
+          <div class="meal-line2">
+            <span class="meal-tag-lbl">${tag} · ${m.time||''}</span>
+            <div class="meal-dot"></div>
+            <span style="font-size:11px;">
+              <span style="color:#34c97a;font-weight:700;">P${m.prot||0}</span> ·
+              <span style="color:#2d8fff;font-weight:700;">C${m.carbs||0}</span> ·
+              <span style="color:#f5a623;font-weight:700;">F${m.fat||0}</span>
+            </span>
+          </div>
+        </div>
+      </div>`;
+    }).join('')}`;
+}
+
+function renderHistory(){
+  const history=JSON.parse(localStorage.getItem('tracktion_history')||'{}');
+  const keys=Object.keys(history).sort().reverse();
+  const list=document.getElementById('history-list');
+
+  if(!keys.length){
+    list.innerHTML=`<div class="empty-hist">
+      <span class="empty-hist-icon">📅</span>
+      <div class="empty-hist-title">No history yet</div>
+      <div class="empty-hist-sub">Your daily logs save automatically at midnight.<br>Come back tomorrow to see today's data.</div>
+    </div>`;
+    return;
+  }
+
+  // Week summary bars
+  const weekEl=document.getElementById('week-summary');
+  weekEl.style.display='block';
+  const last7=keys.slice(0,7).reverse();
+  const targets=JSON.parse(localStorage.getItem('tracktion_targets')||'{}');
+  const maxKcal=Math.max(...last7.map(k=>history[k].totals.kcal),targets.trainKcal||2500);
+  document.getElementById('week-bars').innerHTML=last7.map(k=>{
+    const d=history[k];
+    const pct=Math.round(d.totals.kcal/maxKcal*100);
+    const over=d.totals.kcal>d.target;
+    const day=new Date(k+'T12:00:00').toLocaleDateString('en-US',{weekday:'short'}).slice(0,2);
+    return`<div class="week-bar-wrap">
+      <div class="week-bar-track">
+        <div class="week-bar-fill" style="height:${pct}%;background:${over?'#ff2244':'#0066ff'};margin-top:${100-pct}%;"></div>
+      </div>
+      <span class="week-bar-lbl">${day}</span>
+    </div>`;
+  }).join('');
+
+  // Day cards
+  list.innerHTML=keys.map(key=>{
+    const d=history[key];
+    const over=d.totals.kcal>d.target;
+    const pct=Math.min(100,Math.round(d.totals.kcal/d.target*100));
+    return`<div class="day-card" onclick="showDetail('${key}')">
+      <div class="day-header">
+        <span class="day-date">${friendlyDate(key)}</span>
+        <span class="day-tag ${d.dayType}">${d.dayType==='train'?'⚡ TRAINING':'🥗 REST'}</span>
+      </div>
+      <div class="day-macros">
+        <div class="day-macro"><span class="day-macro-val" style="color:#ff0000;">${d.totals.kcal}</span><span class="day-macro-lbl" style="color:#ff0000;">kcal</span></div>
+        <div class="day-macro"><span class="day-macro-val" style="color:#34c97a;">${d.totals.prot}g</span><span class="day-macro-lbl" style="color:#34c97a;">prot</span></div>
+        <div class="day-macro"><span class="day-macro-val" style="color:#2d8fff;">${d.totals.carbs}g</span><span class="day-macro-lbl" style="color:#2d8fff;">carbs</span></div>
+        <div class="day-macro"><span class="day-macro-val" style="color:#f5a623;">${d.totals.fat}g</span><span class="day-macro-lbl" style="color:#f5a623;">fat</span></div>
+      </div>
+      <div class="day-bar"><div class="day-bar-fill" style="width:${pct}%;background:${over?'#ff2244':'#0066ff'};"></div></div>
+      <div class="day-status" style="color:${over?'#ff2244':'#34c97a'};">${over?'⚠ +'+( d.totals.kcal-d.target)+' over':'✅ '+pct+'% of target'}</div>
+      <div class="day-meals-count">${d.foods.length} meals · tap to see details →</div>
+    </div>`;
+  }).join('');
+}
+
+renderHistory();
+
+// Smooth page transitions
+document.querySelectorAll('a[href]').forEach(a => {
+  const href = a.getAttribute('href');
+  // Only intercept internal page links
+  if (href && !href.startsWith('http') && !href.startsWith('mailto') && !href.startsWith('#')) {
+    a.addEventListener('click', function(e) {
+      e.preventDefault();
+      document.body.style.opacity = '0';
+      document.body.style.transition = 'opacity 0.15s ease';
+      setTimeout(() => { window.location.href = href; }, 150);
+    });
+  }
+});
+
+</script>
+</body>
+</html>
