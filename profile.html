@@ -1,136 +1,167 @@
 <!DOCTYPE html>
 <html lang="en"><head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
-<meta name="apple-mobile-web-app-capable" content="yes"><title>TRACKTION — Profile</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#f4f5f8">
+<title>TRACKTION — Profile</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 *::-webkit-scrollbar{display:none;}*{scrollbar-width:none;}
-html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f4f5f8;color:#1a1a2e;}
-body{display:flex;flex-direction:column;align-items:center;animation:pgIn 0.2s ease;}
+html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;-webkit-font-smoothing:antialiased;background:#f4f5f8;color:#1a1a2e;}
+body{display:flex;flex-direction:column;align-items:center;animation:pgIn 0.15s ease;}
 @keyframes pgIn{from{opacity:0;}to{opacity:1;}}
-.page{width:100%;max-width:480px;height:100vh;display:flex;flex-direction:column;background:#f4f5f8;}
-.scroll-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;}
-.set-hdr-bar{display:flex;align-items:center;padding:14px 16px 12px;background:#ffffff;border-bottom:1px solid rgba(0,0,0,0.09);flex-shrink:0;}
-.set-page-title{font-family:monospace;font-size:14px;font-weight:900;color:#1a1a2e;letter-spacing:1px;margin:0 auto;}
-.back-btn{background:#eeeff2;border:none;border-radius:10px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;color:#1a1a2e;text-decoration:none;}
-.prof-card{background:#ffffff;border:1px solid rgba(0,0,0,0.09);border-radius:12px;overflow:hidden;margin-bottom:10px;box-shadow:0 1px 4px rgba(0,0,0,0.08);}
-.prof-row{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid rgba(0,0,0,0.06);min-height:44px;}
+.page{width:100%;max-width:430px;margin:0 auto;}
+
+/* HEADER — matches index.html exactly */
+.t-header{background:white;padding:16px 16px 13px;display:flex;justify-content:center;align-items:center;border-bottom:0.5px solid #f0f0f0;position:sticky;top:0;z-index:50;width:100%;max-width:430px;}
+
+/* APP HEADER (settings/profile) */
+.t-app-header{background:white;padding:14px 16px 12px;display:flex;align-items:center;border-bottom:0.5px solid #f0f0f0;position:sticky;top:0;z-index:50;width:100%;max-width:430px;flex-shrink:0;}
+.t-app-title{font-family:monospace;font-size:14px;font-weight:900;color:#1a1a2e;letter-spacing:1px;margin:0 auto;}
+.t-back{background:#f4f5f8;border:none;border-radius:10px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;color:#1a1a2e;text-decoration:none;flex-shrink:0;}
+
+/* WORDMARK — 30px, matches index.html */
+.wordmark{display:flex;align-items:center;line-height:1;}
+.wm-track{font-family:monospace;font-size:30px;font-weight:900;color:#0066ff;letter-spacing:-1px;}
+.wm-ti{font-family:monospace;font-size:30px;font-weight:900;color:#ff2244;letter-spacing:-1px;}
+.wm-n{font-family:monospace;font-size:30px;font-weight:900;color:#ffb300;letter-spacing:-1px;}
+
+/* CARDS — matches index.html exactly */
+.card{background:white;border-radius:16px;margin:8px 12px;padding:16px;border:0.5px solid rgba(0,0,0,0.06);box-shadow:0 1px 4px rgba(0,0,0,0.04);}
+
+/* SECTION LABEL — matches index.html */
+.sec-lbl{font-size:10px;font-weight:800;color:rgba(26,26,46,0.45);letter-spacing:1.2px;text-transform:uppercase;margin:12px 12px 6px;display:block;}
+
+/* BUTTONS */
+.btn-primary{width:100%;padding:15px;border-radius:12px;border:none;background:#0066ff;color:white;font-family:monospace;font-size:13px;font-weight:900;letter-spacing:1px;cursor:pointer;}
+.btn-primary:active{opacity:0.88;}
+.btn-ghost{width:100%;padding:15px;border-radius:12px;border:1.5px solid rgba(0,0,0,0.08);background:transparent;color:#1a1a2e;font-family:monospace;font-size:13px;font-weight:900;letter-spacing:1px;cursor:pointer;}
+
+/* FORM INPUTS */
+.finp{width:100%;background:white;border:0.5px solid rgba(0,0,0,0.12);border-radius:12px;color:#1a1a2e;font-size:15px;padding:14px 16px;outline:none;font-family:inherit;}
+.finp:focus{border:1.5px solid #0066ff;}
+.finp::placeholder{color:rgba(26,26,46,0.35);}
+.pw-wrap{position:relative;}
+.eye-btn{position:absolute;right:14px;top:14px;background:none;border:none;font-size:18px;color:rgba(26,26,46,0.35);cursor:pointer;}
+
+/* NAV — exact from index.html */
+.bnav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:white;border-top:0.5px solid rgba(0,0,0,0.08);z-index:100;}
+.bnav-inner{width:100%;display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr;align-items:center;padding:8px 2px 14px;}
+.nbtn{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:0.3px;color:#1a1a2e;cursor:pointer;padding:4px 2px;text-decoration:none;}
+.nbtn.on{color:#0066ff;}
+.nav-icon-wrap{padding:7px 14px;border-radius:12px;font-size:20px;line-height:1;border:1.5px solid transparent;transition:all 0.2s;filter:grayscale(0.2);}
+.nbtn.on .nav-icon-wrap{background:#f0f5ff;border-color:#0066ff;filter:none;}
+.nbtn-center{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:0.3px;color:#0066ff;cursor:pointer;position:relative;top:-18px;text-decoration:none;}
+.nav-plus{width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,#0066ff,#0044cc);display:flex;align-items:center;justify-content:center;color:white;font-size:26px;font-weight:900;box-shadow:0 6px 20px rgba(0,102,255,0.4);line-height:1;transition:transform 0.15s;}
+.nbtn-center:active .nav-plus{transform:scale(0.93);}
+
+/* TOAST */
+.toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:#1a1a2e;color:white;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:600;z-index:300;white-space:nowrap;pointer-events:none;animation:fadeUp 0.2s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateX(-50%) translateY(8px);}to{opacity:1;transform:translateX(-50%) translateY(0);}}
+
+.pg{width:100%;max-width:430px;height:100vh;display:flex;flex-direction:column;background:#f4f5f8;}
+.scroll-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 0 90px;}
+/* PROFILE CARDS */
+.prof-card{background:white;border:0.5px solid rgba(0,0,0,0.06);border-radius:16px;overflow:hidden;margin:0 12px 8px;box-shadow:0 1px 4px rgba(0,0,0,0.04);}
+.prof-row{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:0.5px solid rgba(0,0,0,0.06);min-height:46px;}
 .prof-row:last-child{border-bottom:none;}
 .prof-lbl{font-size:15px;font-weight:500;color:#1a1a2e;}
-.prof-req{color:#ff2244;}
-.prof-inp{background:transparent;border:none;outline:none;font-family:inherit;font-size:14px;color:rgba(0,0,0,0.45);text-align:right;}
-.sec-lbl{font-size:11px;font-weight:700;color:#1a1a2e;text-transform:uppercase;letter-spacing:0.5px;margin:16px 20px 6px;display:block;}
-.bs-sel{width:100%;background:transparent;border:none;border-radius:8px;color:#1a1a2e;outline:none;-webkit-appearance:none;appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 6px center;padding-right:24px;font-size:12px;}
-.day-btns{display:flex;gap:6px;}
-.day-num{width:36px;height:36px;border-radius:9px;border:1.5px solid rgba(0,0,0,0.09);background:transparent;color:#1a1a2e;font-size:14px;font-weight:600;cursor:pointer;}
+.prof-req{color:#ff2244;font-size:12px;}
+.prof-inp{background:transparent;border:none;outline:none;font-family:inherit;font-size:14px;font-weight:700;color:#0066ff;text-align:right;}
+.bs-sel{background:transparent;border:none;border-radius:0;color:#0066ff;outline:none;-webkit-appearance:none;appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%230066ff' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 0 center;padding-right:16px;font-size:14px;font-weight:700;font-family:inherit;}
+.day-btns{display:flex;gap:5px;}
+.day-num{width:36px;height:36px;border-radius:9px;border:0.5px solid rgba(0,0,0,0.12);background:white;color:#1a1a2e;font-size:14px;font-weight:700;cursor:pointer;}
 .day-num.on{background:rgba(0,102,255,0.08);border-color:#0066ff;color:#0066ff;}
-.calc-box{background:#ffffff;border:1px solid rgba(0,0,0,0.09);border-radius:14px;padding:14px 16px;margin:0 0 16px;}
-.calc-hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;}
-.calc-lbl{font-size:11px;font-weight:700;color:#0066ff;letter-spacing:0.3px;text-transform:uppercase;line-height:1.2;}
-.calc-tabs{display:flex;background:rgba(0,0,0,0.06);border-radius:8px;padding:3px;gap:3px;margin-bottom:12px;}
-.calc-tab{flex:1;height:30px;line-height:30px;padding:0;border-radius:6px;border:none;background:transparent;color:#555;font-size:12px;font-weight:600;cursor:pointer;font-family:-apple-system,sans-serif;text-align:center;}
-.calc-tab.on{background:#fff;color:#0066ff;box-shadow:0 1px 2px rgba(0,0,0,0.10);}
-.calc-nums{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;width:100%;}
-.calc-item{background:#eeeff2;border-radius:8px;padding:10px 2px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:56px;overflow:hidden;min-width:0;}
-.calc-val{font-family:monospace;font-size:19px;font-weight:800;line-height:1.1;white-space:nowrap;}
-.calc-unit{font-size:9px;color:#555;font-weight:700;text-transform:uppercase;margin-top:3px;white-space:nowrap;}
-.calc-hint{font-size:11px;color:rgba(0,0,0,0.45);margin-top:6px;line-height:1.5;}
-.bnav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#ffffff;border-top:1px solid rgba(0,0,0,0.09);z-index:90;display:flex;justify-content:space-around;padding:6px 0 calc(6px + env(safe-area-inset-bottom));}.bnav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;font-family:-apple-system,sans-serif;font-size:10px;font-weight:600;color:#1a1a2e;background:none;border:none;cursor:pointer;padding:6px 4px;text-decoration:none;}.bnav-item.active{color:#0066ff;}.bnav-icon{font-size:20px;line-height:1;}
+/* CALC BOX — matches Today page card */
+.calc-box{background:white;border:0.5px solid rgba(0,0,0,0.06);border-radius:16px;padding:16px;margin:0 12px 8px;box-shadow:0 1px 4px rgba(0,0,0,0.04);}
+.calc-lbl{font-size:10px;font-weight:800;color:rgba(26,26,46,0.45);letter-spacing:1.2px;text-transform:uppercase;margin-bottom:8px;display:block;}
+.calc-tabs{display:flex;background:rgba(0,0,0,0.05);border-radius:8px;padding:3px;gap:3px;margin-bottom:12px;}
+.calc-tab{flex:1;height:30px;line-height:30px;padding:0;border-radius:6px;border:none;background:transparent;color:rgba(26,26,46,0.45);font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;text-align:center;}
+.calc-tab.on{background:white;color:#0066ff;box-shadow:0 1px 3px rgba(0,0,0,0.08);}
+.calc-nums{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;width:100%;}
+.calc-item{background:#f4f5f8;border-radius:10px;padding:10px 4px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:56px;}
+.calc-val{font-family:monospace;font-size:20px;font-weight:800;line-height:1.1;white-space:nowrap;}
+.calc-unit{font-size:9px;color:rgba(26,26,46,0.45);font-weight:800;text-transform:uppercase;letter-spacing:0.3px;margin-top:3px;}
+.calc-hint{font-size:12px;color:rgba(26,26,46,0.45);margin-top:8px;line-height:1.5;font-weight:500;}
 </style></head><body>
-<div class="page">
-  <div class="set-hdr-bar">
-    <a href="index.html" class="back-btn">←</a>
-    <span class="set-page-title">PROFILE</span>
-    <button onclick="saveProfile()" style="font-family:monospace;font-size:10px;font-weight:900;letter-spacing:1px;color:#0066ff;background:rgba(0,102,255,0.08);border:1px solid rgba(45,143,255,0.3);border-radius:8px;padding:7px 14px;cursor:pointer;">SAVE</button>
+<div class="pg">
+  <div class="t-app-header">
+    <a href="index.html" class="t-back">←</a>
+    <span class="t-app-title">PROFILE</span>
+    <button onclick="saveProfile()" style="font-family:monospace;font-size:10px;font-weight:900;letter-spacing:1px;color:#0066ff;background:rgba(0,102,255,0.08);border:0.5px solid rgba(0,102,255,0.3);border-radius:8px;padding:7px 14px;cursor:pointer;">SAVE</button>
   </div>
-  <div class="scroll-body" style="padding:16px 20px 80px;">
-    <div style="background:#eeeff2;border:1px solid rgba(0,0,0,0.09);border-radius:12px;padding:11px 14px;margin-bottom:16px;">
-      <div style="font-size:13px;color:#1a1a2e;line-height:1.5;"><span style="color:#ff2244;font-weight:700;">✳</span> marks required fields for accurate target calculation</div>
+  <div class="scroll-body">
+    <div style="background:rgba(255,193,0,0.06);border:0.5px solid rgba(255,193,0,0.25);border-radius:12px;padding:10px 14px;margin:8px 12px;">
+      <div style="font-size:12px;color:#1a1a2e;line-height:1.5;font-weight:500;"><span style="color:#ff2244;font-weight:800;">✳</span> marks required fields for accurate target calculation</div>
     </div>
-    <span class="sec-lbl" style="margin-top:0;">ESSENTIAL INFO</span>
+    <span class="sec-lbl" style="margin-top:4px;">ESSENTIAL INFO</span>
     <div class="prof-card">
-      <div class="prof-row"><span class="prof-lbl">Full name</span><input class="prof-inp" id="pr-name" type="text" placeholder="Your name" style="width:160px;"></div>
+      <div class="prof-row"><span class="prof-lbl">Full name</span><input class="prof-inp" id="pr-name" type="text" placeholder="Your name" style="width:160px;text-align:right;font-size:14px;"></div>
       <div class="prof-row">
         <span class="prof-lbl">Date of birth <span class="prof-req">✳</span></span>
-        <div style="display:flex;gap:6px;align-items:center;">
-          <select id="pr-dob-d" onchange="prDobChange()" style="background:transparent;border:none;outline:none;font-size:14px;font-weight:700;color:#0066ff;font-family:inherit;cursor:pointer;-webkit-appearance:none;max-width:44px;">
-            <option value="">DD</option><option value="01">1</option><option value="02">2</option><option value="03">3</option><option value="04">4</option><option value="05">5</option><option value="06">6</option><option value="07">7</option><option value="08">8</option><option value="09">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option><option value="26">26</option><option value="27">27</option><option value="28">28</option><option value="29">29</option><option value="30">30</option><option value="31">31</option>
-          </select>
-          <select id="pr-dob-m" onchange="prDobChange()" style="background:transparent;border:none;outline:none;font-size:14px;font-weight:700;color:#0066ff;font-family:inherit;cursor:pointer;-webkit-appearance:none;max-width:80px;">
-            <option value="">MMM</option><option value="01">January</option><option value="02">February</option><option value="03">March</option><option value="04">April</option><option value="05">May</option><option value="06">June</option><option value="07">July</option><option value="08">August</option><option value="09">September</option><option value="10">October</option><option value="11">November</option><option value="12">December</option>
-          </select>
-          <select id="pr-dob-y" onchange="prDobChange()" style="background:transparent;border:none;outline:none;font-size:14px;font-weight:700;color:#0066ff;font-family:inherit;cursor:pointer;-webkit-appearance:none;max-width:52px;">
-            <option value="">YYYY</option><option value="1950">1950</option><option value="1951">1951</option><option value="1952">1952</option><option value="1953">1953</option><option value="1954">1954</option><option value="1955">1955</option><option value="1956">1956</option><option value="1957">1957</option><option value="1958">1958</option><option value="1959">1959</option><option value="1960">1960</option><option value="1961">1961</option><option value="1962">1962</option><option value="1963">1963</option><option value="1964">1964</option><option value="1965">1965</option><option value="1966">1966</option><option value="1967">1967</option><option value="1968">1968</option><option value="1969">1969</option><option value="1970">1970</option><option value="1971">1971</option><option value="1972">1972</option><option value="1973">1973</option><option value="1974">1974</option><option value="1975">1975</option><option value="1976">1976</option><option value="1977">1977</option><option value="1978">1978</option><option value="1979">1979</option><option value="1980">1980</option><option value="1981">1981</option><option value="1982">1982</option><option value="1983">1983</option><option value="1984">1984</option><option value="1985">1985</option><option value="1986">1986</option><option value="1987">1987</option><option value="1988">1988</option><option value="1989">1989</option><option value="1990">1990</option><option value="1991">1991</option><option value="1992">1992</option><option value="1993">1993</option><option value="1994">1994</option><option value="1995">1995</option><option value="1996">1996</option><option value="1997">1997</option><option value="1998">1998</option><option value="1999">1999</option><option value="2000">2000</option><option value="2001">2001</option><option value="2002">2002</option><option value="2003">2003</option><option value="2004">2004</option><option value="2005">2005</option><option value="2006">2006</option><option value="2007">2007</option><option value="2008">2008</option><option value="2009">2009</option>
-          </select>
+        <div style="display:flex;gap:4px;align-items:center;">
+          <select id="pr-dob-d" onchange="prDobChange()" style="background:transparent;border:none;outline:none;font-size:14px;font-weight:700;color:#0066ff;font-family:inherit;cursor:pointer;-webkit-appearance:none;max-width:40px;"><option value="">DD</option><option value="01">1</option><option value="02">2</option><option value="03">3</option><option value="04">4</option><option value="05">5</option><option value="06">6</option><option value="07">7</option><option value="08">8</option><option value="09">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option><option value="26">26</option><option value="27">27</option><option value="28">28</option><option value="29">29</option><option value="30">30</option><option value="31">31</option></select>
+          <select id="pr-dob-m" onchange="prDobChange()" style="background:transparent;border:none;outline:none;font-size:14px;font-weight:700;color:#0066ff;font-family:inherit;cursor:pointer;-webkit-appearance:none;max-width:78px;"><option value="">MMM</option><option value="01">Jan</option><option value="02">Feb</option><option value="03">Mar</option><option value="04">Apr</option><option value="05">May</option><option value="06">Jun</option><option value="07">Jul</option><option value="08">Aug</option><option value="09">Sep</option><option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option></select>
+          <select id="pr-dob-y" onchange="prDobChange()" style="background:transparent;border:none;outline:none;font-size:14px;font-weight:700;color:#0066ff;font-family:inherit;cursor:pointer;-webkit-appearance:none;max-width:50px;"><option value="">YYYY</option><option value="1950">1950</option><option value="1951">1951</option><option value="1952">1952</option><option value="1953">1953</option><option value="1954">1954</option><option value="1955">1955</option><option value="1956">1956</option><option value="1957">1957</option><option value="1958">1958</option><option value="1959">1959</option><option value="1960">1960</option><option value="1961">1961</option><option value="1962">1962</option><option value="1963">1963</option><option value="1964">1964</option><option value="1965">1965</option><option value="1966">1966</option><option value="1967">1967</option><option value="1968">1968</option><option value="1969">1969</option><option value="1970">1970</option><option value="1971">1971</option><option value="1972">1972</option><option value="1973">1973</option><option value="1974">1974</option><option value="1975">1975</option><option value="1976">1976</option><option value="1977">1977</option><option value="1978">1978</option><option value="1979">1979</option><option value="1980">1980</option><option value="1981">1981</option><option value="1982">1982</option><option value="1983">1983</option><option value="1984">1984</option><option value="1985">1985</option><option value="1986">1986</option><option value="1987">1987</option><option value="1988">1988</option><option value="1989">1989</option><option value="1990">1990</option><option value="1991">1991</option><option value="1992">1992</option><option value="1993">1993</option><option value="1994">1994</option><option value="1995">1995</option><option value="1996">1996</option><option value="1997">1997</option><option value="1998">1998</option><option value="1999">1999</option><option value="2000">2000</option><option value="2001">2001</option><option value="2002">2002</option><option value="2003">2003</option><option value="2004">2004</option><option value="2005">2005</option><option value="2006">2006</option><option value="2007">2007</option><option value="2008">2008</option><option value="2009">2009</option></select>
         </div>
       </div>
       <div class="prof-row"><span class="prof-lbl">Gender <span class="prof-req">✳</span></span>
         <div style="display:flex;gap:8px;">
-          <button id="pr-g-m" onclick="prSetGender('m')" style="padding:6px 14px;border-radius:9px;background:rgba(0,102,255,0.1);border:1.5px solid #0066ff;color:#0066ff;font-size:13px;font-weight:600;cursor:pointer;">M</button>
-          <button id="pr-g-f" onclick="prSetGender('f')" style="padding:6px 14px;border-radius:9px;background:transparent;border:1.5px solid rgba(0,0,0,0.09);color:#1a1a2e;font-size:13px;font-weight:600;cursor:pointer;">F</button>
+          <button id="pr-g-m" onclick="prSetGender('m')" style="padding:6px 14px;border-radius:9px;background:rgba(0,102,255,0.08);border:0.5px solid #0066ff;color:#0066ff;font-size:13px;font-weight:700;cursor:pointer;">M</button>
+          <button id="pr-g-f" onclick="prSetGender('f')" style="padding:6px 14px;border-radius:9px;background:transparent;border:0.5px solid rgba(0,0,0,0.12);color:rgba(26,26,46,0.5);font-size:13px;font-weight:700;cursor:pointer;">F</button>
         </div>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;border-bottom:1px solid rgba(0,0,0,0.06);">
-        <div style="padding:10px 14px;border-right:1px solid rgba(0,0,0,0.06);">
-          <div style="font-size:10px;font-weight:700;color:rgba(0,0,0,0.45);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">HEIGHT ✳</div>
-          <div id="pr-height-metric-wrap" style="display:flex;align-items:center;gap:4px;">
-            <input class="prof-inp" id="pr-height" type="text" inputmode="numeric" placeholder="170" oninput="prCalc()" style="font-size:16px;font-weight:700;color:#0066ff;text-align:left;width:100%;">
-            <span style="font-size:13px;color:rgba(0,0,0,0.45);" id="pr-height-unit">cm</span>
-          </div>
-          <div id="pr-height-imperial-wrap" style="display:none;align-items:center;gap:4px;">
-            <input class="prof-inp" id="pr-height-ft" type="text" inputmode="numeric" placeholder="5" oninput="prCalc()" style="font-size:16px;font-weight:700;color:#0066ff;text-align:left;width:36px;">
-            <span style="font-size:13px;color:rgba(0,0,0,0.45);">ft</span>
-            <input class="prof-inp" id="pr-height-in" type="text" inputmode="numeric" placeholder="10" oninput="prCalc()" style="font-size:16px;font-weight:700;color:#0066ff;text-align:left;width:36px;">
-            <span style="font-size:13px;color:rgba(0,0,0,0.45);">in</span>
-          </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;border-top:0.5px solid rgba(0,0,0,0.06);">
+        <div style="padding:12px 16px;border-right:0.5px solid rgba(0,0,0,0.06);">
+          <div style="font-size:10px;font-weight:800;color:rgba(26,26,46,0.45);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">HEIGHT ✳</div>
+          <div id="pr-height-metric-wrap" style="display:flex;align-items:center;gap:4px;"><input class="prof-inp" id="pr-height" type="text" inputmode="numeric" placeholder="170" oninput="prCalc()" style="font-size:18px;text-align:left;width:100%;"><span style="font-size:12px;color:rgba(26,26,46,0.45);font-weight:600;" id="pr-height-unit">cm</span></div>
+          <div id="pr-height-imperial-wrap" style="display:none;align-items:center;gap:3px;"><input class="prof-inp" id="pr-height-ft" type="text" inputmode="numeric" placeholder="5" oninput="prCalc()" style="font-size:18px;text-align:left;width:32px;"><span style="font-size:12px;color:rgba(26,26,46,0.45);font-weight:600;">ft</span><input class="prof-inp" id="pr-height-in" type="text" inputmode="numeric" placeholder="10" oninput="prCalc()" style="font-size:18px;text-align:left;width:32px;margin-left:4px;"><span style="font-size:12px;color:rgba(26,26,46,0.45);font-weight:600;">in</span></div>
         </div>
-        <div style="padding:10px 14px;">
-          <div style="font-size:10px;font-weight:700;color:rgba(0,0,0,0.45);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">WEIGHT ✳</div>
-          <div style="display:flex;align-items:center;gap:4px;">
-            <input class="prof-inp" id="pr-weight" type="text" inputmode="numeric" placeholder="74.5" oninput="prCalc()" style="font-size:16px;font-weight:700;color:#0066ff;text-align:left;width:100%;">
-            <span style="font-size:13px;color:rgba(0,0,0,0.45);" id="pr-weight-unit">kg</span>
-          </div>
+        <div style="padding:12px 16px;">
+          <div style="font-size:10px;font-weight:800;color:rgba(26,26,46,0.45);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">WEIGHT ✳</div>
+          <div style="display:flex;align-items:center;gap:4px;"><input class="prof-inp" id="pr-weight" type="text" inputmode="numeric" placeholder="74.5" oninput="prCalc()" style="font-size:18px;text-align:left;width:100%;"><span style="font-size:12px;color:rgba(26,26,46,0.45);font-weight:600;" id="pr-weight-unit">kg</span></div>
         </div>
       </div>
     </div>
     <span class="sec-lbl">ACTIVITY &amp; GOAL</span>
     <div class="prof-card">
-      <div style="display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid rgba(0,0,0,0.06);">
-        <div style="padding:10px 12px;border-right:1px solid rgba(0,0,0,0.06);">
-          <div style="font-size:10px;font-weight:700;color:#1a1a2e;text-transform:uppercase;letter-spacing:0.3px;margin-bottom:6px;">ACTIVITY ✳</div>
-          <select class="bs-sel" id="pr-activity" onchange="prCalc()"><option value="">Select</option><option value="1.2">Sedentary</option><option value="1.375">Light — 1–2x/wk</option><option value="1.55">Moderate — 3–4x/wk</option><option value="1.725">Very active — 5–6x/wk</option><option value="1.9">Athlete — 2x/day</option></select>
+      <div style="display:grid;grid-template-columns:1fr 1fr;border-bottom:0.5px solid rgba(0,0,0,0.06);">
+        <div style="padding:12px 12px;border-right:0.5px solid rgba(0,0,0,0.06);">
+          <div style="font-size:10px;font-weight:800;color:rgba(26,26,46,0.45);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">ACTIVITY ✳</div>
+          <select class="bs-sel" id="pr-activity" onchange="prCalc()"><option value="">Select</option><option value="1.2">Sedentary</option><option value="1.375">Light 1–2x/wk</option><option value="1.55">Moderate 3–4x</option><option value="1.725">Very active</option><option value="1.9">Athlete</option></select>
         </div>
-        <div style="padding:10px 12px;">
-          <div style="font-size:10px;font-weight:700;color:#1a1a2e;text-transform:uppercase;letter-spacing:0.3px;margin-bottom:6px;">DAILY STEPS ✳</div>
+        <div style="padding:12px 12px;">
+          <div style="font-size:10px;font-weight:800;color:rgba(26,26,46,0.45);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">DAILY STEPS ✳</div>
           <select class="bs-sel" id="pr-steps" onchange="prCalc()"><option value="">Select</option><option value="0">Under 5k</option><option value="0.025">5k–8k</option><option value="0.05">6k–10k</option><option value="0.075">10k–13k</option><option value="0.1">13k+</option></select>
         </div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;">
-        <div style="padding:10px 12px;border-right:1px solid rgba(0,0,0,0.06);">
-          <div style="font-size:10px;font-weight:700;color:#1a1a2e;text-transform:uppercase;letter-spacing:0.3px;margin-bottom:6px;">JOB TYPE ✳</div>
+        <div style="padding:12px 12px;border-right:0.5px solid rgba(0,0,0,0.06);">
+          <div style="font-size:10px;font-weight:800;color:rgba(26,26,46,0.45);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">JOB TYPE ✳</div>
           <select class="bs-sel" id="pr-job" onchange="prCalc()"><option value="">Select</option><option value="0">Desk job</option><option value="0.05">Light manual</option><option value="0.1">Manual work</option><option value="0.15">Heavy labour</option></select>
         </div>
-        <div style="padding:10px 12px;">
-          <div style="font-size:10px;font-weight:700;color:#1a1a2e;text-transform:uppercase;letter-spacing:0.3px;margin-bottom:6px;">PRIMARY GOAL ✳</div>
-          <select class="bs-sel" id="pr-goal" onchange="prCalc()"><option value="">Select</option><option value="-0.20">Aggressive cut</option><option value="-0.12">Moderate cut</option><option value="-0.05">Slight cut</option><option value="0">Maintain</option><option value="0.08">Lean muscle gain</option><option value="0.15">Build muscle</option></select>
+        <div style="padding:12px 12px;">
+          <div style="font-size:10px;font-weight:800;color:rgba(26,26,46,0.45);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">PRIMARY GOAL ✳</div>
+          <select class="bs-sel" id="pr-goal" onchange="prCalc()"><option value="">Select</option><option value="-0.20">Aggressive cut</option><option value="-0.12">Moderate cut</option><option value="-0.05">Slight cut</option><option value="0">Maintain</option><option value="0.08">Lean muscle</option><option value="0.15">Build muscle</option></select>
         </div>
       </div>
     </div>
     <span class="sec-lbl">BODY COMPOSITION</span>
     <div class="prof-card">
-      <div style="display:grid;grid-template-columns:1fr 1fr;">
-        <div style="padding:10px 14px;border-right:1px solid rgba(0,0,0,0.06);">
-          <div style="font-size:10px;font-weight:700;color:rgba(0,0,0,0.45);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">WAIST</div>
-          <div style="display:flex;align-items:center;gap:4px;"><input class="prof-inp" id="pr-waist" type="text" inputmode="numeric" placeholder="91" oninput="prCheckWaist()" style="font-size:16px;font-weight:700;color:#0066ff;text-align:left;width:100%;"><span style="font-size:13px;color:rgba(0,0,0,0.45);">cm</span></div>
-          <div style="font-size:11px;margin-top:3px;" id="pr-waist-status"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;border-bottom:0.5px solid rgba(0,0,0,0.06);">
+        <div style="padding:12px 16px;border-right:0.5px solid rgba(0,0,0,0.06);">
+          <div style="font-size:10px;font-weight:800;color:rgba(26,26,46,0.45);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;">WAIST</div>
+          <div style="display:flex;align-items:center;gap:4px;"><input class="prof-inp" id="pr-waist" type="text" inputmode="numeric" placeholder="91" oninput="prCheckWaist()" style="font-size:18px;text-align:left;width:100%;"><span style="font-size:12px;color:rgba(26,26,46,0.45);font-weight:600;">cm</span></div>
+          <div style="font-size:11px;margin-top:4px;font-weight:700;" id="pr-waist-status"></div>
         </div>
-        <div style="padding:10px 14px;">
-          <div style="font-size:10px;font-weight:700;color:rgba(0,0,0,0.45);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">BODY FAT %</div>
-          <div style="display:flex;align-items:center;gap:4px;"><input class="prof-inp" id="pr-bf" type="text" inputmode="numeric" placeholder="14.5" style="font-size:16px;font-weight:700;color:#0066ff;text-align:left;width:100%;"><span style="font-size:13px;color:rgba(0,0,0,0.45);">%</span></div>
+        <div style="padding:12px 16px;">
+          <div style="font-size:10px;font-weight:800;color:rgba(26,26,46,0.45);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;">BODY FAT %</div>
+          <div style="display:flex;align-items:center;gap:4px;"><input class="prof-inp" id="pr-bf" type="text" inputmode="numeric" placeholder="14.5" style="font-size:18px;text-align:left;width:100%;"><span style="font-size:12px;color:rgba(26,26,46,0.45);font-weight:600;">%</span></div>
         </div>
       </div>
-      <div class="prof-row" style="cursor:pointer;border-top:1px solid rgba(0,0,0,0.06);" onclick="alert('Body Scan AI coming soon — will provide BF% estimate from a photo.')">
-        <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:22px;">📸</span><div><span class="prof-lbl">AI Photo Estimate</span><div style="font-size:11px;color:#1a1a2e;margin-top:2px;">Rough BF% from a photo — independent analysis</div></div></div>
+      <div class="prof-row" style="cursor:pointer;" onclick="alert('Body Scan AI coming soon — BF% estimate from a photo.')">
+        <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:22px;">📸</span><div><span class="prof-lbl">AI Photo Estimate</span><div style="font-size:12px;color:rgba(26,26,46,0.45);margin-top:2px;font-weight:400;">Rough BF% from a photo — independent analysis</div></div></div>
         <span style="color:#0066ff;font-size:18px;">›</span>
       </div>
     </div>
@@ -138,36 +169,26 @@ body{display:flex;flex-direction:column;align-items:center;animation:pgIn 0.2s e
     <div class="prof-card">
       <div class="prof-row" style="flex-direction:column;align-items:flex-start;gap:10px;">
         <span class="prof-lbl">Days per week</span>
-        <div class="day-btns">
-          <button class="day-num" onclick="prSetDays(1)" id="pr-d-1">1</button>
-          <button class="day-num" onclick="prSetDays(2)" id="pr-d-2">2</button>
-          <button class="day-num" onclick="prSetDays(3)" id="pr-d-3">3</button>
-          <button class="day-num on" onclick="prSetDays(4)" id="pr-d-4">4</button>
-          <button class="day-num" onclick="prSetDays(5)" id="pr-d-5">5</button>
-          <button class="day-num" onclick="prSetDays(6)" id="pr-d-6">6</button>
-          <button class="day-num" onclick="prSetDays(7)" id="pr-d-7">7</button>
-        </div>
+        <div class="day-btns"><button class="day-num" onclick="prSetDays(1)" id="pr-d-1">1</button><button class="day-num" onclick="prSetDays(2)" id="pr-d-2">2</button><button class="day-num" onclick="prSetDays(3)" id="pr-d-3">3</button><button class="day-num on" onclick="prSetDays(4)" id="pr-d-4">4</button><button class="day-num" onclick="prSetDays(5)" id="pr-d-5">5</button><button class="day-num" onclick="prSetDays(6)" id="pr-d-6">6</button><button class="day-num" onclick="prSetDays(7)" id="pr-d-7">7</button></div>
       </div>
     </div>
     <span class="sec-lbl">YOUR TARGETS</span>
     <div class="calc-box">
-      <div class="calc-hdr">
-        <span class="calc-lbl">CALCULATED LIVE</span>
-        <div style="display:flex;gap:6px;">
-          <button class="calc-tab on" id="pr-tab-train" onclick="prSwitchTab('train')" style="font-size:9px;padding:4px 10px;">TRAIN</button>
-          <button class="calc-tab" id="pr-tab-rest" onclick="prSwitchTab('rest')" style="font-size:9px;padding:4px 10px;">REST</button>
-        </div>
+      <span class="calc-lbl">CALCULATED LIVE</span>
+      <div style="display:flex;gap:6px;margin-bottom:12px;">
+        <button class="calc-tab on" id="pr-tab-train" onclick="prSwitchTab('train')" style="font-size:10px;padding:0 12px;height:28px;line-height:28px;border-radius:6px;border:none;background:white;color:#0066ff;font-weight:700;cursor:pointer;font-family:inherit;box-shadow:0 1px 3px rgba(0,0,0,0.08);">TRAIN</button>
+        <button class="calc-tab" id="pr-tab-rest" onclick="prSwitchTab('rest')" style="font-size:10px;padding:0 12px;height:28px;line-height:28px;border-radius:6px;border:none;background:rgba(0,0,0,0.05);color:rgba(26,26,46,0.45);font-weight:700;cursor:pointer;font-family:inherit;">REST</button>
       </div>
       <div id="pr-disp-train" class="calc-nums">
         <div class="calc-item"><div class="calc-val" id="pr-t-kcal" style="color:#ff0000;">—</div><div class="calc-unit">kcal</div></div>
         <div class="calc-item"><div class="calc-val" id="pr-t-p" style="color:#34c97a;">—</div><div class="calc-unit">protein</div></div>
-        <div class="calc-item"><div class="calc-val" id="pr-t-c" style="color:#0066ff;">—</div><div class="calc-unit">carbs</div></div>
+        <div class="calc-item"><div class="calc-val" id="pr-t-c" style="color:#2d8fff;">—</div><div class="calc-unit">carbs</div></div>
         <div class="calc-item"><div class="calc-val" id="pr-t-f" style="color:#f5a623;">—</div><div class="calc-unit">fat</div></div>
       </div>
       <div id="pr-disp-rest" class="calc-nums" style="display:none;">
         <div class="calc-item"><div class="calc-val" id="pr-r-kcal" style="color:#ff0000;">—</div><div class="calc-unit">kcal</div></div>
         <div class="calc-item"><div class="calc-val" id="pr-r-p" style="color:#34c97a;">—</div><div class="calc-unit">protein</div></div>
-        <div class="calc-item"><div class="calc-val" id="pr-r-c" style="color:#0066ff;">—</div><div class="calc-unit">carbs</div></div>
+        <div class="calc-item"><div class="calc-val" id="pr-r-c" style="color:#2d8fff;">—</div><div class="calc-unit">carbs</div></div>
         <div class="calc-item"><div class="calc-val" id="pr-r-f" style="color:#f5a623;">—</div><div class="calc-unit">fat</div></div>
       </div>
       <div id="pr-bmr-note" class="calc-hint">Fill in your details above</div>
@@ -175,27 +196,31 @@ body{display:flex;flex-direction:column;align-items:center;animation:pgIn 0.2s e
     <span class="sec-lbl">PROGRESS HISTORY</span>
     <div class="prof-card">
       <div style="padding:14px 16px;" id="pr-history">
-        <div style="text-align:center;padding:16px 0;">
-          <div style="font-size:13px;color:#1a1a2e;">No measurements logged yet</div>
-          <div style="font-family:-apple-system,sans-serif;font-size:11px;color:rgba(0,0,0,0.45);margin-top:4px;">SAVE YOUR PROFILE TO START TRACKING</div>
-        </div>
+        <div style="text-align:center;padding:12px 0;"><div style="font-size:13px;color:rgba(26,26,46,0.55);font-weight:500;">No measurements logged yet</div><div style="font-size:11px;color:rgba(26,26,46,0.35);margin-top:4px;letter-spacing:0.3px;text-transform:uppercase;font-weight:700;">Save your profile to start tracking</div></div>
       </div>
     </div>
-    <div style="height:40px;"></div>
+    <div style="height:20px;"></div>
   </div>
 </div>
-<nav class="bnav"><a class="bnav-item" href="index.html"><span class="bnav-icon">🏠</span>TODAY</a><a class="bnav-item" href="history.html"><span class="bnav-icon">📅</span>HISTORY</a><a class="bnav-item" href="log.html"><span class="bnav-icon">➕</span>LOG</a><a class="bnav-item active" href="profile.html"><span class="bnav-icon">👤</span>PROFILE</a><a class="bnav-item" href="settings.html"><span class="bnav-icon">⚙️</span>SETTINGS</a></nav>
+<div class="bnav"><div class="bnav-inner">
+  <a class="nbtn" href="index.html"><div class="nav-icon-wrap">🏠</div>TODAY</a>
+  <a class="nbtn" href="history.html"><div class="nav-icon-wrap">📅</div>HISTORY</a>
+  <a class="nbtn-center" href="log.html"><div class="nav-plus">+</div>LOG</a>
+  <a class="nbtn on" href="profile.html"><div class="nav-icon-wrap">👤</div>PROFILE</a>
+  <a class="nbtn" href="settings.html"><div class="nav-icon-wrap">⚙️</div>SETTINGS</a>
+</div></div>
 <script>
-var APP={profile:null,targets:{train:{kcal:0,prot:0,carbs:0,fat:0},rest:{kcal:0,prot:0,carbs:0,fat:0}},settings:{units:'metric'},prGender:'m',prDays:4,prTab:'train'};
+var pApp={profile:null,targets:{train:{kcal:0,prot:0,carbs:0,fat:0},rest:{kcal:0,prot:0,carbs:0,fat:0}},settings:{units:'metric'},prGender:'m',prDays:4,prTab:'train'};
+function showToast(msg){var ex=document.querySelector('.toast');if(ex)ex.remove();var t=document.createElement('div');t.className='toast';t.textContent=msg;document.body.appendChild(t);setTimeout(function(){if(t.parentNode)t.remove();},2200);}
 function calcTargets(gender,dob,h,w,act,steps,job,goal){var age=dob?(new Date().getFullYear()-new Date(dob).getFullYear()):null;var actNum=parseFloat(act),stepsNum=parseFloat(steps)||0,jobNum=parseFloat(job)||0,goalNum=parseFloat(goal);if(!age||age<10||age>100)return null;if(!h||h<50||h>300)return null;if(!w||w<20||w>500)return null;if(isNaN(actNum)||actNum<1.0)return null;if(isNaN(goalNum))return null;var bmr=gender==='m'?(10*w)+(6.25*h)-(5*age)+5:(10*w)+(6.25*h)-(5*age)-161;if(bmr<800||bmr>5000)return null;var tdeeTrain=bmr*(actNum+stepsNum+jobNum);var trainKcal=Math.round(tdeeTrain*(1+goalNum)/10)*10;var restKcal=Math.round((trainKcal-Math.round(w*3.5))/10)*10;var prot=Math.round(w*(goalNum<=0?2.2:2.0)/5)*5;var fat=Math.round(w*0.9/5)*5;var trainCarbs=Math.max(30,Math.round((trainKcal-prot*4-fat*9)/4/5)*5);var restCarbs=Math.max(20,Math.round((restKcal-prot*4-fat*9)/4/5)*5);return{bmr:Math.round(bmr),tdeeTrain:Math.round(tdeeTrain),train:{kcal:trainKcal,prot:prot,carbs:trainCarbs,fat:fat},rest:{kcal:restKcal,prot:prot,carbs:restCarbs,fat:fat}};}
-function prDobChange(){var d=document.getElementById('pr-dob-d').value,m=document.getElementById('pr-dob-m').value,y=document.getElementById('pr-dob-y').value;if(d&&m&&y){APP.profile=APP.profile||{};APP.profile.dob=y+'-'+m+'-'+d;prCalc();}}
-function prGetDob(){var d=document.getElementById('pr-dob-d').value,m=document.getElementById('pr-dob-m').value,y=document.getElementById('pr-dob-y').value;if(d&&m&&y)return y+'-'+m+'-'+d;return APP.profile&&APP.profile.dob?APP.profile.dob:null;}
-function prSetGender(g){APP.prGender=g;document.getElementById('pr-g-m').style.background=g==='m'?'rgba(0,102,255,0.1)':'transparent';document.getElementById('pr-g-m').style.borderColor=g==='m'?'#0066ff':'rgba(0,0,0,0.09)';document.getElementById('pr-g-m').style.color=g==='m'?'#0066ff':'#1a1a2e';document.getElementById('pr-g-f').style.background=g==='f'?'rgba(255,105,180,0.1)':'transparent';document.getElementById('pr-g-f').style.borderColor=g==='f'?'#ff2244':'rgba(0,0,0,0.09)';document.getElementById('pr-g-f').style.color=g==='f'?'#ff2244':'#1a1a2e';prCalc();}
-function prSetDays(n){APP.prDays=n;for(var i=1;i<=7;i++){var btn=document.getElementById('pr-d-'+i);if(btn)btn.className='day-num'+(i===n?' on':'');}}
-function prSwitchTab(t){APP.prTab=t;document.getElementById('pr-disp-train').style.display=t==='train'?'grid':'none';document.getElementById('pr-disp-rest').style.display=t==='rest'?'grid':'none';document.getElementById('pr-tab-train').className='calc-tab'+(t==='train'?' on':'');document.getElementById('pr-tab-rest').className='calc-tab'+(t==='rest'?' on':'');}
-function prCheckWaist(){var w=parseFloat(document.getElementById('pr-waist').value),el=document.getElementById('pr-waist-status');if(!w){el.textContent='';return;}var hi=APP.prGender==='m'?94:80,risk=APP.prGender==='m'?102:88;if(w<hi){el.textContent='✓ Healthy range';el.style.color='#34c97a';}else if(w<risk){el.textContent='⚠ Elevated risk';el.style.color='#ffc300';}else{el.textContent='⛔ High risk';el.style.color='#ff2244';}}
-function prCalc(){var dob=prGetDob();var h=null;if(APP.settings.units==='imperial'){var prFt=parseFloat(document.getElementById('pr-height-ft')?document.getElementById('pr-height-ft').value:'')||0,prIn=parseFloat(document.getElementById('pr-height-in')?document.getElementById('pr-height-in').value:'')||0;if(prFt||prIn)h=Math.round((prFt*12+prIn)*2.54);}else{var prHRaw=parseFloat(document.getElementById('pr-height').value)||null;if(prHRaw&&prHRaw<3)prHRaw=Math.round(prHRaw*100);h=prHRaw;}var w=parseFloat(document.getElementById('pr-weight').value)||null,act=parseFloat(document.getElementById('pr-activity').value)||null,steps=parseFloat(document.getElementById('pr-steps').value),job=parseFloat(document.getElementById('pr-job').value),goal=parseFloat(document.getElementById('pr-goal').value);var result=calcTargets(APP.prGender,dob,h,w,act,isNaN(steps)?null:steps,isNaN(job)?null:job,isNaN(goal)?null:goal);var note=document.getElementById('pr-bmr-note');if(!result){note.textContent='Fill in all required fields';return;}note.innerHTML='<strong style="color:#0066ff;">BMR '+result.bmr+' kcal</strong> — calories burned at rest<br><strong style="color:#0066ff;">Train TDEE '+result.tdeeTrain+' kcal</strong> — total daily burn with activity';document.getElementById('pr-t-kcal').textContent=result.train.kcal;document.getElementById('pr-t-p').textContent=result.train.prot+'g';document.getElementById('pr-t-c').textContent=result.train.carbs+'g';document.getElementById('pr-t-f').textContent=result.train.fat+'g';document.getElementById('pr-r-kcal').textContent=result.rest.kcal;document.getElementById('pr-r-p').textContent=result.rest.prot+'g';document.getElementById('pr-r-c').textContent=result.rest.carbs+'g';document.getElementById('pr-r-f').textContent=result.rest.fat+'g';APP.targets=result;}
-function saveProfile(){var p={name:document.getElementById('pr-name').value,dob:prGetDob(),gender:APP.prGender,height:(function(){if(APP.settings.units==='imperial'){var ft4=parseFloat(document.getElementById('pr-height-ft')?document.getElementById('pr-height-ft').value:'')||0,in4=parseFloat(document.getElementById('pr-height-in')?document.getElementById('pr-height-in').value:'')||0;return ft4||in4?String(Math.round((ft4*12+in4)*2.54)):'';}var hv=document.getElementById('pr-height').value;if(hv&&parseFloat(hv)<3)hv=String(Math.round(parseFloat(hv)*100));return hv;})(),weight:document.getElementById('pr-weight').value,activity:document.getElementById('pr-activity').value,steps:document.getElementById('pr-steps').value,job:document.getElementById('pr-job').value,goal:document.getElementById('pr-goal').value,waist:document.getElementById('pr-waist').value,bf:document.getElementById('pr-bf').value,trainDays:APP.prDays};APP.profile=p;prCalc();var tgt={train:APP.targets.train,rest:APP.targets.rest,trainKcal:APP.targets.train.kcal,trainProt:APP.targets.train.prot,trainCarb:APP.targets.train.carbs,trainFat:APP.targets.train.fat,restKcal:APP.targets.rest.kcal,restProt:APP.targets.rest.prot,restCarb:APP.targets.rest.carbs,restFat:APP.targets.rest.fat};localStorage.setItem('tracktion_profile',JSON.stringify(p));localStorage.setItem('tracktion_targets',JSON.stringify(tgt));var hist=JSON.parse(localStorage.getItem('tracktion_measurement_history')||'[]');if(p.weight){hist.unshift({date:new Date().toLocaleDateString(),weight:p.weight,waist:p.waist,bf:p.bf});if(hist.length>30)hist=hist.slice(0,30);localStorage.setItem('tracktion_measurement_history',JSON.stringify(hist));renderHistory(hist);}alert('Profile saved ✓');}
-function renderHistory(hist){var el=document.getElementById('pr-history');if(!hist||!hist.length)return;el.innerHTML=hist.slice(0,5).map(function(h){return'<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(0,0,0,0.06);"><span style="font-size:12px;color:#1a1a2e;">'+h.date+'</span><div style="display:flex;gap:12px;">'+(h.weight?'<span style="font-size:13px;font-weight:600;color:#1a1a2e;">'+h.weight+'kg</span>':'')+(h.waist?'<span style="font-size:13px;color:#0066ff;">'+h.waist+'cm</span>':'')+(h.bf?'<span style="font-size:13px;color:#34c97a;">'+h.bf+'%</span>':'')+'</div></div>';}).join('');}
-(function(){var s=JSON.parse(localStorage.getItem('tracktion_settings')||'{}');if(s.units)APP.settings.units=s.units;var p=JSON.parse(localStorage.getItem('tracktion_profile')||'null');if(!p)return;APP.profile=p;if(p.name)document.getElementById('pr-name').value=p.name;if(p.dob){var parts=p.dob.split('-');if(parts.length===3){document.getElementById('pr-dob-d').value=parts[2];document.getElementById('pr-dob-m').value=parts[1];document.getElementById('pr-dob-y').value=parts[0];}}if(p.gender)prSetGender(p.gender);var isM=APP.settings.units!=='imperial';document.getElementById('pr-height-metric-wrap').style.display=isM?'flex':'none';document.getElementById('pr-height-imperial-wrap').style.display=isM?'none':'flex';document.getElementById('pr-weight-unit').textContent=isM?'kg':'lbs';if(p.height){var cm=parseFloat(p.height);if(isM){document.getElementById('pr-height').value=cm;}else{var ti=cm/2.54;if(document.getElementById('pr-height-ft'))document.getElementById('pr-height-ft').value=Math.floor(ti/12);if(document.getElementById('pr-height-in'))document.getElementById('pr-height-in').value=Math.round(ti%12);}}if(p.weight){var kg=parseFloat(p.weight);document.getElementById('pr-weight').value=isM?kg:Math.round(kg/0.4536*10)/10;}if(p.activity)document.getElementById('pr-activity').value=p.activity;if(p.steps)document.getElementById('pr-steps').value=p.steps;if(p.job)document.getElementById('pr-job').value=p.job;if(p.goal)document.getElementById('pr-goal').value=p.goal;if(p.waist){document.getElementById('pr-waist').value=p.waist;prCheckWaist();}if(p.bf)document.getElementById('pr-bf').value=p.bf;if(p.trainDays)prSetDays(p.trainDays);prCalc();var hist=JSON.parse(localStorage.getItem('tracktion_measurement_history')||'[]');if(hist.length)renderHistory(hist);})();
+function prDobChange(){var d=document.getElementById('pr-dob-d').value,m=document.getElementById('pr-dob-m').value,y=document.getElementById('pr-dob-y').value;if(d&&m&&y)prCalc();}
+function prGetDob(){var d=document.getElementById('pr-dob-d').value,m=document.getElementById('pr-dob-m').value,y=document.getElementById('pr-dob-y').value;return(d&&m&&y)?y+'-'+m+'-'+d:(pApp.profile&&pApp.profile.dob?pApp.profile.dob:null);}
+function prSetGender(g){pApp.prGender=g;document.getElementById('pr-g-m').style.background=g==='m'?'rgba(0,102,255,0.08)':'transparent';document.getElementById('pr-g-m').style.borderColor=g==='m'?'#0066ff':'rgba(0,0,0,0.12)';document.getElementById('pr-g-m').style.color=g==='m'?'#0066ff':'rgba(26,26,46,0.5)';document.getElementById('pr-g-f').style.background=g==='f'?'rgba(255,34,68,0.06)':'transparent';document.getElementById('pr-g-f').style.borderColor=g==='f'?'#ff2244':'rgba(0,0,0,0.12)';document.getElementById('pr-g-f').style.color=g==='f'?'#ff2244':'rgba(26,26,46,0.5)';prCalc();}
+function prSetDays(n){pApp.prDays=n;for(var i=1;i<=7;i++){var btn=document.getElementById('pr-d-'+i);if(btn)btn.className='day-num'+(i===n?' on':'');}}
+function prSwitchTab(t){pApp.prTab=t;document.getElementById('pr-disp-train').style.display=t==='train'?'grid':'none';document.getElementById('pr-disp-rest').style.display=t==='rest'?'grid':'none';var tb=document.getElementById('pr-tab-train'),tr=document.getElementById('pr-tab-rest');tb.style.background=t==='train'?'white':'rgba(0,0,0,0.05)';tb.style.color=t==='train'?'#0066ff':'rgba(26,26,46,0.45)';tb.style.boxShadow=t==='train'?'0 1px 3px rgba(0,0,0,0.08)':'none';tr.style.background=t==='rest'?'white':'rgba(0,0,0,0.05)';tr.style.color=t==='rest'?'#0066ff':'rgba(26,26,46,0.45)';tr.style.boxShadow=t==='rest'?'0 1px 3px rgba(0,0,0,0.08)':'none';}
+function prCheckWaist(){var w=parseFloat(document.getElementById('pr-waist').value),el=document.getElementById('pr-waist-status');if(!w){el.textContent='';return;}var hi=pApp.prGender==='m'?94:80,risk=pApp.prGender==='m'?102:88;if(w<hi){el.textContent='✓ Healthy range';el.style.color='#34c97a';}else if(w<risk){el.textContent='⚠ Elevated risk';el.style.color='#ffb300';}else{el.textContent='⛔ High risk';el.style.color='#ff2244';}}
+function prCalc(){var dob=prGetDob();var h=null;var isM=pApp.settings.units!=='imperial';if(!isM){var ft=parseFloat(document.getElementById('pr-height-ft')?document.getElementById('pr-height-ft').value:'')||0,inch=parseFloat(document.getElementById('pr-height-in')?document.getElementById('pr-height-in').value:'')||0;if(ft||inch)h=Math.round((ft*12+inch)*2.54);}else{var hr=parseFloat(document.getElementById('pr-height').value)||null;if(hr&&hr<3)hr=Math.round(hr*100);h=hr;}var w=parseFloat(document.getElementById('pr-weight').value)||null,act=parseFloat(document.getElementById('pr-activity').value)||null,steps=parseFloat(document.getElementById('pr-steps').value),job=parseFloat(document.getElementById('pr-job').value),goal=parseFloat(document.getElementById('pr-goal').value);var result=calcTargets(pApp.prGender,dob,h,w,act,isNaN(steps)?null:steps,isNaN(job)?null:job,isNaN(goal)?null:goal);var note=document.getElementById('pr-bmr-note');if(!result){note.textContent='Fill in all required fields';return;}note.innerHTML='<strong style="color:#0066ff;">BMR '+result.bmr+' kcal</strong> · At rest &nbsp;|&nbsp; <strong style="color:#0066ff;">Train TDEE '+result.tdeeTrain+' kcal</strong>';document.getElementById('pr-t-kcal').textContent=result.train.kcal;document.getElementById('pr-t-p').textContent=result.train.prot+'g';document.getElementById('pr-t-c').textContent=result.train.carbs+'g';document.getElementById('pr-t-f').textContent=result.train.fat+'g';document.getElementById('pr-r-kcal').textContent=result.rest.kcal;document.getElementById('pr-r-p').textContent=result.rest.prot+'g';document.getElementById('pr-r-c').textContent=result.rest.carbs+'g';document.getElementById('pr-r-f').textContent=result.rest.fat+'g';pApp.targets=result;}
+function saveProfile(){var p={name:document.getElementById('pr-name').value,dob:prGetDob(),gender:pApp.prGender,height:(function(){var isM=pApp.settings.units!=='imperial';if(!isM){var ft=parseFloat(document.getElementById('pr-height-ft')?document.getElementById('pr-height-ft').value:'')||0,inch=parseFloat(document.getElementById('pr-height-in')?document.getElementById('pr-height-in').value:'')||0;return ft||inch?String(Math.round((ft*12+inch)*2.54)):''}var hv=document.getElementById('pr-height').value;if(hv&&parseFloat(hv)<3)hv=String(Math.round(parseFloat(hv)*100));return hv;})(),weight:document.getElementById('pr-weight').value,activity:document.getElementById('pr-activity').value,steps:document.getElementById('pr-steps').value,job:document.getElementById('pr-job').value,goal:document.getElementById('pr-goal').value,waist:document.getElementById('pr-waist').value,bf:document.getElementById('pr-bf').value,trainDays:pApp.prDays};pApp.profile=p;prCalc();var tgt={train:pApp.targets.train,rest:pApp.targets.rest,trainKcal:pApp.targets.train.kcal,trainProt:pApp.targets.train.prot,trainCarb:pApp.targets.train.carbs,trainFat:pApp.targets.train.fat,restKcal:pApp.targets.rest.kcal,restProt:pApp.targets.rest.prot,restCarb:pApp.targets.rest.carbs,restFat:pApp.targets.rest.fat};localStorage.setItem('tracktion_profile',JSON.stringify(p));localStorage.setItem('tracktion_targets',JSON.stringify(tgt));var hist=JSON.parse(localStorage.getItem('tracktion_measurement_history')||'[]');if(p.weight){hist.unshift({date:new Date().toLocaleDateString(),weight:p.weight,waist:p.waist,bf:p.bf});if(hist.length>30)hist=hist.slice(0,30);localStorage.setItem('tracktion_measurement_history',JSON.stringify(hist));renderHistory(hist);}showToast('✅ Profile saved');}
+function renderHistory(hist){var el=document.getElementById('pr-history');if(!hist||!hist.length)return;el.innerHTML=hist.slice(0,5).map(function(h){return'<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:0.5px solid rgba(0,0,0,0.06);"><span style="font-size:12px;color:rgba(26,26,46,0.55);">'+h.date+'</span><div style="display:flex;gap:12px;">'+(h.weight?'<span style="font-size:13px;font-weight:700;color:#1a1a2e;">'+h.weight+'kg</span>':'')+(h.waist?'<span style="font-size:13px;font-weight:700;color:#0066ff;">'+h.waist+'cm</span>':'')+(h.bf?'<span style="font-size:13px;font-weight:700;color:#34c97a;">'+h.bf+'%</span>':'')+'</div></div>';}).join('');}
+(function(){var s=JSON.parse(localStorage.getItem('tracktion_settings')||'{}');if(s.units)pApp.settings.units=s.units;var p=JSON.parse(localStorage.getItem('tracktion_profile')||'null');if(!p)return;pApp.profile=p;if(p.name)document.getElementById('pr-name').value=p.name;if(p.dob){var parts=p.dob.split('-');document.getElementById('pr-dob-d').value=parts[2]||'';document.getElementById('pr-dob-m').value=parts[1]||'';document.getElementById('pr-dob-y').value=parts[0]||'';}if(p.gender)prSetGender(p.gender);var isM=pApp.settings.units!=='imperial';document.getElementById('pr-height-metric-wrap').style.display=isM?'flex':'none';document.getElementById('pr-height-imperial-wrap').style.display=isM?'none':'flex';document.getElementById('pr-weight-unit').textContent=isM?'kg':'lbs';if(p.height){var cm=parseFloat(p.height);if(isM){document.getElementById('pr-height').value=cm;}else{var ti=cm/2.54;if(document.getElementById('pr-height-ft'))document.getElementById('pr-height-ft').value=Math.floor(ti/12);if(document.getElementById('pr-height-in'))document.getElementById('pr-height-in').value=Math.round(ti%12);}}if(p.weight){var kg=parseFloat(p.weight);document.getElementById('pr-weight').value=isM?kg:Math.round(kg/0.4536*10)/10;}if(p.activity)document.getElementById('pr-activity').value=p.activity;if(p.steps)document.getElementById('pr-steps').value=p.steps;if(p.job)document.getElementById('pr-job').value=p.job;if(p.goal)document.getElementById('pr-goal').value=p.goal;if(p.waist){document.getElementById('pr-waist').value=p.waist;prCheckWaist();}if(p.bf)document.getElementById('pr-bf').value=p.bf;if(p.trainDays)prSetDays(p.trainDays);prCalc();var hist=JSON.parse(localStorage.getItem('tracktion_measurement_history')||'[]');if(hist.length)renderHistory(hist);})();
 </script></body></html>
