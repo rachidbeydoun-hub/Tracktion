@@ -9,49 +9,25 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 *::-webkit-scrollbar{display:none;}*{scrollbar-width:none;}
-body{
-  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
-  -webkit-font-smoothing:antialiased;
-  background:#f4f5f8;color:#1a1a2e;
-  min-height:100vh;
-  display:flex;justify-content:center;align-items:flex-start;
-  animation:pgIn 0.15s ease;
-}
+html,body{height:100%;overflow:hidden;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;-webkit-font-smoothing:antialiased;background:#f4f5f8;color:#1a1a2e;display:flex;justify-content:center;align-items:flex-start;animation:pgIn 0.15s ease;}
 @keyframes pgIn{from{opacity:0;}to{opacity:1;}}
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
 @keyframes ringFill1{from{stroke-dasharray:0 553;}to{stroke-dasharray:415 138;}}
 @keyframes ringFill2{from{stroke-dasharray:0 402;}to{stroke-dasharray:302 100;}}
 @keyframes ringFill3{from{stroke-dasharray:0 251;}to{stroke-dasharray:188 63;}}
-
-.screen{
-  width:100%;max-width:430px;
-  min-height:100vh;
-  display:flex;flex-direction:column;align-items:center;
-  justify-content:space-between;
-  padding:44px 24px 36px;
-  background:#f4f5f8;
-}
-
-/* WORDMARK */
+.screen{width:100%;max-width:430px;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:44px 24px 36px;background:#f4f5f8;overflow:hidden;}
 .wordmark{font-family:monospace;font-size:42px;font-weight:900;letter-spacing:-1px;line-height:1;display:flex;align-items:center;animation:fadeUp 0.4s ease both;}
 .wm-track{color:#0066ff;}
 .wm-ti{color:#ff2244;}
 .wm-on{color:#ffb300;}
-
-/* TAGPILL */
-.tagpill{display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(0,102,255,0.25);border-radius:20px;padding:5px 18px;animation:fadeUp 0.4s ease 0.1s both;}
-
-/* RINGS */
+.tagpill{display:flex;align-items:center;justify-content:center;gap:6px;border:1px solid rgba(0,102,255,0.25);border-radius:20px;padding:5px 18px;animation:fadeUp 0.4s ease 0.1s both;}
 .rings-wrap{flex-shrink:0;animation:fadeUp 0.5s ease 0.2s both;}
 .r1{animation:ringFill1 1.8s ease 0.4s both;}
 .r2{animation:ringFill2 1.8s ease 0.6s both;}
 .r3{animation:ringFill3 1.8s ease 0.8s both;}
-
-/* TEXT */
 .headline{font-size:24px;font-weight:800;color:#1a1a2e;text-align:center;line-height:1.25;animation:fadeUp 0.4s ease 0.5s both;}
 .subhead{font-size:14px;font-weight:600;color:#0066ff;text-align:center;line-height:1.5;margin-top:6px;animation:fadeUp 0.4s ease 0.6s both;}
-
-/* FEATURES */
 .features{width:100%;display:flex;flex-direction:column;gap:7px;}
 .feat{background:white;border-radius:14px;border:0.5px solid rgba(0,0,0,0.06);box-shadow:0 1px 4px rgba(0,0,0,0.04);padding:12px 14px;display:flex;align-items:center;gap:12px;}
 .feat-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
@@ -60,8 +36,6 @@ body{
 .f1{animation:fadeUp 0.4s ease 0.7s both;}
 .f2{animation:fadeUp 0.4s ease 0.8s both;}
 .f3{animation:fadeUp 0.4s ease 0.9s both;}
-
-/* BUTTONS */
 .btn-primary{width:100%;padding:15px;border-radius:13px;border:none;background:#0066ff;color:white;font-family:monospace;font-size:13px;font-weight:900;letter-spacing:1px;cursor:pointer;animation:fadeUp 0.4s ease 1s both;}
 .btn-primary:active{opacity:0.88;}
 .btn-ghost{width:100%;padding:15px;border-radius:13px;border:1.5px solid rgba(26,26,46,0.12);background:transparent;color:#1a1a2e;font-family:monospace;font-size:13px;font-weight:900;letter-spacing:1px;cursor:pointer;animation:fadeUp 0.4s ease 1.05s both;}
@@ -71,12 +45,11 @@ body{
 <body>
 <div class="screen">
 
-  <!-- WORDMARK + PILL -->
   <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
-    <div class="wordmark">
+    <div class="wordmark" id="wm">
       <span class="wm-track">TRACK</span><span class="wm-ti">TI</span><span class="wm-on">ON</span>
     </div>
-    <div class="tagpill">
+    <div class="tagpill" id="pill">
       <span style="font-family:monospace;font-size:9px;font-weight:900;color:#0066ff;letter-spacing:1px;">TRACK</span>
       <span style="font-family:monospace;font-size:9px;font-weight:900;color:#ff2244;">·</span>
       <span style="font-family:monospace;font-size:9px;font-weight:900;color:#ff2244;letter-spacing:1px;">TRAIN</span>
@@ -85,9 +58,8 @@ body{
     </div>
   </div>
 
-  <!-- RINGS HERO -->
   <div class="rings-wrap">
-    <svg width="190" height="190" viewBox="0 0 200 200">
+    <svg width="170" height="170" viewBox="0 0 200 200">
       <circle cx="100" cy="100" r="88" fill="none" stroke="rgba(0,102,255,0.1)" stroke-width="14"/>
       <circle class="r1" cx="100" cy="100" r="88" fill="none" stroke="#0066ff" stroke-width="14" stroke-dasharray="0 553" stroke-linecap="round" transform="rotate(-90 100 100)"/>
       <circle cx="100" cy="100" r="64" fill="none" stroke="rgba(255,195,0,0.1)" stroke-width="13"/>
@@ -99,13 +71,11 @@ body{
     </svg>
   </div>
 
-  <!-- HEADLINE -->
   <div style="text-align:center;">
     <div class="headline">Finally. A food tracker<br>you'll actually stick to.</div>
     <div class="subhead">Snap a photo. Your macros appear.<br>That's literally it.</div>
   </div>
 
-  <!-- FEATURES -->
   <div class="features">
     <div class="feat f1">
       <div class="feat-icon" style="background:rgba(0,102,255,0.08);">📸</div>
@@ -130,7 +100,6 @@ body{
     </div>
   </div>
 
-  <!-- BUTTONS -->
   <div style="width:100%;display:flex;flex-direction:column;gap:10px;">
     <button class="btn-primary" onclick="goTo('signup.html')">GET STARTED →</button>
     <button class="btn-ghost" onclick="goTo('signup.html?mode=signin')">SIGN IN</button>
@@ -140,6 +109,10 @@ body{
 <script>
 function goTo(u){document.body.style.opacity='0';document.body.style.transition='opacity 0.15s ease';setTimeout(function(){window.location.href=u;},150);}
 try{if(localStorage.getItem('tracktion_user')&&localStorage.getItem('tracktion_targets'))window.location.replace('index.html');}catch(e){}
+(function(){
+  function match(){var wm=document.getElementById('wm'),pill=document.getElementById('pill');if(wm&&pill)pill.style.width=wm.offsetWidth+'px';}
+  match();setTimeout(match,100);window.addEventListener('resize',match);
+})();
 </script>
 </body>
 </html>
