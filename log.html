@@ -579,7 +579,7 @@ function toggleChip(el){el.classList.toggle('active');}
 // ═══════════════════════════════════════
 async function analyzePhoto(){
   if(!currentPhoto){showToast('📷 Take or select a photo first');return;}
-  const apiKey=localStorage.getItem('tracktion_api_key');
+  const apiKey=localStorage.getItem('tracktion_apikey');
   if(!apiKey){showToast('🔑 Add your API key in Settings');return;}
   const btn=document.getElementById('analyze-btn');
   btn.innerHTML='<span>⏳</span> ANALYZING...';btn.disabled=true;
@@ -696,7 +696,7 @@ function filterCat(cat,btn){
 async function askAISearch(){
   const query=document.getElementById('search-input').value;
   if(!query){showToast('Type a food name first');return;}
-  const apiKey=localStorage.getItem('tracktion_api_key');
+  const apiKey=localStorage.getItem('tracktion_apikey');
   if(!apiKey){showToast('🔑 Add your API key in Settings');return;}
   const resultsEl=document.getElementById('ai-search-results');
   resultsEl.style.display='block';
