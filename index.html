@@ -3,12 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Tracktion">
-<meta name="mobile-web-app-capable" content="yes">
-<link rel="apple-touch-icon" href="icon-512.png">
-<link rel="manifest" href="./manifest.json">
 <title>TRACKTION</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -16,39 +10,56 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .page{width:100%;max-width:430px;margin:0 auto;padding:0 0 90px;}
 
 /* HEADER */
-.header{background:white;padding:16px 16px 13px;display:flex;justify-content:center;align-items:center;border-bottom:0.5px solid #f0f0f0;position:sticky;top:0;z-index:50;width:100%;max-width:430px;}
+.header{background:white;padding:16px 16px 13px;display:flex;justify-content:space-between;align-items:center;border-bottom:0.5px solid #f0f0f0;position:sticky;top:0;z-index:50;width:100%;max-width:430px;}
 .wordmark{display:flex;align-items:center;line-height:1;}
 .wm-track{font-family:monospace;font-size:30px;font-weight:900;color:#0066ff;letter-spacing:-1px;}
 .wm-ti{font-family:monospace;font-size:30px;font-weight:900;color:#ff2244;letter-spacing:-1px;}
-.wm-n{font-family:monospace;font-size:30px;font-weight:900;color:#ffb300;letter-spacing:-1px;}
+.wm-on{font-family:monospace;font-size:30px;font-weight:900;color:#ffb300;letter-spacing:-1px;}
+
+/* ASK AI PILL */
+.askai{display:flex;align-items:center;gap:6px;border:1.5px solid #0066ff;border-radius:20px;padding:7px 13px;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:all 0.15s;}
+.askai.on{background:#0066ff;}
+.askai-txt{font-size:10px;font-weight:800;letter-spacing:0.5px;color:#0066ff;}
+.askai.on .askai-txt{color:white;}
+.pulse{width:7px;height:7px;border-radius:50%;background:#0066ff;animation:pulse 1.6s infinite;}
+.askai.on .pulse{background:white;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.35;}}
 
 /* CARD */
 .card{background:white;border-radius:16px;margin:8px 12px;padding:16px;border:0.5px solid rgba(0,0,0,0.06);box-shadow:0 1px 4px rgba(0,0,0,0.04);}
 
-/* DAY TOGGLE */
-.dtoggle{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:8px 12px;}
-.dbtn{padding:11px 8px;border-radius:12px;border:1.5px solid #eee;background:white;font-size:11px;font-weight:800;color:#1a1a2e;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:5px;box-shadow:0 1px 3px rgba(0,0,0,0.04);}
-.dbtn .kc{font-family:monospace;font-weight:900;font-size:13px;color:#1a1a2e;}
-.dbtn.on{background:#0066ff;color:white;border-color:#0066ff;box-shadow:0 4px 12px rgba(0,102,255,0.3);}
-.dbtn.on .kc{color:white !important;}
+/* DAY TOGGLE — slim pill row */
+.dtoggle{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 12px 14px;}
+.dbtn{padding:10px 8px;border-radius:24px;border:1.5px solid #eee;background:white;font-size:11px;font-weight:800;color:rgba(26,26,46,0.4);cursor:pointer;transition:all 0.2s;text-align:center;letter-spacing:0.5px;-webkit-tap-highlight-color:transparent;}
+.dbtn.on{background:#0066ff;color:white;border-color:#0066ff;box-shadow:0 4px 12px rgba(0,102,255,0.25);}
+
+/* RINGS HERO */
+.rings-hero{display:flex;flex-direction:column;align-items:center;margin-bottom:14px;}
+.rem-main{font-family:monospace;font-size:32px;font-weight:900;line-height:1;margin-top:10px;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:color 0.2s;}
+.rem-sub{font-size:11px;font-weight:700;color:rgba(26,26,46,0.4);margin-top:4px;}
+.target-line{font-size:11px;font-weight:700;color:rgba(26,26,46,0.45);margin-top:6px;}
+
+/* AI PANEL */
+.ai-panel{background:white;border-radius:16px;border:0.5px solid rgba(0,0,0,0.06);box-shadow:0 1px 4px rgba(0,0,0,0.04);margin:8px 12px;overflow:hidden;display:none;}
+.ai-panel.open{display:block;}
+.ai-tabs{display:grid;grid-template-columns:1fr 1fr;border-bottom:0.5px solid rgba(0,0,0,0.06);}
+.ai-tab{text-align:center;padding:10px;font-size:11px;font-weight:800;letter-spacing:0.5px;color:rgba(26,26,46,0.4);cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.ai-tab.on{color:#0066ff;border-bottom:2px solid #0066ff;}
+.ai-content{padding:13px 16px;font-size:13px;font-weight:500;line-height:1.65;color:#1a1a2e;}
+.ai-chat-input{display:none;gap:6px;padding:0 14px 14px;}
+.ai-chat-input.show{display:flex;}
+.ai-chat-input input{flex:1;border:1px solid rgba(0,0,0,0.1);border-radius:10px;padding:9px 11px;font-size:12px;font-family:inherit;}
+.ai-chat-input button{background:#0066ff;color:white;border:none;border-radius:10px;padding:9px 16px;font-size:11px;font-weight:800;cursor:pointer;}
 
 /* MACRO BARS */
 .mrow{display:grid;grid-template-columns:44px 1fr auto;align-items:center;gap:10px;margin-bottom:11px;}
 .mrow:last-child{margin-bottom:0;}
 .mlbl{font-size:10px;font-weight:800;letter-spacing:0.5px;}
-.btrack{height:8px;background:#e4e6eb;border-radius:10px;overflow:hidden;}
+.btrack{height:6px;background:#e4e6eb;border-radius:10px;overflow:hidden;}
 .bfill{height:100%;border-radius:10px;transition:width 0.5s ease;}
 .mval{font-family:monospace;font-size:11px;font-weight:700;text-align:right;white-space:nowrap;display:flex;flex-direction:column;align-items:flex-end;gap:1px;min-width:76px;}
 .over{font-size:9px;font-weight:800;color:#ff2244;display:none;}
 
-/* COACHING TIP */
-.tip-card{background:linear-gradient(135deg,#f0f7ff,#e8f4ff);border:1px solid rgba(0,102,255,0.1);border-radius:16px;margin:8px 12px;padding:14px 16px;}
-.tip-text{font-size:13px;color:#1a1a2e;line-height:1.65;font-weight:500;}
-
-/* LOG SECTION */
-.log-section{margin:8px 12px 8px;}
-.log-header{font-size:10px;font-weight:800;color:rgba(26,26,46,0.45);letter-spacing:1.2px;text-transform:uppercase;margin-bottom:8px;}
-.empty-log{text-align:center;padding:12px 0;color:rgba(26,26,46,0.35);font-size:13px;font-weight:600;}
 /* EMPTY STATE CARD */
 .empty-state{background:white;border-radius:16px;margin:8px 12px 0;padding:14px 16px 12px;border:0.5px solid rgba(0,0,0,0.06);box-shadow:0 1px 4px rgba(0,0,0,0.04);text-align:center;display:none;}
 .empty-state.show{display:block;}
@@ -57,11 +68,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .empty-state-arrow{font-size:22px;animation:bounce 1.5s infinite;display:block;}
 @keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(5px);}}
 
-/* MEAL CARD */
-.meal{background:white;border-radius:14px;margin-bottom:8px;padding:13px 12px 13px 18px;border:0.5px solid rgba(0,0,0,0.06);box-shadow:0 1px 4px rgba(0,0,0,0.04);display:flex;align-items:center;justify-content:space-between;position:relative;overflow:hidden;transition:transform 0.1s;}
+/* LOG SECTION */
+.log-section{margin:8px 12px 8px;}
+.log-header{font-size:10px;font-weight:800;color:rgba(26,26,46,0.45);letter-spacing:1.2px;text-transform:uppercase;margin-bottom:8px;}
+.empty-log{text-align:center;padding:12px 0;color:rgba(26,26,46,0.35);font-size:13px;font-weight:600;}
+
+/* MEAL CARD — collapsed */
+.meal{background:white;border-radius:14px;margin-bottom:8px;border:0.5px solid rgba(0,0,0,0.06);box-shadow:0 1px 4px rgba(0,0,0,0.04);position:relative;overflow:hidden;transition:transform 0.1s;cursor:pointer;-webkit-tap-highlight-color:transparent;}
 .meal:active{transform:scale(0.99);}
 .meal:last-child{margin-bottom:0;}
 .meal-accent{width:4px;position:absolute;left:0;top:0;bottom:0;}
+.meal-main{display:flex;align-items:center;justify-content:space-between;padding:13px 12px 13px 18px;}
 .meal-left{flex:1;min-width:0;}
 .meal-line1{display:flex;align-items:baseline;gap:8px;margin-bottom:4px;}
 .meal-name{font-size:14px;font-weight:700;color:#1a1a2e;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:175px;}
@@ -69,30 +86,35 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .meal-line2{display:flex;align-items:center;gap:6px;}
 .meal-tag-lbl{font-size:10px;font-weight:700;color:rgba(26,26,46,0.4);letter-spacing:0.3px;}
 .meal-dot{width:3px;height:3px;border-radius:50%;background:rgba(26,26,46,0.2);flex-shrink:0;}
-.meal-actions{display:flex;align-items:center;gap:6px;margin-left:8px;flex-shrink:0;}
-.star-btn{background:none;border:none;cursor:pointer;font-size:18px;padding:4px;line-height:1;transition:transform 0.15s;}
-.star-btn:hover{transform:scale(1.2);}
+.meal-actions{display:flex;align-items:center;gap:10px;margin-left:8px;flex-shrink:0;}
+.star-btn{background:none;border:none;cursor:pointer;font-size:18px;padding:4px;line-height:1;transition:transform 0.15s;-webkit-tap-highlight-color:transparent;}
+.star-btn:active{transform:scale(1.2);}
 .star-btn.starred{filter:drop-shadow(0 0 4px rgba(255,179,0,0.7));}
-.del-btn{background:#fff0f2;border:none;cursor:pointer;color:#ff2244;font-size:14px;font-weight:700;padding:5px 9px;border-radius:8px;line-height:1;transition:all 0.15s;}
-.del-btn:hover{background:#ff2244;color:white;}
+.del-btn{background:none;border:none;cursor:pointer;color:rgba(26,26,46,0.3);font-size:18px;font-weight:700;padding:4px 6px;line-height:1;transition:color 0.15s;-webkit-tap-highlight-color:transparent;}
+.del-btn:active{color:#ff2244;}
 
-/* BOTTOM NAV — raised center circle */
-/* BOTTOM NAV — 5 tabs raised + center */
+/* MEAL CARD — expanded breakdown */
+.meal-expand{display:none;border-top:0.5px solid rgba(0,0,0,0.05);padding:14px 16px;}
+.meal-expand.open{display:block;}
+.exp-meta{font-size:11px;font-weight:700;color:rgba(26,26,46,0.45);margin-bottom:10px;}
+.exp-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:10px;}
+.exp-stat{background:#f8f9fb;border-radius:10px;padding:10px 4px;text-align:center;}
+.exp-num{font-family:monospace;font-size:20px;font-weight:700;line-height:1;}
+.exp-lbl{font-size:9px;font-weight:800;letter-spacing:0.6px;text-transform:uppercase;color:rgba(26,26,46,0.4);margin-top:4px;}
+.exp-acts{display:flex;justify-content:flex-end;gap:14px;align-items:center;}
+.edit-btn{background:none;border:none;cursor:pointer;color:#0066ff;font-size:11px;font-weight:800;letter-spacing:0.5px;padding:4px 6px;-webkit-tap-highlight-color:transparent;}
+.exp-name-input{width:100%;font-size:14px;font-weight:700;color:#1a1a2e;border:1px solid rgba(0,0,0,0.1);border-radius:8px;padding:8px 10px;margin-bottom:10px;font-family:inherit;}
+.exp-stat input{width:100%;background:none;border:none;text-align:center;font-family:monospace;font-size:20px;font-weight:700;padding:0;}
+.exp-stat input:focus{outline:none;}
+.save-btn{background:#0066ff;color:white;border:none;border-radius:10px;padding:8px 16px;font-size:11px;font-weight:800;letter-spacing:0.5px;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+
+/* BOTTOM NAV */
 .bnav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:white;border-top:0.5px solid rgba(0,0,0,0.08);z-index:100;}
 .bnav-inner{width:100%;display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr;align-items:center;padding:8px 2px 14px;}
-.nbtn{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:0.3px;color:#1a1a2e;cursor:pointer;padding:4px 2px;text-decoration:none;-webkit-tap-highlight-color:transparent;}
-.nbtn.on{color:#0066ff;}
-.nav-icon-wrap{padding:5px 10px;border-radius:10px;font-size:18px;line-height:1;border:1.5px solid transparent;transition:all 0.2s;}
-.nbtn.on .nav-icon-wrap{background:#f0f5ff;border-color:#0066ff;}
-.nbtn-center{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:0.3px;color:#0066ff;cursor:pointer;position:relative;top:-18px;text-decoration:none;}
-.nav-plus{width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,#0066ff,#0044cc);display:flex;align-items:center;justify-content:center;color:white;font-size:26px;font-weight:900;box-shadow:0 6px 20px rgba(0,102,255,0.4);line-height:1;transition:transform 0.15s;}
-.nbtn-center:active .nav-plus{transform:scale(0.93);}
-
 .nbtn{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:0.3px;color:#1a1a2e;cursor:pointer;padding:4px 2px;text-decoration:none;-webkit-tap-highlight-color:transparent;}
 .nbtn.on{color:#0066ff;}
 .nav-icon-wrap{padding:7px 14px;border-radius:12px;font-size:20px;line-height:1;border:1.5px solid transparent;transition:all 0.2s;filter:grayscale(0.2);}
 .nbtn.on .nav-icon-wrap{background:#f0f5ff;border-color:#0066ff;filter:none;}
-/* center raised */
 .nbtn-center{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:0.3px;color:#0066ff;cursor:pointer;position:relative;top:-18px;text-decoration:none;}
 .nav-plus{width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,#0066ff,#0044cc);display:flex;align-items:center;justify-content:center;color:white;font-size:26px;font-weight:900;box-shadow:0 6px 20px rgba(0,102,255,0.4);line-height:1;transition:transform 0.15s;}
 .nbtn-center:active .nav-plus{transform:scale(0.93);}
@@ -120,11 +142,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .hist-tag.train{background:#eef4ff;color:#0066ff;}
 .hist-tag.rest{background:#f0fff5;color:#1a9e5c;}
 .hist-empty{text-align:center;padding:40px 20px;color:#1a1a2e;font-size:14px;font-weight:600;}
-/* Detail view */
-.hist-detail{display:none;}
-.hist-detail.open{display:block;}
 
-/* PAGE TRANSITIONS — seamless fade between pages */
+/* PAGE TRANSITIONS */
 body{animation:fadeIn 0.15s ease;}
 @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
 a[href]{transition:opacity 0.1s ease;}
@@ -139,24 +158,48 @@ a[href]{transition:opacity 0.1s ease;}
     <div class="wordmark">
       <span class="wm-track">TRACK</span>
       <span class="wm-ti">TI</span>
-      <svg id="ring-o" width="52" height="52" viewBox="0 0 52 52" style="margin:0 1px;flex-shrink:0;">
-        <circle cx="26" cy="26" r="23"   fill="none" stroke="#ddeaff" stroke-width="4"/>
-        <circle cx="26" cy="26" r="15.5" fill="none" stroke="#fff5cc" stroke-width="3.5"/>
-        <circle cx="26" cy="26" r="8"    fill="none" stroke="#ffe0e5" stroke-width="3"/>
-        <circle id="r-kcal" cx="26" cy="26" r="23"   fill="none" stroke="#0066ff" stroke-width="4"   stroke-dasharray="144.5" stroke-dashoffset="144.5" stroke-linecap="round" transform="rotate(-90 26 26)" style="transition:stroke-dashoffset 0.5s ease;"/>
-        <circle id="r-prot" cx="26" cy="26" r="15.5" fill="none" stroke="#ffc300" stroke-width="3.5" stroke-dasharray="97.4"  stroke-dashoffset="97.4"  stroke-linecap="round" transform="rotate(-90 26 26)" style="transition:stroke-dashoffset 0.5s ease;"/>
-        <circle id="r-fat"  cx="26" cy="26" r="8"    fill="none" stroke="#ff2244" stroke-width="3"   stroke-dasharray="50.3"  stroke-dashoffset="50.3"  stroke-linecap="round" transform="rotate(-90 26 26)" style="transition:stroke-dashoffset 0.5s ease;"/>
-        <text x="23" y="29" text-anchor="middle" font-family="monospace" font-size="10" font-weight="900" fill="#ffc300">R</text>
-        <text x="29" y="29" text-anchor="middle" font-family="monospace" font-size="10" font-weight="900" fill="#0066ff">B</text>
-      </svg>
-      <span class="wm-n">N</span>
+      <span class="wm-on">ON</span>
+    </div>
+    <div class="askai" id="askai" onclick="toggleAI()">
+      <div class="pulse"></div>
+      <div class="askai-txt">ASK AI</div>
     </div>
   </div>
 
   <!-- DAY TOGGLE -->
   <div class="dtoggle">
-    <div class="dbtn on" id="btn-train" onclick="setDay('train')">⚡ TRAINING <span class="kc" id="kc-train">2500</span></div>
-    <div class="dbtn" id="btn-rest"  onclick="setDay('rest')">🥗 REST <span class="kc" id="kc-rest">2200</span></div>
+    <div class="dbtn on" id="btn-train" onclick="setDay('train')">⚡ TRAINING</div>
+    <div class="dbtn" id="btn-rest" onclick="setDay('rest')">🥗 REST</div>
+  </div>
+
+  <!-- RINGS HERO -->
+  <div class="rings-hero">
+    <svg id="ring-svg" width="160" height="160" viewBox="0 0 160 160">
+      <circle cx="80" cy="80" r="72" fill="none" stroke="#ddeaff" stroke-width="10"/>
+      <circle cx="80" cy="80" r="52" fill="none" stroke="#fff3cc" stroke-width="9"/>
+      <circle cx="80" cy="80" r="32" fill="none" stroke="#ffe0e5" stroke-width="8"/>
+      <circle id="r-kcal" cx="80" cy="80" r="72" fill="none" stroke="#0066ff" stroke-width="10" stroke-dasharray="452.4" stroke-dashoffset="452.4" stroke-linecap="round" transform="rotate(-90 80 80)" style="transition:stroke-dashoffset 0.5s ease;"/>
+      <circle id="r-prot" cx="80" cy="80" r="52" fill="none" stroke="#ffc300" stroke-width="9" stroke-dasharray="326.7" stroke-dashoffset="326.7" stroke-linecap="round" transform="rotate(-90 80 80)" style="transition:stroke-dashoffset 0.5s ease;"/>
+      <circle id="r-fat" cx="80" cy="80" r="32" fill="none" stroke="#ff2244" stroke-width="8" stroke-dasharray="201.1" stroke-dashoffset="201.1" stroke-linecap="round" transform="rotate(-90 80 80)" style="transition:stroke-dashoffset 0.5s ease;"/>
+      <text x="75" y="86" text-anchor="middle" font-family="monospace" font-size="18" font-weight="900" fill="#ffc300">R</text>
+      <text x="90" y="86" text-anchor="middle" font-family="monospace" font-size="18" font-weight="900" fill="#0066ff">B</text>
+    </svg>
+    <div class="rem-main" id="rem-num" onclick="cycleMetric()">2500</div>
+    <div class="rem-sub" id="rem-sub">kcal remaining · tap to change</div>
+    <div class="target-line" id="target-line">Target 2,500 kcal · Training day</div>
+  </div>
+
+  <!-- AI PANEL -->
+  <div class="ai-panel" id="ai-panel">
+    <div class="ai-tabs">
+      <div class="ai-tab on" id="tab-tips" onclick="setAITab('tips')">TIPS</div>
+      <div class="ai-tab" id="tab-coach" onclick="setAITab('coach')">COACH</div>
+    </div>
+    <div class="ai-content" id="ai-content">💡 Loading your tip...</div>
+    <div class="ai-chat-input" id="ai-chat">
+      <input type="text" id="ai-chat-text" placeholder="Ask about your macros, meals, plan...">
+      <button onclick="sendCoachMsg()">Send</button>
+    </div>
   </div>
 
   <!-- MACRO BARS -->
@@ -183,12 +226,7 @@ a[href]{transition:opacity 0.1s ease;}
     </div>
   </div>
 
-  <!-- COACHING TIP -->
-  <div class="tip-card">
-    <div id="tip-text" class="tip-text">💡 Loading your tip...</div>
-  </div>
-
-  <!-- EMPTY STATE — shown when no meals logged -->
+  <!-- EMPTY STATE -->
   <div class="empty-state" id="empty-state">
     <div class="empty-state-title">Log your first meal</div>
     <div class="empty-state-sub">Tap + below — your rings fill as you eat.</div>
@@ -239,6 +277,27 @@ const TIPS={
 
 let loggedFoods=[], favMeals=[], day='train';
 let targets={train:{kcal:2500,prot:168,carb:260,fat:68},rest:{kcal:2200,prot:160,carb:130,fat:72}};
+let expandedIdx=null;
+let editingIdx=null;
+
+// Ring circumferences (2*pi*r)
+const RING_C={kcal:452.4,prot:326.7,fat:201.1};
+
+// Remaining metric cycle: kcal -> prot -> carb -> fat
+const METRICS=[
+  {key:'kcal',label:'kcal',color:'#0066ff',unit:''},
+  {key:'prot',label:'protein',color:'#34c97a',unit:'g'},
+  {key:'carb',label:'carbs',color:'#2d8fff',unit:'g'},
+  {key:'fat', label:'fat',  color:'#f5a623',unit:'g'}
+];
+let metricIdx=0;
+try{
+  const saved=localStorage.getItem('tracktion_main_metric');
+  if(saved){
+    const i=METRICS.findIndex(m=>m.key===saved);
+    if(i>=0) metricIdx=i;
+  }
+}catch(e){}
 
 function init(){
   checkRollover();
@@ -252,22 +311,16 @@ function init(){
       targets.rest ={kcal:s.restKcal, prot:s.restProt||160, carb:s.restCarb||130, fat:s.restFat||72};
     }
   }catch(e){}
-  document.getElementById('kc-train').textContent=targets.train.kcal;
-  document.getElementById('kc-rest').textContent=targets.rest.kcal;
   document.getElementById('btn-train').className='dbtn'+(day==='train'?' on':'');
   document.getElementById('btn-rest').className='dbtn'+(day==='rest'?' on':'');
-  document.getElementById('kc-train').style.color=day==='train'?'white':'#1a1a2e';
-  document.getElementById('kc-rest').style.color=day==='rest'?'white':'#1a1a2e';
   render();
 }
 
 function setDay(d){
   day=d;
-  localStorage.setItem('tracktion_day',d);
+  try{localStorage.setItem('tracktion_day',d);}catch(e){}
   document.getElementById('btn-train').className='dbtn'+(d==='train'?' on':'');
   document.getElementById('btn-rest').className='dbtn'+(d==='rest'?' on':'');
-  document.getElementById('kc-train').style.color=d==='train'?'white':'#1a1a2e';
-  document.getElementById('kc-rest').style.color=d==='rest'?'white':'#1a1a2e';
   render();
 }
 
@@ -275,6 +328,7 @@ function render(){
   const t=targets[day];
   let k=0,p=0,c=0,f=0;
   loggedFoods.forEach(m=>{k+=m.kcal||0;p+=m.prot||0;c+=m.carbs||0;f+=m.fat||0;});
+
   [{id:'kcal',v:k,tg:t.kcal,u:''},{id:'prot',v:p,tg:t.prot,u:'g'},{id:'carb',v:c,tg:t.carb,u:'g'},{id:'fat',v:f,tg:t.fat,u:'g'}]
   .forEach(({id,v,tg,u})=>{
     document.getElementById('val-'+id).textContent=v+' / '+tg+u;
@@ -283,22 +337,145 @@ function render(){
     if(v>tg){oel.textContent='+'+(v-tg)+u+' over';oel.style.display='block';}
     else oel.style.display='none';
   });
+
+  // Rings — kcal, protein, fat
   const pK=Math.min(100,t.kcal>0?Math.round(k/t.kcal*100):0);
   const pP=Math.min(100,t.prot>0?Math.round(p/t.prot*100):0);
   const pF=Math.min(100,t.fat>0?Math.round(f/t.fat*100):0);
-  document.getElementById('r-kcal').setAttribute('stroke-dashoffset',(144.5*(1-pK/100)).toFixed(1));
-  document.getElementById('r-prot').setAttribute('stroke-dashoffset',(97.4*(1-pP/100)).toFixed(1));
-  document.getElementById('r-fat').setAttribute('stroke-dashoffset',(50.3*(1-pF/100)).toFixed(1));
+  document.getElementById('r-kcal').setAttribute('stroke-dashoffset',(RING_C.kcal*(1-pK/100)).toFixed(1));
+  document.getElementById('r-prot').setAttribute('stroke-dashoffset',(RING_C.prot*(1-pP/100)).toFixed(1));
+  document.getElementById('r-fat').setAttribute('stroke-dashoffset',(RING_C.fat*(1-pF/100)).toFixed(1));
+
+  // Remaining metric (tap to cycle)
+  renderMainMetric(k,p,c,f,t);
+
+  // Tip
   const isOver=k>t.kcal||f>t.fat;
   let tip;
   if(isOver) tip=TIPS.over;
   else if(day==='rest') tip=loggedFoods.length===0?TIPS.rest_empty:TIPS.rest_done;
   else{const pct=t.kcal>0?k/t.kcal:0;tip=pct===0?TIPS.empty:pct<0.35?TIPS.quarter:pct<0.65?TIPS.half:pct<0.9?TIPS.almost:TIPS.done;}
-  document.getElementById('tip-text').textContent=tip;
+  document.getElementById('ai-content').dataset.tip=tip;
+  if(document.getElementById('tab-tips').classList.contains('on')){
+    document.getElementById('ai-content').textContent=tip;
+  }
+
   renderLog();
 }
 
-// Normalize meal tags from old Log Food page (handles lowercase, emojis, etc.)
+function renderMainMetric(k,p,c,f,t){
+  const m=METRICS[metricIdx];
+  const totals={kcal:k,prot:p,carb:c,fat:f};
+  const tgMap={kcal:t.kcal,prot:t.prot,carb:t.carb,fat:t.fat};
+  const used=totals[m.key];
+  const tg=tgMap[m.key];
+  const remaining=Math.max(0,tg-used);
+  const el=document.getElementById('rem-num');
+  el.textContent=remaining.toLocaleString()+(m.unit||'');
+  el.style.color=m.color;
+  document.getElementById('rem-sub').textContent=m.label+' remaining · tap to change';
+  const dayLabel=day==='train'?'Training day':'Rest day';
+  document.getElementById('target-line').textContent='Target '+tg.toLocaleString()+(m.unit||'')+' '+m.label+' · '+dayLabel;
+}
+
+function cycleMetric(){
+  metricIdx=(metricIdx+1)%METRICS.length;
+  try{localStorage.setItem('tracktion_main_metric',METRICS[metricIdx].key);}catch(e){}
+  render();
+}
+
+// ═══════════════════════════════════════
+// AI PANEL
+// ═══════════════════════════════════════
+function toggleAI(){
+  const btn=document.getElementById('askai');
+  const panel=document.getElementById('ai-panel');
+  const on=btn.classList.toggle('on');
+  panel.classList.toggle('open',on);
+  if(on){
+    const tip=document.getElementById('ai-content').dataset.tip||'💡 Loading your tip...';
+    if(document.getElementById('tab-tips').classList.contains('on')){
+      document.getElementById('ai-content').textContent=tip;
+    }
+  }
+}
+
+function setAITab(tab){
+  document.getElementById('tab-tips').classList.toggle('on',tab==='tips');
+  document.getElementById('tab-coach').classList.toggle('on',tab==='coach');
+  document.getElementById('ai-chat').classList.toggle('show',tab==='coach');
+  const content=document.getElementById('ai-content');
+  if(tab==='coach'){
+    content.textContent="Ask me anything — I can see your profile, last 7 days, and today's log. \"Am I on track?\" \"Why isn't my weight moving?\" \"What should I eat now?\"";
+  }else{
+    content.textContent=content.dataset.tip||'💡 Loading your tip...';
+  }
+}
+
+function sendCoachMsg(){
+  const input=document.getElementById('ai-chat-text');
+  const msg=input.value.trim();
+  if(!msg)return;
+  const content=document.getElementById('ai-content');
+  let apikey='';
+  try{apikey=localStorage.getItem('tracktion_apikey')||'';}catch(e){}
+  if(!apikey){
+    content.textContent="Add your Anthropic API key in Settings to chat with the AI Coach.";
+    input.value='';
+    return;
+  }
+  content.textContent="Thinking...";
+  const t=targets[day];
+  let k=0,p=0,c=0,f=0;
+  loggedFoods.forEach(m=>{k+=m.kcal||0;p+=m.prot||0;c+=m.carbs||0;f+=m.fat||0;});
+
+  // Profile context
+  let profile={};
+  try{profile=JSON.parse(localStorage.getItem('tracktion_profile')||'{}');}catch(e){}
+  const profileLine=profile.weight?('Profile: weight '+profile.weight+(profile.units==='imperial'?'lb':'kg')+', goal: '+(profile.goal||'recomp')+'. '):'';
+
+  // Last 7 days history
+  let history={};
+  try{history=JSON.parse(localStorage.getItem('tracktion_history')||'{}');}catch(e){}
+  const keys=Object.keys(history).sort().reverse().slice(0,7);
+  let histLine='';
+  if(keys.length){
+    histLine='Last '+keys.length+' days: '+keys.map(key=>{
+      const d=history[key];
+      return key+' ('+d.dayType+'): '+d.totals.kcal+'kcal/'+d.totals.prot+'p/'+d.totals.carbs+'c/'+d.totals.fat+'f';
+    }).join(', ')+'. ';
+  }
+
+  const ctx=profileLine+histLine
+    +'Today ('+day+'): targets '+t.kcal+'kcal/'+t.prot+'p/'+t.carb+'c/'+t.fat+'f, logged so far '+k+'kcal/'+p+'p/'+c+'c/'+f+'f. '
+    +'Meals today: '+(loggedFoods.map(m=>m.name).join(', ')||'none')+'. '
+    +'User question: '+msg;
+
+  fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',
+    headers:{
+      'Content-Type':'application/json',
+      'x-api-key':apikey,
+      'anthropic-version':'2023-06-01',
+      'anthropic-dangerous-direct-browser-access':'true'
+    },
+    body:JSON.stringify({
+      model:'claude-sonnet-4-20250514',
+      max_tokens:300,
+      messages:[{role:'user',content:'You are a concise fitness and nutrition coach inside the Tracktion app. Be direct, short, practical, professional. Use the profile, recent history and current data to give specific advice (e.g. weight trend vs goal). Context: '+ctx}]
+    })
+  }).then(r=>r.json()).then(data=>{
+    const txt=(data.content&&data.content[0]&&data.content[0].text)||"Couldn't get a response — check your API key in Settings.";
+    content.textContent=txt;
+  }).catch(()=>{
+    content.textContent="Couldn't reach the AI — check your connection or API key.";
+  });
+  input.value='';
+}
+
+// ═══════════════════════════════════════
+// MEAL LOG
+// ═══════════════════════════════════════
 function normalizeTag(tag){
   if(!tag) return 'Snack';
   const t=tag.toString().toLowerCase();
@@ -323,29 +500,93 @@ function renderLog(){
     const tag=normalizeTag(m.mealTag);
     const color=MEAL_COLORS[tag]||'#aaa';
     const isFav=favNames.has(m.name);
-    return`<div class="meal">
+    const isOpen=expandedIdx===i;
+    return`<div class="meal" onclick="toggleMealExpand(${i})">
       <div class="meal-accent" style="background:${color};"></div>
-      <div class="meal-left">
-        <div class="meal-line1">
-          <span class="meal-name">${m.name}</span>
-          <span class="meal-kcal-lbl">${m.kcal} kcal</span>
+      <div class="meal-main">
+        <div class="meal-left">
+          <div class="meal-line1">
+            <span class="meal-name">${m.name}</span>
+            <span class="meal-kcal-lbl">${m.kcal} kcal</span>
+          </div>
+          <div class="meal-line2">
+            <span class="meal-tag-lbl">${tag} · ${m.time||''}</span>
+            <div class="meal-dot"></div>
+            <span style="font-size:11px;">
+              <span style="color:#34c97a;font-weight:700;">P${m.prot||0}</span> ·
+              <span style="color:#2d8fff;font-weight:700;">C${m.carbs||0}</span> ·
+              <span style="color:#f5a623;font-weight:700;">F${m.fat||0}</span>
+            </span>
+          </div>
         </div>
-        <div class="meal-line2">
-          <span class="meal-tag-lbl">${tag} · ${m.time||''}</span>
-          <div class="meal-dot"></div>
-          <span style="font-size:11px;">
-            <span style="color:#34c97a;font-weight:700;">P${m.prot||0}</span> ·
-            <span style="color:#2d8fff;font-weight:700;">C${m.carbs||0}</span> ·
-            <span style="color:#f5a623;font-weight:700;">F${m.fat||0}</span>
-          </span>
+        <div class="meal-actions">
+          <button class="star-btn${isFav?' starred':''}" onclick="event.stopPropagation();toggleFav(${i})">${isFav?'⭐':'☆'}</button>
+          <button class="del-btn" onclick="event.stopPropagation();removeMeal(${i})">×</button>
         </div>
       </div>
-      <div class="meal-actions">
-        <button class="star-btn${isFav?' starred':''}" onclick="toggleFav(${i})">${isFav?'⭐':'☆'}</button>
-        <button class="del-btn" onclick="removeMeal(${i})">×</button>
+      <div class="meal-expand${isOpen?' open':''}">
+        ${editingIdx===i?`
+        <input class="exp-name-input" id="edit-name-${i}" value="${(m.name||'').replace(/"/g,'&quot;')}">
+        <div class="exp-meta">${tag} · Logged ${m.time||''}${m.source?(' · '+m.source):''}</div>
+        <div class="exp-grid">
+          <div class="exp-stat"><input type="number" id="edit-kcal-${i}" style="color:#ff0000;" value="${m.kcal||0}"><div class="exp-lbl">kcal</div></div>
+          <div class="exp-stat"><input type="number" id="edit-prot-${i}" style="color:#34c97a;" value="${m.prot||0}"><div class="exp-lbl">protein</div></div>
+          <div class="exp-stat"><input type="number" id="edit-carbs-${i}" style="color:#2d8fff;" value="${m.carbs||0}"><div class="exp-lbl">carbs</div></div>
+          <div class="exp-stat"><input type="number" id="edit-fat-${i}" style="color:#f5a623;" value="${m.fat||0}"><div class="exp-lbl">fat</div></div>
+        </div>
+        <div class="exp-acts">
+          <button class="edit-btn" onclick="event.stopPropagation();cancelEdit()">CANCEL</button>
+          <button class="save-btn" onclick="event.stopPropagation();saveEdit(${i})">SAVE</button>
+        </div>
+        `:`
+        <div class="exp-meta">${tag} · Logged ${m.time||''}${m.source?(' · '+m.source):''}</div>
+        <div class="exp-grid">
+          <div class="exp-stat"><div class="exp-num" style="color:#ff0000;">${m.kcal||0}</div><div class="exp-lbl">kcal</div></div>
+          <div class="exp-stat"><div class="exp-num" style="color:#34c97a;">${m.prot||0}g</div><div class="exp-lbl">protein</div></div>
+          <div class="exp-stat"><div class="exp-num" style="color:#2d8fff;">${m.carbs||0}g</div><div class="exp-lbl">carbs</div></div>
+          <div class="exp-stat"><div class="exp-num" style="color:#f5a623;">${m.fat||0}g</div><div class="exp-lbl">fat</div></div>
+        </div>
+        <div class="exp-acts">
+          <button class="edit-btn" onclick="event.stopPropagation();startEdit(${i})">EDIT</button>
+          <button class="star-btn${isFav?' starred':''}" onclick="event.stopPropagation();toggleFav(${i})">${isFav?'⭐':'☆'}</button>
+          <button class="del-btn" onclick="event.stopPropagation();removeMeal(${i})">×</button>
+        </div>
+        `}
       </div>
     </div>`;
   }).join('');
+}
+
+function toggleMealExpand(i){
+  if(editingIdx!==null)return;
+  expandedIdx=(expandedIdx===i)?null:i;
+  renderLog();
+}
+
+function startEdit(i){
+  editingIdx=i;
+  renderLog();
+}
+
+function cancelEdit(){
+  editingIdx=null;
+  renderLog();
+}
+
+function saveEdit(i){
+  const m=loggedFoods[i];
+  if(!m)return;
+  const name=document.getElementById('edit-name-'+i).value.trim();
+  const kcal=parseInt(document.getElementById('edit-kcal-'+i).value)||0;
+  const prot=parseInt(document.getElementById('edit-prot-'+i).value)||0;
+  const carbs=parseInt(document.getElementById('edit-carbs-'+i).value)||0;
+  const fat=parseInt(document.getElementById('edit-fat-'+i).value)||0;
+  m.name=name||m.name;
+  m.kcal=kcal;m.prot=prot;m.carbs=carbs;m.fat=fat;
+  try{localStorage.setItem('tracktion_foods',JSON.stringify(loggedFoods));}catch(e){}
+  editingIdx=null;
+  showToast('Meal updated');
+  render();
 }
 
 function toggleFav(i){
@@ -359,13 +600,15 @@ function toggleFav(i){
     favMeals.splice(idx,1);
     showToast('Removed from My Meals');
   }
-  localStorage.setItem('tracktion_favs',JSON.stringify(favMeals));
+  try{localStorage.setItem('tracktion_favs',JSON.stringify(favMeals));}catch(e){}
   renderLog();
 }
 
 function removeMeal(i){
   loggedFoods.splice(i,1);
-  localStorage.setItem('tracktion_foods',JSON.stringify(loggedFoods));
+  if(expandedIdx===i) expandedIdx=null;
+  else if(expandedIdx!==null && i<expandedIdx) expandedIdx--;
+  try{localStorage.setItem('tracktion_foods',JSON.stringify(loggedFoods));}catch(e){}
   render();
 }
 
@@ -376,125 +619,38 @@ function showToast(msg){
   setTimeout(()=>{if(t.parentNode)t.remove();},2200);
 }
 
-
 // ═══════════════════════════════════════
-// DATE KEY
+// DATE KEY / ROLLOVER
 // ═══════════════════════════════════════
 function todayKey(){
   const d=new Date();
   return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 }
 
-function friendlyDate(key){
-  const d=new Date(key+'T12:00:00');
-  return d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
-}
-
-// ═══════════════════════════════════════
-// MIDNIGHT ROLLOVER
-// ═══════════════════════════════════════
 function checkRollover(){
-  const lastDate=localStorage.getItem('tracktion_last_date');
-  const today=todayKey();
-  if(!lastDate){localStorage.setItem('tracktion_last_date',today);return;}
+  let lastDate,today;
+  try{lastDate=localStorage.getItem('tracktion_last_date');}catch(e){lastDate=null;}
+  today=todayKey();
+  if(!lastDate){try{localStorage.setItem('tracktion_last_date',today);}catch(e){}return;}
   if(lastDate!==today){
-    const foods=JSON.parse(localStorage.getItem('tracktion_foods')||'[]');
+    let foods=[];
+    try{foods=JSON.parse(localStorage.getItem('tracktion_foods')||'[]');}catch(e){foods=[];}
     if(foods.length>0){
-      const history=JSON.parse(localStorage.getItem('tracktion_history')||'{}');
-      const tgts=JSON.parse(localStorage.getItem('tracktion_targets')||'{}');
-      const dt=localStorage.getItem('tracktion_day')||'train';
+      let history={};
+      try{history=JSON.parse(localStorage.getItem('tracktion_history')||'{}');}catch(e){history={};}
+      let tgts={};
+      try{tgts=JSON.parse(localStorage.getItem('tracktion_targets')||'{}');}catch(e){tgts={};}
+      let dt;
+      try{dt=localStorage.getItem('tracktion_day')||'train';}catch(e){dt='train';}
       const totals=foods.reduce((s,f)=>({kcal:s.kcal+(f.kcal||0),prot:s.prot+(f.prot||0),carbs:s.carbs+(f.carbs||0),fat:s.fat+(f.fat||0)}),{kcal:0,prot:0,carbs:0,fat:0});
       history[lastDate]={foods,totals,dayType:dt,target:dt==='train'?(tgts.trainKcal||2500):(tgts.restKcal||2200)};
-      localStorage.setItem('tracktion_history',JSON.stringify(history));
-      localStorage.setItem('tracktion_foods','[]');
+      try{
+        localStorage.setItem('tracktion_history',JSON.stringify(history));
+        localStorage.setItem('tracktion_foods','[]');
+      }catch(e){}
     }
-    localStorage.setItem('tracktion_last_date',today);
+    try{localStorage.setItem('tracktion_last_date',today);}catch(e){}
   }
-}
-
-// ═══════════════════════════════════════
-// HISTORY SCREEN
-// ═══════════════════════════════════════
-function openHistory(){ window.location.href='history.html'; }
-function closeHistory(){
-  document.getElementById('history-screen').classList.remove('open');
-}
-
-function renderHistory(){
-  const history=JSON.parse(localStorage.getItem('tracktion_history')||'{}');
-  const keys=Object.keys(history).sort().reverse();
-  const content=document.getElementById('history-content');
-  if(!keys.length){
-    content.innerHTML='<div class="hist-empty">No history yet.<br>Your daily logs save automatically at midnight.</div>';
-    return;
-  }
-  content.innerHTML=keys.map(key=>{
-    const d=history[key];
-    const pct=d.target>0?Math.min(100,Math.round(d.totals.kcal/d.target*100)):0;
-    const over=d.totals.kcal>d.target;
-    return`<div class="hist-day-card" onclick="showDayDetail('${key}')">
-      <span class="hist-tag ${d.dayType}">${d.dayType==='train'?'⚡ TRAINING':'🥗 REST'}</span>
-      <div class="hist-date">${friendlyDate(key)}</div>
-      <div class="hist-macros">
-        <div class="hist-macro">
-          <span class="hist-macro-val" style="color:#ff0000;">${d.totals.kcal}</span>
-          <span class="hist-macro-lbl" style="color:#ff0000;">kcal</span>
-        </div>
-        <div class="hist-macro">
-          <span class="hist-macro-val" style="color:#34c97a;">${d.totals.prot}g</span>
-          <span class="hist-macro-lbl" style="color:#34c97a;">prot</span>
-        </div>
-        <div class="hist-macro">
-          <span class="hist-macro-val" style="color:#2d8fff;">${d.totals.carbs}g</span>
-          <span class="hist-macro-lbl" style="color:#2d8fff;">carbs</span>
-        </div>
-        <div class="hist-macro">
-          <span class="hist-macro-val" style="color:#f5a623;">${d.totals.fat}g</span>
-          <span class="hist-macro-lbl" style="color:#f5a623;">fat</span>
-        </div>
-      </div>
-      <div class="hist-bar"><div class="hist-bar-fill" style="width:${pct}%;background:${over?'#ff2244':'#0066ff'};"></div></div>
-      <div style="font-size:10px;font-weight:700;margin-top:4px;color:${over?'#ff2244':'#34c97a'};">
-        ${over?'+'+( d.totals.kcal-d.target)+' over target':pct+'% of '+d.target+' kcal target'}
-      </div>
-    </div>`;
-  }).join('');
-}
-
-function showDayDetail(key){
-  const history=JSON.parse(localStorage.getItem('tracktion_history')||'{}');
-  const d=history[key];if(!d)return;
-  const MEAL_COLORS_LOCAL={Breakfast:'#2d8fff',Lunch:'#34c97a',Dinner:'#ff2244',Snack:'#ffb300'};
-  const content=document.getElementById('history-content');
-  content.innerHTML=`
-    <div style="padding:8px 12px;">
-      <button onclick="renderHistory()" style="background:none;border:none;color:#0066ff;font-size:13px;font-weight:800;cursor:pointer;padding:4px 0;margin-bottom:8px;">← Back to History</button>
-      <div class="card" style="margin:0 0 8px;">
-        <span class="hist-tag ${d.dayType}" style="margin-bottom:8px;">${d.dayType==='train'?'⚡ TRAINING':'🥗 REST'}</span>
-        <div style="font-size:16px;font-weight:800;color:#1a1a2e;margin-bottom:12px;">${friendlyDate(key)}</div>
-        <div class="hist-macros">
-          <div class="hist-macro"><span class="hist-macro-val" style="color:#ff0000;">${d.totals.kcal}</span><span class="hist-macro-lbl" style="color:#ff0000;">kcal</span></div>
-          <div class="hist-macro"><span class="hist-macro-val" style="color:#34c97a;">${d.totals.prot}g</span><span class="hist-macro-lbl" style="color:#34c97a;">prot</span></div>
-          <div class="hist-macro"><span class="hist-macro-val" style="color:#2d8fff;">${d.totals.carbs}g</span><span class="hist-macro-lbl" style="color:#2d8fff;">carbs</span></div>
-          <div class="hist-macro"><span class="hist-macro-val" style="color:#f5a623;">${d.totals.fat}g</span><span class="hist-macro-lbl" style="color:#f5a623;">fat</span></div>
-        </div>
-      </div>
-      ${d.foods.map(m=>{
-        const tag=m.mealTag||'Snack';
-        const color=MEAL_COLORS_LOCAL[tag]||'#ffb300';
-        return`<div class="meal" style="margin-bottom:8px;">
-          <div class="meal-accent" style="background:${color};"></div>
-          <div class="meal-left">
-            <div class="meal-line1"><span class="meal-name">${m.name}</span><span class="meal-kcal-lbl">${m.kcal} kcal</span></div>
-            <div class="meal-line2">
-              <span class="meal-tag-lbl">${tag} · ${m.time||''}</span>
-              <div class="meal-dot"></div>
-              <span style="font-size:11px;"><span style="color:#34c97a;font-weight:700;">P${m.prot||0}</span> · <span style="color:#2d8fff;font-weight:700;">C${m.carbs||0}</span> · <span style="color:#f5a623;font-weight:700;">F${m.fat||0}</span></span>
-            </div>
-          </div>
-        </div>`;
-      }).join('')}
-    </div>`;
 }
 
 init();
@@ -508,13 +664,5 @@ document.addEventListener('visibilitychange',()=>{
 });
 </script>
 
-<!-- HISTORY SCREEN -->
-<div class="history-screen" id="history-screen">
-  <div class="hist-header">
-    <button class="hist-back" onclick="closeHistory()">←</button>
-    <span class="hist-title">HISTORY</span>
-  </div>
-  <div id="history-content"></div>
-</div>
 </body>
 </html>
