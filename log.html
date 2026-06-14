@@ -194,7 +194,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 @keyframes spin{to{transform:rotate(360deg);}}
 
 /* ADD BAR */
-.add-bar{position:fixed;bottom:70px;left:0;right:0;background:white;padding:10px 12px;border-top:0.5px solid rgba(0,0,0,0.07);box-shadow:0 -3px 10px rgba(0,0,0,0.06);z-index:100;display:flex;justify-content:center;}
+.add-bar{position:fixed;bottom:calc(70px + env(safe-area-inset-bottom));left:0;right:0;background:white;padding:10px 12px;border-top:0.5px solid rgba(0,0,0,0.07);box-shadow:0 -3px 10px rgba(0,0,0,0.06);z-index:99;display:flex;justify-content:center;}
 .add-bar-inner{width:100%;max-width:430px;}
 .add-to-log-btn{width:100%;padding:15px;background:linear-gradient(135deg,#0066ff,#0044cc);color:white;border:none;border-radius:14px;font-size:15px;font-weight:700;cursor:pointer;transition:all 0.2s;box-shadow:0 4px 14px rgba(0,102,255,0.3);letter-spacing:0.3px;}
 .add-to-log-btn:active{transform:scale(0.98);}
@@ -755,12 +755,30 @@ async function reSearchItem(i){
     var data=await res.json();
     var f=JSON.parse(data.content[0].text.trim());
     // Update aiItems
-    if(aiItems[i]){aiItems[i]=Object.assign(aiItems[i],f,{idx:i});}
-    // Rerender just this item's macros and recalc total
+    if(aiItems[i]){aiItems[i]=Object.assign(aiItems[i],f,{idx:i,confidence:'High',confidence_note:'Re-searched and confirmed'});}
+    // Rerender just this item's macros and name
     var riEl=document.getElementById('ri-'+i);
-    riEl.querySelector('.ri-portion').textContent=f.portion;
-    riEl.querySelector('.ri-nums').innerHTML='<span class="ri-num" style="color:#ff0000;">'+f.kcal+' kcal</span><span class="ri-num" style="color:#34c97a;">P '+f.prot+'g</span><span class="ri-num" style="color:#2d8fff;">C '+f.carbs+'g</span><span class="ri-num" style="color:#f5a623;">F '+f.fat+'g</span>';
-    riEl.querySelector('.ri-name').textContent=f.name;
+    if(riEl){
+      riEl.querySelector('.ri-portion').textContent=f.portion;
+      riEl.querySelector('.ri-nums').innerHTML='<span class="ri-num" style="color:#ff0000;">'+f.kcal+' kcal</span><span class="ri-num" style="color:#34c97a;">P '+f.prot+'g</span><span class="ri-num" style="color:#2d8fff;">C '+f.carbs+'g</span><span class="ri-num" style="color:#f5a623;">F '+f.fat+'g</span>';
+      riEl.querySelector('.ri-name').textContent=f.name;
+      // Remove warn styling — now confirmed
+      riEl.classList.remove('warn');
+      var flag=riEl.querySelector('.ri-flag');
+      if(flag)flag.remove();
+    }
+    // Update conf detail row for this item
+    var confRows=document.querySelectorAll('.conf-row-item');
+    if(confRows[i]){
+      confRows[i].innerHTML='<span class="conf-name">'+f.name+'</span><span class="conf-tag" style="color:#1a9e5c;">● High</span>';
+    }
+    // Update main confidence pill if all items now High
+    var allHigh=aiItems.every(function(item){return (item.confidence||'High')==='High';});
+    if(allHigh){
+      var pill=document.getElementById('conf-pill');
+      pill.className='conf-pill high';
+      pill.textContent='✓ High · see details ▾';
+    }
     recalcTotal();
     showToast('Updated: '+f.name);
     btn.textContent='✅ Updated';
@@ -854,6 +872,37 @@ function renderMeals(){
 }
 
 // ADD FOOD
+function resetSnap(){
+  currentPhoto=null;currentFileName='';pendingFood=null;aiItems=[];openRiIdx=null;
+  // Reset photo section
+  document.getElementById('photo-hdr-left').innerHTML='<div class="sec-title">📷 Photo</div>';
+  document.getElementById('photo-btns').style.display='grid';
+  document.getElementById('photo-preview-wrap').style.display='none';
+  document.getElementById('photo-full-wrap').classList.remove('open');
+  document.getElementById('photo-retake').style.display='none';
+  // Hide notes + analyze + results + tip
+  document.getElementById('notes-section').style.display='none';
+  document.getElementById('analyze-section').style.display='none';
+  document.getElementById('results-wrap').classList.remove('show');
+  document.getElementById('tip-bar').classList.remove('show');
+  // Reset notes + chips
+  document.getElementById('description').value='';
+  document.getElementById('ctx-body').classList.remove('open');
+  document.getElementById('ctx-arrow').classList.remove('open');
+  document.querySelectorAll('.chip').forEach(function(c){c.classList.remove('on');});
+  // Reset chip defaults
+  var normals=document.querySelectorAll('.chip');
+  normals.forEach(function(c){if(c.textContent==='Normal')c.classList.add('on');});
+  // Reset analyze button
+  var btn=document.getElementById('analyze-btn');
+  btn.innerHTML='<span class="thunder">⚡</span> Analyze this meal';
+  btn.style.background='';btn.disabled=false;
+  // Reset log name
+  document.getElementById('log-name-inp').value='';
+  // Scroll to top
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
 function quickAddFood(food){
   food.mealTag=currentTag;
   food.date=todayKey();
@@ -876,11 +925,8 @@ function addToLog(){
     try{localStorage.setItem('tracktion_foods',JSON.stringify(loggedFoods));}catch(e){}
     pendingFood=null;aiItems=[];
     updateBadge();
-    var btn=document.getElementById('add-to-log-btn');
-    btn.textContent='✅ LOGGED!';
-    btn.style.background='linear-gradient(135deg,#1a9e5c,#148a4e)';
-    setTimeout(function(){btn.textContent='ADD TO LOG';btn.style.background='';},1800);
-    showToast('Meal logged successfully');
+    showToast('✅ Meal logged successfully');
+    setTimeout(function(){resetSnap();},400);
     return;
   }
   if(activeTab==='quick'){
