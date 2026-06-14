@@ -325,6 +325,9 @@ function init(){
   try{loggedFoods=JSON.parse(localStorage.getItem('tracktion_foods')||'[]');}catch(e){loggedFoods=[];}
   try{favMeals=JSON.parse(localStorage.getItem('tracktion_favs')||'[]');}catch(e){favMeals=[];}
   try{coachHistory=JSON.parse(localStorage.getItem('tracktion_coach_history')||'[]');}catch(e){coachHistory=[];}
+  // Clean any stuck Thinking... messages from previous sessions
+  coachHistory=coachHistory.filter(function(m){return m.text!=='Thinking...';});
+  try{localStorage.setItem('tracktion_coach_history',JSON.stringify(coachHistory));}catch(e){}
   day=localStorage.getItem('tracktion_day')||'train';
   try{
     const s=JSON.parse(localStorage.getItem('tracktion_targets')||'null');
@@ -492,7 +495,7 @@ function loadTip(isManual){
     method:'POST',
     headers:{'Content-Type':'application/json','x-api-key':apikey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
     body:JSON.stringify({
-      model:'claude-sonnet-4-20250514',
+      model:'claude-sonnet-4-6',
       max_tokens:120,
       messages:[{role:'user',content:'You are a fitness and nutrition coach in the Tracktion app. Give ONE short, direct, personalised coaching tip (2-3 sentences max) based on this data. Be specific to their numbers, not generic. No bullet points. Context: '+ctx}]
     })
@@ -591,24 +594,34 @@ function sendCoachMsg(){
     if(dedupedMsgs.length&&dedupedMsgs[dedupedMsgs.length-1].role===apiRole) return;
     dedupedMsgs.push({role:apiRole,content:m.text});
   });
-  // Always end with user message
+  // Anthropic requires first message to be user — strip leading assistant messages
+  while(dedupedMsgs.length&&dedupedMsgs[0].role==='assistant') dedupedMsgs.shift();
+  // Always end with the current user message
   dedupedMsgs.push({role:'user',content:msg});
   fetch('https://api.anthropic.com/v1/messages',{
     method:'POST',
     headers:{'Content-Type':'application/json','x-api-key':apikey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
     body:JSON.stringify({
-      model:'claude-sonnet-4-20250514',
+      model:'claude-sonnet-4-6',
       max_tokens:300,
       system:'You are a direct, professional fitness and nutrition coach inside the Tracktion app. Be specific to their data. No fluff. Context: '+ctx,
       messages:dedupedMsgs
     })
   }).then(function(r){return r.json();}).then(function(data){
-    const txt=(data.content&&data.content[0]&&data.content[0].text)||'Could not get a response — check your API key in Settings.';
+    var txt;
+    if(data.content&&data.content[0]&&data.content[0].text){
+      txt=data.content[0].text;
+    } else if(data.error){
+      txt='API error: '+data.error.message;
+    } else {
+      txt='No response — try again.';
+    }
     coachHistory[coachHistory.length-1]={role:'ai',text:txt};
     try{localStorage.setItem('tracktion_coach_history',JSON.stringify(coachHistory));}catch(e){}
     renderCoachHistory();
-  }).catch(function(){
-    coachHistory[coachHistory.length-1]={role:'ai',text:"Couldn't reach the AI — check your connection or API key."};
+  }).catch(function(err){
+    var errMsg="Connection failed: "+(err&&err.message?err.message:'unknown error');
+    coachHistory[coachHistory.length-1]={role:'ai',text:errMsg};
     try{localStorage.setItem('tracktion_coach_history',JSON.stringify(coachHistory));}catch(e){}
     renderCoachHistory();
   });
