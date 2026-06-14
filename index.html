@@ -607,20 +607,27 @@ function sendCoachMsg(){
       system:'You are a direct, professional fitness and nutrition coach inside the Tracktion app. Be specific to their data. No fluff. Context: '+ctx,
       messages:dedupedMsgs
     })
-  }).then(function(r){return r.json();}).then(function(data){
+  }).then(function(r){
+    if(!r.ok){
+      return r.text().then(function(rawErr){
+        throw new Error('HTTP '+r.status+': '+rawErr.slice(0,200));
+      });
+    }
+    return r.json();
+  }).then(function(data){
     var txt;
     if(data.content&&data.content[0]&&data.content[0].text){
       txt=data.content[0].text;
     } else if(data.error){
-      txt='API error: '+data.error.message;
+      txt='API error: '+data.error.type+' — '+data.error.message;
     } else {
-      txt='No response — try again.';
+      txt='Unexpected response: '+JSON.stringify(data).slice(0,100);
     }
     coachHistory[coachHistory.length-1]={role:'ai',text:txt};
     try{localStorage.setItem('tracktion_coach_history',JSON.stringify(coachHistory));}catch(e){}
     renderCoachHistory();
   }).catch(function(err){
-    var errMsg="Connection failed: "+(err&&err.message?err.message:'unknown error');
+    var errMsg='Error: '+(err&&err.message?err.message:'unknown — check console');
     coachHistory[coachHistory.length-1]={role:'ai',text:errMsg};
     try{localStorage.setItem('tracktion_coach_history',JSON.stringify(coachHistory));}catch(e){}
     renderCoachHistory();
