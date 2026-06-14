@@ -60,9 +60,32 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 /* PHOTO */
 .photo-btns{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:12px;}
-.photo-btn{padding:12px;border:1px solid rgba(0,102,255,0.2);border-radius:10px;background:#f8fbff;font-size:12px;font-weight:700;color:#0066ff;text-align:center;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;transition:all 0.15s;}
-.photo-btn:active{background:#e8f0ff;}
-.photo-btn-ico{font-size:18px;}
+.photo-btn{padding:14px 12px;border:1.5px solid rgba(0,102,255,0.25);border-radius:12px;background:#f8fbff;font-size:12px;font-weight:700;color:#0066ff;text-align:center;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:background 0.2s,border-color 0.2s,transform 0.15s,box-shadow 0.2s;position:relative;overflow:hidden;user-select:none;}
+.photo-btn:active{transform:scale(0.96);}
+.photo-btn.pressed{background:#0066ff;border-color:#0066ff;color:white;box-shadow:0 6px 18px rgba(0,102,255,0.35);}
+.photo-btn.pressed .photo-btn-ico{color:white;}
+.photo-btn-ico{font-size:20px;transition:transform 0.3s,filter 0.2s;display:inline-block;}
+.photo-btn-lbl{font-size:12px;font-weight:700;transition:color 0.2s;}
+.photo-btn.pressed .photo-btn-lbl{color:white;}
+/* Ripple */
+.photo-btn::after{content:'';position:absolute;inset:0;background:rgba(255,255,255,0.3);transform:scale(0);border-radius:12px;transition:transform 0.4s ease,opacity 0.4s ease;opacity:0;}
+.photo-btn.ripple::after{transform:scale(2);opacity:0;}
+
+/* Camera shutter animation */
+@keyframes shutter{0%{transform:scale(1);}30%{transform:scale(1.3);filter:brightness(2);}60%{transform:scale(0.85);}100%{transform:scale(1);}}
+.camera-fire{animation:shutter 0.35s ease forwards;}
+
+/* Gallery flip animation */
+@keyframes galleryflip{0%{transform:rotateY(0deg);}40%{transform:rotateY(90deg);}70%{transform:rotateY(-15deg);}100%{transform:rotateY(0deg);}}
+.gallery-fire{animation:galleryflip 0.4s ease forwards;}
+
+/* Photo preview — slide in */
+.photo-preview{display:flex;align-items:center;gap:10px;margin-top:12px;background:#f0fff5;border-radius:10px;padding:9px 12px;cursor:pointer;border:0.5px solid rgba(52,201,122,0.2);animation:slideUp 0.3s ease;}
+@keyframes slideUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+/* Photo buttons exit */
+.photo-btns.exit{animation:slideDown 0.25s ease forwards;}
+@keyframes slideDown{from{opacity:1;transform:translateY(0);}to{opacity:0;transform:translateY(-6px);}}
 
 .photo-preview{display:flex;align-items:center;gap:10px;margin-top:12px;background:#f0fff5;border-radius:10px;padding:9px 12px;cursor:pointer;border:0.5px solid rgba(52,201,122,0.2);}
 .photo-thumb{width:36px;height:36px;border-radius:8px;object-fit:cover;flex-shrink:0;display:block;}
@@ -263,8 +286,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
         </div>
         <div class="sec-body">
           <div class="photo-btns" id="photo-btns">
-            <div class="photo-btn" onclick="openCamera()"><span class="photo-btn-ico">📷</span>Camera</div>
-            <div class="photo-btn" onclick="openGallery()"><span class="photo-btn-ico">🖼</span>Gallery</div>
+            <div class="photo-btn" id="btn-camera" onclick="handleCameraClick()">
+              <span class="photo-btn-ico" id="ico-camera">📷</span>
+              <span class="photo-btn-lbl">Camera</span>
+            </div>
+            <div class="photo-btn" id="btn-gallery" onclick="handleGalleryClick()">
+              <span class="photo-btn-ico" id="ico-gallery">🖼</span>
+              <span class="photo-btn-lbl">Gallery</span>
+            </div>
           </div>
           <input type="file" id="file-input" accept="image/*" style="display:none;" onchange="handlePhoto(this)">
           <div id="photo-preview-wrap" style="display:none;">
@@ -558,6 +587,32 @@ function showTab(name,el){
   if(name==='search')renderFoods(currentCat);
 }
 
+// PHOTO BUTTON ANIMATIONS
+function handleCameraClick(){
+  var btn=document.getElementById('btn-camera');
+  var ico=document.getElementById('ico-camera');
+  // Press state
+  btn.classList.add('pressed','ripple');
+  ico.classList.add('camera-fire');
+  setTimeout(function(){
+    btn.classList.remove('pressed','ripple');
+    ico.classList.remove('camera-fire');
+    openCamera();
+  },320);
+}
+
+function handleGalleryClick(){
+  var btn=document.getElementById('btn-gallery');
+  var ico=document.getElementById('ico-gallery');
+  btn.classList.add('pressed','ripple');
+  ico.classList.add('gallery-fire');
+  setTimeout(function(){
+    btn.classList.remove('pressed','ripple');
+    ico.classList.remove('gallery-fire');
+    openGallery();
+  },360);
+}
+
 // PHOTO
 function openCamera(){var i=document.getElementById('file-input');i.setAttribute('capture','environment');i.click();}
 function openGallery(){var i=document.getElementById('file-input');i.removeAttribute('capture');i.click();}
@@ -596,12 +651,14 @@ function handlePhoto(input){
       document.getElementById('photo-thumb-img').src=dataUrl;
       document.getElementById('photo-full-img').src=dataUrl;
       document.getElementById('photo-fname').textContent=currentFileName;
-      document.getElementById('photo-btns').style.display='none';
-      document.getElementById('photo-preview-wrap').style.display='block';
-      document.getElementById('photo-retake').style.display='block';
-      // Reveal notes + analyze
-      document.getElementById('notes-section').style.display='block';
-      document.getElementById('analyze-section').style.display='block';
+      document.getElementById('photo-btns').classList.add('exit');
+      setTimeout(function(){
+        document.getElementById('photo-btns').style.display='none';
+        document.getElementById('photo-preview-wrap').style.display='block';
+        document.getElementById('photo-retake').style.display='block';
+        document.getElementById('notes-section').style.display='block';
+        document.getElementById('analyze-section').style.display='block';
+      },220);
     };
     img.src=e.target.result;
   };
