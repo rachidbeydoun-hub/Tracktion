@@ -58,7 +58,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 /* COACH TAB */
 .coach-body{display:none;flex-direction:column;}
 .coach-body.show{display:flex;}
-.coach-history{max-height:220px;overflow-y:auto;padding:10px 14px 6px;}
+.coach-history{max-height:280px;overflow-y:auto;padding:10px 14px 6px;}
 .coach-msg{margin-bottom:8px;display:flex;}
 .coach-msg.user{justify-content:flex-end;}
 .coach-msg.ai{justify-content:flex-start;}
@@ -524,7 +524,8 @@ function renderCoachHistory(){
   clearBtn.style.display=hasReal?'block':'none';
   var html='';
   coachHistory.forEach(function(msg){
-    html+='<div class="coach-msg '+msg.role+'"><div class="msg-bubble">'+escapeHtml(msg.text)+'</div></div>';
+    var content=msg.role==='user'?escapeHtml(msg.text):renderMarkdown(msg.text);
+    html+='<div class="coach-msg '+msg.role+'"><div class="msg-bubble">'+content+'</div></div>';
   });
   container.innerHTML=html;
   container.scrollTop=container.scrollHeight;
@@ -532,6 +533,27 @@ function renderCoachHistory(){
 
 function escapeHtml(t){
   return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function renderMarkdown(text){
+  // Escape HTML first
+  var s=text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  // Headers ## → bold line
+  s=s.replace(/^##\s+(.+)$/gm,'<strong>$1</strong>');
+  s=s.replace(/^#\s+(.+)$/gm,'<strong>$1</strong>');
+  // Bold **text**
+  s=s.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
+  // Italic *text*
+  s=s.replace(/\*(.+?)\*/g,'<em>$1</em>');
+  // Horizontal rule ---
+  s=s.replace(/^---+$/gm,'<hr style="border:none;border-top:0.5px solid rgba(255,255,255,0.3);margin:6px 0;">');
+  // Bullet points - item
+  s=s.replace(/^[\-•]\s+(.+)$/gm,'<div style="padding-left:10px;margin:2px 0;">· $1</div>');
+  // Line breaks
+  s=s.replace(/\n/g,'<br>');
+  // Clean up multiple <br>
+  s=s.replace(/(<br>){3,}/g,'<br><br>');
+  return s;
 }
 
 function clearCoach(){
@@ -596,7 +618,7 @@ function sendCoachMsg(){
     body:JSON.stringify({
       model:'claude-sonnet-4-6',
       max_tokens:300,
-      system:'You are a direct, professional fitness and nutrition coach inside the Tracktion app. Be specific to their data. No fluff. Context: '+ctx,
+      system:'You are a direct, professional fitness and nutrition coach inside the Tracktion app. Be specific to their data. Keep responses concise — 3-4 sentences max. No headers, no bullet lists, no markdown formatting. Plain conversational text only. Context: '+ctx,
       messages:dedupedMsgs
     })
   }).then(function(r){
