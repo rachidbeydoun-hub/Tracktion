@@ -173,15 +173,20 @@ a[href]{transition:opacity 0.1s ease;}
 
   <!-- RINGS HERO -->
   <div class="rings-hero">
-    <svg id="ring-svg" width="160" height="160" viewBox="0 0 160 160">
-      <circle cx="80" cy="80" r="72" fill="none" stroke="#ddeaff" stroke-width="10"/>
-      <circle cx="80" cy="80" r="52" fill="none" stroke="#fff3cc" stroke-width="9"/>
-      <circle cx="80" cy="80" r="32" fill="none" stroke="#ffe0e5" stroke-width="8"/>
-      <circle id="r-kcal" cx="80" cy="80" r="72" fill="none" stroke="#0066ff" stroke-width="10" stroke-dasharray="452.4" stroke-dashoffset="452.4" stroke-linecap="round" transform="rotate(-90 80 80)" style="transition:stroke-dashoffset 0.5s ease;"/>
-      <circle id="r-prot" cx="80" cy="80" r="52" fill="none" stroke="#ffc300" stroke-width="9" stroke-dasharray="326.7" stroke-dashoffset="326.7" stroke-linecap="round" transform="rotate(-90 80 80)" style="transition:stroke-dashoffset 0.5s ease;"/>
-      <circle id="r-fat" cx="80" cy="80" r="32" fill="none" stroke="#ff2244" stroke-width="8" stroke-dasharray="201.1" stroke-dashoffset="201.1" stroke-linecap="round" transform="rotate(-90 80 80)" style="transition:stroke-dashoffset 0.5s ease;"/>
-      <text x="75" y="86" text-anchor="middle" font-family="monospace" font-size="18" font-weight="900" fill="#ffc300">R</text>
-      <text x="90" y="86" text-anchor="middle" font-family="monospace" font-size="18" font-weight="900" fill="#0066ff">B</text>
+    <svg id="ring-svg" width="170" height="170" viewBox="0 0 170 170">
+      <!-- Tracks -->
+      <circle cx="85" cy="85" r="78" fill="none" stroke="#ffe5e5" stroke-width="9"/>
+      <circle cx="85" cy="85" r="61" fill="none" stroke="#e8f5ee" stroke-width="8"/>
+      <circle cx="85" cy="85" r="44" fill="none" stroke="#ddeaff" stroke-width="8"/>
+      <circle cx="85" cy="85" r="27" fill="none" stroke="#fff3e0" stroke-width="7"/>
+      <!-- Fills: outer=red=kcal, r2=green=prot, r3=blue=carbs, inner=gold=fat -->
+      <circle id="r-kcal" cx="85" cy="85" r="78" fill="none" stroke="#ff0000" stroke-width="9" stroke-dasharray="490.1" stroke-dashoffset="490.1" stroke-linecap="round" transform="rotate(-90 85 85)" style="transition:stroke-dashoffset 0.6s ease;"/>
+      <circle id="r-prot" cx="85" cy="85" r="61" fill="none" stroke="#34c97a" stroke-width="8" stroke-dasharray="383.3" stroke-dashoffset="383.3" stroke-linecap="round" transform="rotate(-90 85 85)" style="transition:stroke-dashoffset 0.6s ease;"/>
+      <circle id="r-carb" cx="85" cy="85" r="44" fill="none" stroke="#2d8fff" stroke-width="8" stroke-dasharray="276.5" stroke-dashoffset="276.5" stroke-linecap="round" transform="rotate(-90 85 85)" style="transition:stroke-dashoffset 0.6s ease;"/>
+      <circle id="r-fat" cx="85" cy="85" r="27" fill="none" stroke="#f5a623" stroke-width="7" stroke-dasharray="169.6" stroke-dashoffset="169.6" stroke-linecap="round" transform="rotate(-90 85 85)" style="transition:stroke-dashoffset 0.6s ease;"/>
+      <!-- RB initials -->
+      <text x="80" y="91" text-anchor="middle" font-family="monospace" font-size="17" font-weight="900" fill="#f5a623">R</text>
+      <text x="95" y="91" text-anchor="middle" font-family="monospace" font-size="17" font-weight="900" fill="#0066ff">B</text>
     </svg>
     <div class="rem-main" id="rem-num" onclick="cycleMetric()">2500</div>
     <div class="rem-sub" id="rem-sub">kcal remaining · tap to change</div>
@@ -271,53 +276,28 @@ a[href]{transition:opacity 0.1s ease;}
 
 <script>
 const MEAL_COLORS={Breakfast:'#2d8fff',Lunch:'#34c97a',Dinner:'#ff2244',Snack:'#ffb300'};
-const RING_C={kcal:452.4,prot:326.7,fat:201.1,carbs:201.1};
-const RING_META={
-  kcal:{label:'kcal',color:'#0066ff',stroke:'#0066ff',track:'#ddeaff',unit:''},
-  prot:{label:'protein',color:'#34c97a',stroke:'#ffc300',track:'#fff3cc',unit:'g'},
-  carbs:{label:'carbs',color:'#2d8fff',stroke:'#2d8fff',track:'#ddeaff',unit:'g'},
-  fat:{label:'fat',color:'#f5a623',stroke:'#ff2244',track:'#ffe0e5',unit:'g'}
-};
-// Ring radii: outer=72, middle=52, inner=32
-const RING_RADII=[72,52,32];
-const RING_WIDTHS=[10,9,8];
-const RING_CIRCS=[452.4,326.7,201.1];
-var ringConfig={outer:'kcal',middle:'prot',inner:'fat'};
 
-function loadRingConfig(){
-  try{
-    var s=JSON.parse(localStorage.getItem('tracktion_settings')||'{}');
-    if(s.rings){ringConfig=s.rings;}
-  }catch(e){}
-}
-
-function buildRingSVG(){
-  const slots=[ringConfig.outer,ringConfig.middle,ringConfig.inner];
-  var trackCircles='',fillCircles='',labels='';
-  slots.forEach(function(key,i){
-    var meta=RING_META[key]||RING_META.kcal;
-    var r=RING_RADII[i],w=RING_WIDTHS[i],c=RING_CIRCS[i];
-    trackCircles+='<circle cx="80" cy="80" r="'+r+'" fill="none" stroke="'+meta.track+'" stroke-width="'+w+'"/>';
-    fillCircles+='<circle id="r-'+i+'" data-key="'+key+'" cx="80" cy="80" r="'+r+'" fill="none" stroke="'+meta.stroke+'" stroke-width="'+w+'" stroke-dasharray="'+c+'" stroke-dashoffset="'+c+'" stroke-linecap="round" transform="rotate(-90 80 80)" style="transition:stroke-dashoffset 0.5s ease;"/>';
-  });
-  labels='<text x="75" y="86" text-anchor="middle" font-family="monospace" font-size="18" font-weight="900" fill="#ffc300">R</text>'
-        +'<text x="90" y="86" text-anchor="middle" font-family="monospace" font-size="18" font-weight="900" fill="#0066ff">B</text>';
-  document.getElementById('ring-svg').innerHTML=trackCircles+fillCircles+labels;
-}
+// 4 FIXED RINGS — locked colors, locked identity
+// outer=red=kcal, r2=green=prot, r3=blue=carbs, inner=gold=fat
+const RING_FIXED=[
+  {id:'r-kcal',key:'kcal',circ:490.1,tgKey:'kcal'},
+  {id:'r-prot',key:'prot',circ:383.3,tgKey:'prot'},
+  {id:'r-carb',key:'carb',circ:276.5,tgKey:'carb'},
+  {id:'r-fat', key:'fat', circ:169.6,tgKey:'fat'}
+];
 
 function updateRings(k,p,c,f,t){
-  const vals={kcal:k,prot:p,carbs:c,fat:f};
-  const tgs={kcal:t.kcal,prot:t.prot,carbs:t.carb,fat:t.fat};
-  [ringConfig.outer,ringConfig.middle,ringConfig.inner].forEach(function(key,i){
-    var v=vals[key]||0,tg=tgs[key]||1;
+  var vals={kcal:k,prot:p,carb:c,fat:f};
+  var tgs={kcal:t.kcal,prot:t.prot,carb:t.carb,fat:t.fat};
+  RING_FIXED.forEach(function(r){
+    var v=vals[r.key]||0,tg=tgs[r.tgKey]||1;
     var pct=Math.min(100,Math.round(v/tg*100));
-    var c=RING_CIRCS[i];
-    var el=document.getElementById('r-'+i);
-    if(el) el.setAttribute('stroke-dashoffset',(c*(1-pct/100)).toFixed(1));
+    var el=document.getElementById(r.id);
+    if(el) el.setAttribute('stroke-dashoffset',(r.circ*(1-pct/100)).toFixed(1));
   });
 }
 const METRICS=[
-  {key:'kcal',label:'kcal',color:'#0066ff',unit:''},
+  {key:'kcal',label:'kcal',color:'#ff0000',unit:''},
   {key:'prot',label:'protein',color:'#34c97a',unit:'g'},
   {key:'carb',label:'carbs',color:'#2d8fff',unit:'g'},
   {key:'fat', label:'fat',  color:'#f5a623',unit:'g'}
@@ -367,8 +347,6 @@ function init(){
   }catch(e){}
   document.getElementById('btn-train').className='dbtn'+(day==='train'?' on':'');
   document.getElementById('btn-rest').className='dbtn'+(day==='rest'?' on':'');
-  loadRingConfig();
-  buildRingSVG();
   renderCoachHistory();
   render();
   // Auto-load tip on init
