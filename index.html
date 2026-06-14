@@ -36,24 +36,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 /* RINGS HERO */
 .rings-hero{display:flex;flex-direction:column;align-items:center;margin-bottom:14px;}
 .rem-main{font-family:monospace;font-size:32px;font-weight:900;line-height:1;margin-top:10px;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:color 0.2s;}
-.rem-sub{font-size:11px;font-weight:700;color:rgba(26,26,46,0.4);margin-top:4px;}
+.rem-sub{font-size:11px;font-weight:700;color:#1a1a2e;margin-top:4px;opacity:0.55;}
 
 /* AI PANEL */
 .ai-panel{background:white;border-radius:16px;border:0.5px solid rgba(0,0,0,0.06);box-shadow:0 1px 4px rgba(0,0,0,0.04);margin:8px 12px;overflow:hidden;}
 .ai-tabs{display:grid;grid-template-columns:1fr 1fr;border-bottom:0.5px solid rgba(0,0,0,0.06);}
-.ai-tab{text-align:center;padding:10px;font-size:11px;font-weight:800;letter-spacing:0.5px;color:rgba(26,26,46,0.4);cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.ai-tab{text-align:center;padding:10px;font-size:11px;font-weight:800;letter-spacing:0.5px;color:#1a1a2e;cursor:pointer;-webkit-tap-highlight-color:transparent;}
 .ai-tab.on{color:#0066ff;border-bottom:2px solid #0066ff;}
 
 /* TIPS TAB */
 .tips-body{padding:13px 16px 10px;}
 .tips-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
-.tips-label{font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:rgba(26,26,46,0.4);}
+.tips-label{font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#1a1a2e;}
 .tips-refresh{display:flex;align-items:center;gap:4px;background:none;border:none;cursor:pointer;color:#0066ff;font-size:10px;font-weight:800;letter-spacing:0.5px;padding:4px 8px;border-radius:8px;-webkit-tap-highlight-color:transparent;}
 .tips-refresh:active{background:#f0f5ff;}
 .tips-refresh-icon{font-size:13px;display:inline-block;transition:transform 0.4s;}
 .tips-refresh-icon.spinning{transform:rotate(360deg);}
 .tips-text{font-size:13px;font-weight:500;line-height:1.65;color:#1a1a2e;min-height:40px;}
-.tips-count{font-size:10px;font-weight:700;color:rgba(26,26,46,0.35);margin-top:8px;text-align:right;}
+.tips-count{font-size:10px;font-weight:700;color:#1a1a2e;margin-top:8px;text-align:right;}
 
 /* COACH TAB */
 .coach-body{display:none;flex-direction:column;}
@@ -65,8 +65,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .msg-bubble{max-width:80%;padding:9px 13px;border-radius:14px;font-size:13px;line-height:1.55;font-weight:500;}
 .coach-msg.user .msg-bubble{background:#0066ff;color:white;border-radius:14px 14px 4px 14px;}
 .coach-msg.ai .msg-bubble{background:#f0f2f5;color:#1a1a2e;border-radius:14px 14px 14px 4px;}
-.coach-empty{padding:14px 16px;font-size:12px;color:rgba(26,26,46,0.4);font-weight:600;text-align:center;}
-.coach-clear{font-size:9px;font-weight:800;color:rgba(26,26,46,0.3);letter-spacing:0.5px;text-align:right;padding:0 14px 6px;cursor:pointer;background:none;border:none;-webkit-tap-highlight-color:transparent;}
+.coach-empty{padding:14px 16px;font-size:12px;color:#1a1a2e;font-weight:600;text-align:center;}
+.coach-clear{font-size:9px;font-weight:800;color:#1a1a2e;letter-spacing:0.5px;text-align:right;padding:4px 14px 6px;cursor:pointer;background:none;border:none;display:block;width:100%;text-align:right;}
 .coach-input-row{display:flex;gap:6px;padding:8px 14px 14px;border-top:0.5px solid rgba(0,0,0,0.05);}
 .coach-input-row input{flex:1;border:1px solid rgba(0,0,0,0.1);border-radius:10px;padding:9px 11px;font-size:12px;font-family:inherit;}
 .coach-input-row button{background:#0066ff;color:white;border:none;border-radius:10px;padding:9px 16px;font-size:11px;font-weight:800;cursor:pointer;-webkit-tap-highlight-color:transparent;}
@@ -517,7 +517,7 @@ function renderCoachHistory(){
   const container=document.getElementById('coach-history');
   const empty=document.getElementById('coach-empty');
   const clearBtn=document.getElementById('coach-clear');
-  if(!coachHistory.length){
+  if(!coachHistory.length||coachHistory.every(function(m){return m.text==='Thinking...';})){
     empty.style.display='block';
     clearBtn.style.display='none';
     container.innerHTML='';
@@ -531,7 +531,7 @@ function renderCoachHistory(){
     html+='<div class="coach-msg '+msg.role+'"><div class="msg-bubble">'+escapeHtml(msg.text)+'</div></div>';
   });
   container.innerHTML=html;
-  container.appendChild(clearBtn);
+  // clearBtn stays outside scroll container — just toggle visibility
   container.scrollTop=container.scrollHeight;
 }
 
@@ -580,10 +580,19 @@ function sendCoachMsg(){
   var profileLine='';
   if(profile.weight) profileLine='Profile: weight '+profile.weight+(profile.units==='imperial'?'lb':'kg')+', goal: '+(profile.goal||'recomp')+'. ';
   const ctx=profileLine+histLine+'Today('+day+'): targets '+t.kcal+'kcal/'+t.prot+'p/'+t.carb+'c/'+t.fat+'f. Logged: '+k+'kcal/'+p+'p/'+c+'c/'+f+'f. Meals: '+(loggedFoods.map(function(m){return m.name;}).join(', ')||'none')+'.';
-  // Build messages array from history (last 10 exchanges max)
-  const historyMsgs=coachHistory.slice(0,-1).slice(-20).map(function(m){
-    return{role:m.role==='user'?'user':'assistant',content:m.text};
+  // Build clean messages array — exclude Thinking placeholder, no consecutive same-role
+  var cleanHistory=coachHistory.slice(0,-1).filter(function(m){
+    return m.text!=='Thinking...';
   });
+  // Dedupe consecutive same roles (safety net)
+  var dedupedMsgs=[];
+  cleanHistory.slice(-20).forEach(function(m){
+    var apiRole=m.role==='user'?'user':'assistant';
+    if(dedupedMsgs.length&&dedupedMsgs[dedupedMsgs.length-1].role===apiRole) return;
+    dedupedMsgs.push({role:apiRole,content:m.text});
+  });
+  // Always end with user message
+  dedupedMsgs.push({role:'user',content:msg});
   fetch('https://api.anthropic.com/v1/messages',{
     method:'POST',
     headers:{'Content-Type':'application/json','x-api-key':apikey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
@@ -591,7 +600,7 @@ function sendCoachMsg(){
       model:'claude-sonnet-4-20250514',
       max_tokens:300,
       system:'You are a direct, professional fitness and nutrition coach inside the Tracktion app. Be specific to their data. No fluff. Context: '+ctx,
-      messages:historyMsgs.concat([{role:'user',content:msg}])
+      messages:dedupedMsgs
     })
   }).then(function(r){return r.json();}).then(function(data){
     const txt=(data.content&&data.content[0]&&data.content[0].text)||'Could not get a response — check your API key in Settings.';
