@@ -213,9 +213,8 @@ a[href]{transition:opacity 0.1s ease;}
 
     <!-- COACH CONTENT -->
     <div class="coach-body show" id="coach-body">
-      <div class="coach-history" id="coach-history">
-        <div class="coach-empty" id="coach-empty">Ask me anything — I can see your profile, last 7 days, and today. Try: "Am I on track?" or "Why is my weight not moving?"</div>
-      </div>
+      <div class="coach-empty" id="coach-empty">Ask me anything — I can see your profile, last 7 days, and today. Try: "Am I on track?" or "Why is my weight not moving?"</div>
+      <div class="coach-history" id="coach-history"></div>
       <button class="coach-clear" id="coach-clear" onclick="clearCoach()" style="display:none;">CLEAR HISTORY</button>
       <div class="coach-input-row">
         <input type="text" id="coach-input" placeholder="Ask your AI coach..." onkeydown="if(event.key==='Enter')sendCoachMsg()">
@@ -520,21 +519,14 @@ function renderCoachHistory(){
   const container=document.getElementById('coach-history');
   const empty=document.getElementById('coach-empty');
   const clearBtn=document.getElementById('coach-clear');
-  if(!coachHistory.length||coachHistory.every(function(m){return m.text==='Thinking...';})){
-    empty.style.display='block';
-    clearBtn.style.display='none';
-    container.innerHTML='';
-    container.appendChild(empty);
-    return;
-  }
-  empty.style.display='none';
-  clearBtn.style.display='block';
+  const hasReal=coachHistory.length>0&&!coachHistory.every(function(m){return m.text==='Thinking...';});
+  empty.style.display=hasReal?'none':'block';
+  clearBtn.style.display=hasReal?'block':'none';
   var html='';
   coachHistory.forEach(function(msg){
     html+='<div class="coach-msg '+msg.role+'"><div class="msg-bubble">'+escapeHtml(msg.text)+'</div></div>';
   });
   container.innerHTML=html;
-  // clearBtn stays outside scroll container — just toggle visibility
   container.scrollTop=container.scrollHeight;
 }
 
