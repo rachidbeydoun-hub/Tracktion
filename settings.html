@@ -93,6 +93,13 @@ body{display:flex;flex-direction:column;align-items:center;animation:pgIn 0.15s 
 .set-api-inp:focus{border:1.5px solid #0066ff;}
 .set-api-inp::placeholder{color:rgba(26,26,46,0.35);}
 .cs-badge{font-size:10px;font-weight:800;padding:2px 8px;border-radius:6px;background:rgba(0,102,255,0.08);color:#0066ff;letter-spacing:0.3px;}
+.ring-config-row{padding:14px 16px;border-bottom:0.5px solid rgba(0,0,0,0.06);}
+.ring-config-row:last-of-type{border-bottom:none;}
+.ring-config-lbl{font-size:11px;font-weight:800;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+.ring-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;}
+.ring-select{width:100%;background:#f4f5f8;border:0.5px solid rgba(0,0,0,0.12);border-radius:10px;color:#1a1a2e;font-size:14px;font-weight:600;padding:10px 12px;outline:none;font-family:inherit;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%231a1a2e' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;}
+.ring-select:focus{border:1.5px solid #0066ff;}
+.ring-save-wrap{padding:14px 16px 16px;}
 </style></head><body>
 <div class="pg">
   <div class="t-app-header">
@@ -123,6 +130,48 @@ body{display:flex;flex-direction:column;align-items:center;animation:pgIn 0.15s 
         <div class="set-row">
           <div class="set-row-left"><span>🕛</span><div><div class="set-row-lbl">Auto-save at midnight</div><div class="set-row-sub">Saves today's log to history</div></div></div>
           <div class="set-toggle on" id="tog-autosave" onclick="togglePref('autosave')"><div class="set-toggle-thumb"></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="set-sec">
+      <button class="set-sec-btn" id="btn-rings" onclick="toggleSet('set-rings','btn-rings')"><span>🔵 CONFIGURE RINGS</span><span class="set-chev" id="chev-set-rings">▼</span></button>
+      <div class="set-sec-body" id="set-rings">
+        <div class="ring-config-row">
+          <div class="ring-config-lbl"><div class="ring-dot" style="background:#0066ff;box-shadow:0 0 0 2px rgba(0,102,255,0.2);"></div>OUTER RING</div>
+          <select class="ring-select" id="ring-outer" onchange="onRingChange()">
+            <option value="kcal">Calories</option>
+            <option value="prot">Protein</option>
+            <option value="carbs">Carbs</option>
+            <option value="fat">Fat</option>
+            <option value="steps" disabled>Steps (Coming Soon)</option>
+            <option value="workout" disabled>Workout (Coming Soon)</option>
+          </select>
+        </div>
+        <div class="ring-config-row">
+          <div class="ring-config-lbl"><div class="ring-dot" style="background:#ffc300;box-shadow:0 0 0 2px rgba(255,195,0,0.2);"></div>MIDDLE RING</div>
+          <select class="ring-select" id="ring-middle" onchange="onRingChange()">
+            <option value="kcal">Calories</option>
+            <option value="prot">Protein</option>
+            <option value="carbs">Carbs</option>
+            <option value="fat">Fat</option>
+            <option value="steps" disabled>Steps (Coming Soon)</option>
+            <option value="workout" disabled>Workout (Coming Soon)</option>
+          </select>
+        </div>
+        <div class="ring-config-row">
+          <div class="ring-config-lbl"><div class="ring-dot" style="background:#ff2244;box-shadow:0 0 0 2px rgba(255,34,68,0.2);"></div>INNER RING</div>
+          <select class="ring-select" id="ring-inner" onchange="onRingChange()">
+            <option value="kcal">Calories</option>
+            <option value="prot">Protein</option>
+            <option value="carbs">Carbs</option>
+            <option value="fat">Fat</option>
+            <option value="steps" disabled>Steps (Coming Soon)</option>
+            <option value="workout" disabled>Workout (Coming Soon)</option>
+          </select>
+        </div>
+        <div id="ring-dupe-warn" style="display:none;padding:0 16px 8px;font-size:12px;font-weight:700;color:#ff2244;">Each ring must track a different metric.</div>
+        <div class="ring-save-wrap">
+          <button class="btn-primary" onclick="saveRings()">SAVE RINGS</button>
         </div>
       </div>
     </div>
@@ -183,10 +232,60 @@ body{display:flex;flex-direction:column;align-items:center;animation:pgIn 0.15s 
 </div></div>
 <script>
 var sSettings={units:'metric',autosave:true,tips:true};
+// ── RING CONFIG ──────────────────────────────
+var RING_METRICS=['kcal','prot','carbs','fat'];
+var ringDefaults={outer:'kcal',middle:'prot',inner:'fat'};
+
+function loadRings(){
+  var s={};
+  try{s=JSON.parse(localStorage.getItem('tracktion_settings')||'{}');}catch(e){}
+  var r=s.rings||ringDefaults;
+  document.getElementById('ring-outer').value=r.outer||'kcal';
+  document.getElementById('ring-middle').value=r.middle||'prot';
+  document.getElementById('ring-inner').value=r.inner||'fat';
+  updateRingSelects();
+}
+
+function onRingChange(){
+  updateRingSelects();
+}
+
+function updateRingSelects(){
+  var o=document.getElementById('ring-outer').value;
+  var m=document.getElementById('ring-middle').value;
+  var n=document.getElementById('ring-inner').value;
+  var hasDupe=(o===m)||(o===n)||(m===n);
+  document.getElementById('ring-dupe-warn').style.display=hasDupe?'block':'none';
+  // Disable already-picked options in sibling selects
+  ['ring-outer','ring-middle','ring-inner'].forEach(function(id){
+    var sel=document.getElementById(id);
+    var current=sel.value;
+    var siblings=[o,m,n].filter(function(v,idx){
+      return['ring-outer','ring-middle','ring-inner'][idx]!==id;
+    });
+    Array.from(sel.options).forEach(function(opt){
+      if(opt.value==='steps'||opt.value==='workout'){opt.disabled=true;return;}
+      opt.disabled=siblings.includes(opt.value)&&opt.value!==current;
+    });
+  });
+}
+
+function saveRings(){
+  var o=document.getElementById('ring-outer').value;
+  var m=document.getElementById('ring-middle').value;
+  var n=document.getElementById('ring-inner').value;
+  if((o===m)||(o===n)||(m===n)){showToast('Each ring must track a different metric.');return;}
+  var s={};
+  try{s=JSON.parse(localStorage.getItem('tracktion_settings')||'{}');}catch(e){}
+  s.rings={outer:o,middle:m,inner:n};
+  try{localStorage.setItem('tracktion_settings',JSON.stringify(s));}catch(e){}
+  showToast('Rings saved ✓');
+}
+// ────────────────────────────────────────────
 function showToast(msg){var ex=document.querySelector('.toast');if(ex)ex.remove();var t=document.createElement('div');t.className='toast';t.textContent=msg;document.body.appendChild(t);setTimeout(function(){if(t.parentNode)t.remove();},2200);}
 function toggleSet(id,btnId){var body=document.getElementById(id),chev=document.getElementById('chev-'+id),btn=document.getElementById(btnId);var isOpen=body.classList.contains('open');body.classList.toggle('open',!isOpen);if(chev)chev.classList.toggle('open',!isOpen);if(btn)btn.classList.toggle('open',!isOpen);}
 function setUnits(u){sSettings.units=u;document.getElementById('pill-metric').classList.toggle('on',u==='metric');document.getElementById('pill-imperial').classList.toggle('on',u==='imperial');localStorage.setItem('tracktion_units',u);var s=JSON.parse(localStorage.getItem('tracktion_settings')||'{}');s.units=u;localStorage.setItem('tracktion_settings',JSON.stringify(s));showToast(u==='metric'?'Units: KG · CM':'Units: LBS · IN');}
 function togglePref(key){sSettings[key]=!sSettings[key];var tog=document.getElementById('tog-'+key);if(tog)tog.classList.toggle('on',sSettings[key]);var s=JSON.parse(localStorage.getItem('tracktion_settings')||'{}');s[key]=sSettings[key];localStorage.setItem('tracktion_settings',JSON.stringify(s));}
 function validateApiKey(){var key=document.getElementById('set-api-key').value.trim();if(!key){alert('Paste your API key first.');return;}localStorage.setItem('tracktion_apikey',key);var el=document.getElementById('api-key-status');el.textContent='Checking...';el.style.color='#ffb300';fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:10,messages:[{role:'user',content:'hi'}]})}).then(function(r){return r.json();}).then(function(d){if(d.content&&d.content[0]){el.textContent='✅ Valid — AI features active';el.style.color='#34c97a';}else if(d.error){el.textContent='❌ '+(d.error.message||'Invalid key');el.style.color='#ff2244';}}).catch(function(){el.textContent='❌ Connection failed';el.style.color='#ff2244';});}
-(function(){var s=JSON.parse(localStorage.getItem('tracktion_settings')||'{}');if(s.units){sSettings.units=s.units;document.getElementById('pill-metric').classList.toggle('on',s.units==='metric');document.getElementById('pill-imperial').classList.toggle('on',s.units==='imperial');}if(s.autosave===false){sSettings.autosave=false;document.getElementById('tog-autosave').classList.remove('on');}if(s.tips===false){sSettings.tips=false;document.getElementById('tog-tips').classList.remove('on');}var apiKey=localStorage.getItem('tracktion_apikey')||'';document.getElementById('set-api-key').value=apiKey;})();
+(function(){var s=JSON.parse(localStorage.getItem('tracktion_settings')||'{}');if(s.units){sSettings.units=s.units;document.getElementById('pill-metric').classList.toggle('on',s.units==='metric');document.getElementById('pill-imperial').classList.toggle('on',s.units==='imperial');}if(s.autosave===false){sSettings.autosave=false;document.getElementById('tog-autosave').classList.remove('on');}if(s.tips===false){sSettings.tips=false;document.getElementById('tog-tips').classList.remove('on');}var apiKey=localStorage.getItem('tracktion_apikey')||'';document.getElementById('set-api-key').value=apiKey;loadRings();})();
 </script></body></html>
