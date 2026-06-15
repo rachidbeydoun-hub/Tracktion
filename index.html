@@ -90,7 +90,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 /* LOG SECTION */
 .log-section{margin:8px 12px 8px;}
-.log-header{font-size:10px;font-weight:800;color:rgba(26,26,46,0.45);letter-spacing:1.2px;text-transform:uppercase;margin-bottom:8px;}
+.log-header{font-size:10px;font-weight:800;color:#1a1a2e;opacity:0.45;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:8px;}
 .empty-log{text-align:center;padding:12px 0;color:rgba(26,26,46,0.35);font-size:13px;font-weight:600;}
 
 /* MEAL CARD */
@@ -471,6 +471,9 @@ function updateTipCount(){
 }
 
 function loadTip(isManual){
+  var sett={};
+  try{sett=JSON.parse(localStorage.getItem('tracktion_settings')||'{}')}catch(e){}
+  if(sett.tips===false){document.getElementById('tips-text').textContent='💡 Coaching tips turned off in Settings.';document.getElementById('refresh-btn').style.display='none';return;}
   var apikey='';
   try{apikey=localStorage.getItem('tracktion_apikey')||'';}catch(e){}
   const textEl=document.getElementById('tips-text');
@@ -782,6 +785,9 @@ function todayKey(){
 }
 
 function checkRollover(){
+  var sett={};
+  try{sett=JSON.parse(localStorage.getItem('tracktion_settings')||'{}')}catch(e){}
+  if(sett.autosave===false)return;
   var lastDate;
   try{lastDate=localStorage.getItem('tracktion_last_date');}catch(e){lastDate=null;}
   const today=todayKey();
