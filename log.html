@@ -704,7 +704,7 @@ async function analyzePhoto(){
       body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,messages:[{role:'user',content:[{type:'image',source:{type:'base64',media_type:'image/jpeg',data:currentPhoto}},{type:'text',text:prompt}]}]})
     });
     var data=await res.json();
-    var raw=data.content[0].text.trim();
+    var raw=data.content[0].text.trim().replace(/^```json\n?/,'').replace(/^```\n?/,'').replace(/\n?```$/,'').trim();
     var result=JSON.parse(raw);
     aiItems=result.items.map(function(item,i){return Object.assign({},item,{idx:i});});
     pendingFood={name:result.items.map(function(i){return i.name;}).join(' + '),kcal:result.total.kcal,prot:result.total.prot,carbs:result.total.carbs,fat:result.total.fat};
@@ -810,7 +810,7 @@ async function reSearchItem(i){
       body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:300,messages:[{role:'user',content:'Nutrition for: "'+food+'", portion: "'+amt+' '+unit+'". Respond ONLY in JSON: {"name":"","portion":"","kcal":0,"prot":0,"carbs":0,"fat":0}'}]})
     });
     var data=await res.json();
-    var f=JSON.parse(data.content[0].text.trim());
+    var _raw=data.content[0].text.trim().replace(/^```json\n?/,'').replace(/^```\n?/,'').replace(/\n?```$/,'').trim();var f=JSON.parse(_raw);
     // Update aiItems
     if(aiItems[i]){aiItems[i]=Object.assign(aiItems[i],f,{idx:i,confidence:'High',confidence_note:'Re-searched and confirmed'});}
     // Rerender just this item's macros and name
