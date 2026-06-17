@@ -561,7 +561,7 @@ function autoSuggestTag(){
   var tag,id;
   if(h<11){tag='Breakfast';id='tag-bf';}
   else if(h<17){tag='Lunch';id='tag-lu';}
-  else if(h<21){tag='Dinner';id='tag-di';}
+  else if(h<24){tag='Dinner';id='tag-di';}
   else{tag='Snack';id='tag-sn';}
   currentTag=tag;
   document.getElementById('tag-auto').textContent='auto-detected · '+now;
@@ -701,7 +701,7 @@ async function analyzePhoto(){
     var res=await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
       headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:[{type:'image',source:{type:'base64',media_type:'image/jpeg',data:currentPhoto}},{type:'text',text:prompt}]}]})
+      body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,messages:[{role:'user',content:[{type:'image',source:{type:'base64',media_type:'image/jpeg',data:currentPhoto}},{type:'text',text:prompt}]}]})
     });
     var data=await res.json();
     var raw=data.content[0].text.trim();
@@ -807,7 +807,7 @@ async function reSearchItem(i){
     var res=await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
       headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:300,messages:[{role:'user',content:'Nutrition for: "'+food+'", portion: "'+amt+' '+unit+'". Respond ONLY in JSON: {"name":"","portion":"","kcal":0,"prot":0,"carbs":0,"fat":0}'}]})
+      body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:300,messages:[{role:'user',content:'Nutrition for: "'+food+'", portion: "'+amt+' '+unit+'". Respond ONLY in JSON: {"name":"","portion":"","kcal":0,"prot":0,"carbs":0,"fat":0}'}]})
     });
     var data=await res.json();
     var f=JSON.parse(data.content[0].text.trim());
@@ -895,7 +895,7 @@ async function askAISearch(){
     var res=await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
       headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:500,messages:[{role:'user',content:'Nutrition for: "'+query+'". Respond ONLY in JSON: {"name":"","portion":"","kcal":0,"prot":0,"carbs":0,"fat":0}'}]})
+      body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:500,messages:[{role:'user',content:'Nutrition for: "'+query+'". Respond ONLY in JSON: {"name":"","portion":"","kcal":0,"prot":0,"carbs":0,"fat":0}'}]})
     });
     var data=await res.json();
     var food=JSON.parse(data.content[0].text.trim());
