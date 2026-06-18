@@ -148,6 +148,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .ri-nums{display:flex;gap:8px;margin-top:4px;flex-wrap:wrap;}
 .ri-num{font-family:monospace;font-size:11px;font-weight:700;}
 .ri-edit-icon{font-size:13px;color:#0066ff;flex-shrink:0;padding:2px 4px;}
+.ri-confirm-btn{background:#1a9e5c;border:none;border-radius:7px;color:white;font-size:12px;font-weight:900;padding:5px 8px;cursor:pointer;flex-shrink:0;line-height:1;}
 
 .ri-panel{display:none;margin-top:10px;padding-top:10px;border-top:0.5px solid rgba(0,0,0,0.06);}
 .ri-panel.open{display:block;}
@@ -758,14 +759,18 @@ function renderRiList(items){
     var warn=(item.confidence==='Medium'||item.confidence==='Low');
     return '<div class="ri'+(warn?' warn':'')+'" onclick="toggleRI('+i+')" id="ri-'+i+'">'
       +'<div class="ri-top"><div>'
-      +'<div class="ri-name">'+item.name+(warn?'<span class="ri-flag">⚠ check</span>':'')+'</div>'
+      +'<div class="ri-name">'+item.name+(warn?'<span class="ri-flag" id="ri-flag-'+i+'">⚠ check</span>':'')+'</div>'
       +'<div class="ri-portion">'+item.portion+'</div>'
       +'<div class="ri-nums">'
       +'<span class="ri-num" style="color:#ff0000;">'+item.kcal+' kcal</span>'
       +'<span class="ri-num" style="color:#34c97a;">P '+item.prot+'g</span>'
       +'<span class="ri-num" style="color:#2d8fff;">C '+item.carbs+'g</span>'
       +'<span class="ri-num" style="color:#f5a623;">F '+item.fat+'g</span>'
-      +'</div></div><div class="ri-edit-icon">✎</div></div>'
+      +'</div></div>'
+      +'<div style="display:flex;align-items:center;gap:6px;">'
+      +(warn?'<button class="ri-confirm-btn" id="ri-cfm-'+i+'" onclick="event.stopPropagation();confirmItem('+i+')">✓</button>':'')
+      +'<div class="ri-edit-icon">✎</div>'
+      +'</div></div>'
       +'<div class="ri-panel'+(warn?' open':'')+'" id="rp-'+i+'">'
       +'<div class="ri-edit-row">'
       +'<div><div class="ri-field-lbl">Food</div><input class="ri-field-inp" id="ri-food-'+i+'" value="'+item.name+'" onclick="event.stopPropagation()"></div>'
@@ -786,21 +791,51 @@ function extractAmount(portion){
 
 function extractUnit(portion){
   if(!portion)return'g';
-  var p=portion.toLowerCase();
-  // Order matters — check multi-word first
+  var p=portion.toLowerCase().replace(/~/g,'');
+  // Order matters — check multi-word/specific first
+  if(/\bstrip[s]?\b/.test(p))return'piece';
   if(/\bpiece[s]?\b/.test(p))return'piece';
   if(/\bslice[s]?\b/.test(p))return'piece';
+  if(/\bscoop[s]?\b/.test(p))return'piece';
+  if(/\bserving[s]?\b/.test(p))return'piece';
   if(/\btbsp\b|tablespoon/.test(p))return'tbsp';
   if(/\btsp\b|teaspoon/.test(p))return'tsp';
   if(/\bcup[s]?\b/.test(p))return'cup';
-  if(/\bml\b|milliliter/.test(p))return'ml';
-  if(/\bl\b|liter/.test(p))return'L';
+  if(/\bml\b|milliliter|millilitre/.test(p))return'ml';
+  if(/\bliter[s]?\b|litre[s]?\b/.test(p))return'L';
+  if(/\bfl\.?oz\b/.test(p))return'ml';
   if(/\boz\b|ounce/.test(p))return'oz';
   if(/\blb[s]?\b|pound/.test(p))return'oz';
   if(/\bhandful\b/.test(p))return'handful';
   if(/\bpalm\b/.test(p))return'palm';
   if(/\bg\b|gram/.test(p))return'g';
+  // last resort: look for a number followed directly by ml/g/oz
+  var m=p.match(/\d+\s*(ml|g|oz|l)\b/);
+  if(m){if(m[1]==='ml')return'ml';if(m[1]==='oz')return'oz';if(m[1]==='l')return'L';}
   return'g';
+}
+
+function confirmItem(i){
+  // Mark item as confirmed in aiItems
+  if(aiItems[i]){aiItems[i].confidence='High';aiItems[i].confidence_note='User confirmed';}
+  // Remove warn styling from row
+  var row=document.getElementById('ri-'+i);
+  if(row)row.classList.remove('warn');
+  // Remove flag badge
+  var flag=document.getElementById('ri-flag-'+i);
+  if(flag)flag.remove();
+  // Remove confirm button
+  var cfm=document.getElementById('ri-cfm-'+i);
+  if(cfm)cfm.remove();
+  // Update conf detail row
+  var confRows=document.querySelectorAll('.conf-row-item');
+  if(confRows[i])confRows[i].innerHTML='<span class="conf-name">'+aiItems[i].name+'</span><span class="conf-tag" style="color:#1a9e5c;">● High</span>';
+  // Recalc overall confidence pill
+  var allHigh=aiItems.every(function(it){return(it.confidence||'High')==='High';});
+  if(allHigh){
+    var pill=document.getElementById('conf-pill');
+    if(pill){pill.className='conf-pill high';pill.textContent='✓ High · see details ▾';}
+  }
 }
 
 function toggleRI(i){
