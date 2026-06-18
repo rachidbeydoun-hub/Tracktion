@@ -90,7 +90,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 /* LOG SECTION */
 .log-section{margin:8px 12px 8px;}
-.log-header{font-size:10px;font-weight:800;color:#1a1a2e;opacity:0.45;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:8px;}
+.log-header{font-size:10px;font-weight:800;color:rgba(26,26,46,0.45);letter-spacing:1.2px;text-transform:uppercase;margin-bottom:8px;}
 .empty-log{text-align:center;padding:12px 0;color:rgba(26,26,46,0.35);font-size:13px;font-weight:600;}
 
 /* MEAL CARD */
@@ -371,6 +371,7 @@ function render(){
   .forEach(function(o){
     document.getElementById('val-'+o.id).textContent=o.v+' / '+o.tg+o.u;
     document.getElementById('bar-'+o.id).style.width=Math.min(100,o.tg>0?Math.round(o.v/o.tg*100):0)+'%';
+    if(o.v>o.tg){document.getElementById('bar-'+o.id).style.background='#ff2244';}else{document.getElementById('bar-'+o.id).style.background='';}
     var oel=document.getElementById('over-'+o.id);
     if(o.v>o.tg){oel.textContent='+'+(o.v-o.tg)+o.u+' over';oel.style.display='block';}
     else oel.style.display='none';
@@ -384,11 +385,25 @@ function renderMainMetric(k,p,c,f,t){
   const m=METRICS[metricIdx];
   const vals={kcal:k,prot:p,carb:c,fat:f};
   const tgs={kcal:t.kcal,prot:t.prot,carb:t.carb,fat:t.fat};
-  const rem=Math.max(0,tgs[m.key]-vals[m.key]);
+  const rem=tgs[m.key]-vals[m.key];
   const el=document.getElementById('rem-num');
-  el.textContent=rem.toLocaleString()+(m.unit||'');
-  el.style.color=m.color;
-  document.getElementById('rem-sub').textContent=m.label+' remaining \u00b7 tap to change';
+  const sub=document.getElementById('rem-sub');
+  if(rem>0){
+    el.textContent=rem.toLocaleString()+(m.unit||'');
+    el.style.color=m.color;
+    sub.textContent=m.label+' remaining · tap to change';
+    sub.style.color='';
+  } else if(rem===0){
+    el.textContent='✓ goal hit';
+    el.style.color='#1a9e5c';
+    sub.textContent=m.label+' target reached · tap to change';
+    sub.style.color='#1a9e5c';
+  } else {
+    el.textContent='+'+(Math.abs(rem)).toLocaleString()+(m.unit||'')+' over';
+    el.style.color='#ff2244';
+    sub.textContent=m.label+' over target · tap to change';
+    sub.style.color='#ff2244';
+  }
 }
 
 function cycleMetric(){
@@ -471,9 +486,6 @@ function updateTipCount(){
 }
 
 function loadTip(isManual){
-  var sett={};
-  try{sett=JSON.parse(localStorage.getItem('tracktion_settings')||'{}')}catch(e){}
-  if(sett.tips===false){document.getElementById('tips-text').textContent='💡 Coaching tips turned off in Settings.';document.getElementById('refresh-btn').style.display='none';return;}
   var apikey='';
   try{apikey=localStorage.getItem('tracktion_apikey')||'';}catch(e){}
   const textEl=document.getElementById('tips-text');
@@ -785,9 +797,6 @@ function todayKey(){
 }
 
 function checkRollover(){
-  var sett={};
-  try{sett=JSON.parse(localStorage.getItem('tracktion_settings')||'{}')}catch(e){}
-  if(sett.autosave===false)return;
   var lastDate;
   try{lastDate=localStorage.getItem('tracktion_last_date');}catch(e){lastDate=null;}
   const today=todayKey();

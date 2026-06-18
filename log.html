@@ -148,7 +148,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .ri-nums{display:flex;gap:8px;margin-top:4px;flex-wrap:wrap;}
 .ri-num{font-family:monospace;font-size:11px;font-weight:700;}
 .ri-edit-icon{font-size:13px;color:#0066ff;flex-shrink:0;padding:2px 4px;}
-.ri-confirm-btn{background:#1a9e5c;border:none;border-radius:7px;color:white;font-size:12px;font-weight:900;padding:5px 8px;cursor:pointer;flex-shrink:0;line-height:1;}
+.ri-confirm-btn{background:#f0f0f3;border:none;border-radius:7px;color:#1a1a2e;font-size:12px;font-weight:900;padding:5px 8px;cursor:pointer;flex-shrink:0;line-height:1;transition:background 0.2s,color 0.2s;}
 
 .ri-panel{display:none;margin-top:10px;padding-top:10px;border-top:0.5px solid rgba(0,0,0,0.06);}
 .ri-panel.open{display:block;}
@@ -505,6 +505,8 @@ var FOODS=[
 ];
 
 var currentPhoto=null,currentFileName='',pendingFood=null;
+var METRICS=[{key:'kcal',label:'kcal',color:'#ff0000',unit:''},{key:'prot',label:'protein',color:'#34c97a',unit:'g'},{key:'carb',label:'carbs',color:'#2d8fff',unit:'g'},{key:'fat',label:'fat',color:'#f5a623',unit:'g'}];
+var metricIdx=0;
 var loggedFoods=[],favMeals=[],currentCat='all',currentTag='Snack';
 var aiItems=[],openRiIdx=null;
 
@@ -538,6 +540,7 @@ function init(){
   try{loggedFoods=JSON.parse(localStorage.getItem('tracktion_foods')||'[]');}catch(e){loggedFoods=[];}
   try{favMeals=JSON.parse(localStorage.getItem('tracktion_favs')||'[]');}catch(e){favMeals=[];}
   updateBadge();
+  try{var _sm=localStorage.getItem('tracktion_main_metric');if(_sm){var _mi=METRICS.findIndex(function(m){return m.key===_sm;});if(_mi>=0)metricIdx=_mi;}}catch(_e){}
   autoSuggestTag();
   renderFoods('all');
 }
@@ -551,9 +554,29 @@ function updateBadge(){
   var logged=loggedFoods.reduce(function(s,f){return s+(f.kcal||0);},0);
   var rem=tkcal-logged;
   var el=document.getElementById('kcal-badge');
-  el.textContent=(rem>0?rem:0)+' kcal left';
-  el.style.color=rem>0?'#0066ff':'#ff2244';
-  el.style.background=rem>0?'#f0f5ff':'#fff0f2';
+  var metric=METRICS&&METRICS[metricIdx||0];
+  var metricKey=metric?metric.key:'kcal';
+  var metricColor=metric?metric.color:'#0066ff';
+  var metricUnit=metric?metric.unit:'';
+  var vals={kcal:logged,prot:0,carb:0,fat:0};
+  loggedFoods.forEach(function(f){vals.prot+=(f.prot||0);vals.carb+=(f.carbs||0);vals.fat+=(f.fat||0);});
+  var tgMap={kcal:tkcal,prot:(day==='train'?(tgts.trainProt||168):(tgts.restProt||160)),carb:(day==='train'?(tgts.trainCarb||260):(tgts.restCarb||130)),fat:(day==='train'?(tgts.trainFat||68):(tgts.restFat||72))};
+  var mVal=vals[metricKey]||logged;
+  var mTgt=tgMap[metricKey]||tkcal;
+  var mRem=mTgt-mVal;
+  if(mRem>0){
+    el.textContent=Math.round(mRem)+metricUnit+' left';
+    el.style.color=metricColor;
+    el.style.background=metricColor==='#ff0000'?'#fff0f0':'#f0f5ff';
+  } else if(mRem===0){
+    el.textContent='✓ goal hit';
+    el.style.color='#1a9e5c';
+    el.style.background='#f0faf4';
+  } else {
+    el.textContent='+'+Math.round(Math.abs(mRem))+metricUnit+' over';
+    el.style.color='#ff2244';
+    el.style.background='#fff0f2';
+  }
 }
 
 function autoSuggestTag(){
@@ -785,56 +808,55 @@ function renderRiList(items){
 }
 
 function extractAmount(portion){
+  if(!portion)return'1';
+  // If portion has a parenthetical count like "~60g (3 tbsp)" or "2 strips ~40g"
+  // prefer the leading count number when a named unit follows it
+  var named=portion.match(/^[~\s]*(\d+(?:\.\d+)?)\s*(strips?|slices?|pieces?|cups?|tbsp|tsp|scoop|serving|handful|palm|ml|oz|fl\.?oz)/i);
+  if(named)return named[1];
+  // Parenthetical: "(3 tbsp)" or "(2 pieces)"
+  var paren=portion.match(/\((\d+(?:\.\d+)?)\s*(strips?|slices?|pieces?|cups?|tbsp|tsp|scoop|ml|oz)/i);
+  if(paren)return paren[1];
   var m=portion.match(/[\d.]+/);
   return m?m[0]:'1';
 }
 
 function extractUnit(portion){
   if(!portion)return'g';
-  var p=portion.toLowerCase().replace(/~/g,'');
-  // Order matters — check multi-word/specific first
-  if(/\bstrip[s]?\b/.test(p))return'piece';
+  var p=portion.toLowerCase();
+  // Order matters — check multi-word first
   if(/\bpiece[s]?\b/.test(p))return'piece';
   if(/\bslice[s]?\b/.test(p))return'piece';
-  if(/\bscoop[s]?\b/.test(p))return'piece';
-  if(/\bserving[s]?\b/.test(p))return'piece';
   if(/\btbsp\b|tablespoon/.test(p))return'tbsp';
   if(/\btsp\b|teaspoon/.test(p))return'tsp';
   if(/\bcup[s]?\b/.test(p))return'cup';
-  if(/\bml\b|milliliter|millilitre/.test(p))return'ml';
-  if(/\bliter[s]?\b|litre[s]?\b/.test(p))return'L';
-  if(/\bfl\.?oz\b/.test(p))return'ml';
+  if(/\bml\b|milliliter/.test(p))return'ml';
+  if(/\bl\b|liter/.test(p))return'L';
   if(/\boz\b|ounce/.test(p))return'oz';
   if(/\blb[s]?\b|pound/.test(p))return'oz';
   if(/\bhandful\b/.test(p))return'handful';
   if(/\bpalm\b/.test(p))return'palm';
   if(/\bg\b|gram/.test(p))return'g';
-  // last resort: look for a number followed directly by ml/g/oz
-  var m=p.match(/\d+\s*(ml|g|oz|l)\b/);
-  if(m){if(m[1]==='ml')return'ml';if(m[1]==='oz')return'oz';if(m[1]==='l')return'L';}
   return'g';
 }
 
 function confirmItem(i){
-  // Mark item as confirmed in aiItems
   if(aiItems[i]){aiItems[i].confidence='High';aiItems[i].confidence_note='User confirmed';}
-  // Remove warn styling from row
-  var row=document.getElementById('ri-'+i);
-  if(row)row.classList.remove('warn');
-  // Remove flag badge
-  var flag=document.getElementById('ri-flag-'+i);
-  if(flag)flag.remove();
-  // Remove confirm button
   var cfm=document.getElementById('ri-cfm-'+i);
-  if(cfm)cfm.remove();
-  // Update conf detail row
-  var confRows=document.querySelectorAll('.conf-row-item');
-  if(confRows[i])confRows[i].innerHTML='<span class="conf-name">'+aiItems[i].name+'</span><span class="conf-tag" style="color:#1a9e5c;">● High</span>';
-  // Recalc overall confidence pill
-  var allHigh=aiItems.every(function(it){return(it.confidence||'High')==='High';});
-  if(allHigh){
-    var pill=document.getElementById('conf-pill');
-    if(pill){pill.className='conf-pill high';pill.textContent='✓ High · see details ▾';}
+  if(cfm){
+    cfm.style.background='#1a9e5c';cfm.style.color='white';
+    setTimeout(function(){
+      var row=document.getElementById('ri-'+i);
+      var flag=document.getElementById('ri-flag-'+i);
+      if(row)row.classList.remove('warn');
+      if(flag)flag.remove();
+      if(cfm&&cfm.parentNode)cfm.remove();
+      // update conf detail
+      var confRows=document.querySelectorAll('.conf-row-item');
+      if(confRows[i])confRows[i].innerHTML='<span class="conf-name">'+aiItems[i].name+'</span><span class="conf-tag" style="color:#1a9e5c;">● Confirmed</span>';
+      // recalc overall pill
+      var allGood=aiItems.every(function(it){return(it.confidence||'High')==='High';});
+      if(allGood){var pill=document.getElementById('conf-pill');if(pill){pill.className='conf-pill high';pill.textContent='✓ High · see details ▾';}}
+    },500);
   }
 }
 
@@ -1045,8 +1067,12 @@ function addToLog(){
     try{localStorage.setItem('tracktion_foods',JSON.stringify(loggedFoods));}catch(e){}
     pendingFood=null;aiItems=[];
     updateBadge();
-    showToast('✅ Meal logged successfully');
-    setTimeout(function(){resetSnap();},400);
+    showToast('✅ Meal logged!');
+    setTimeout(function(){
+      document.body.style.opacity='0';
+      document.body.style.transition='opacity 0.15s ease';
+      setTimeout(function(){window.location.href='index.html';},150);
+    },600);
     return;
   }
   if(activeTab==='quick'){
@@ -1065,7 +1091,12 @@ function addToLog(){
     try{localStorage.setItem('tracktion_foods',JSON.stringify(loggedFoods));}catch(e){}
     ['q-kcal','q-prot','q-carbs','q-fat','q-name'].forEach(function(id){document.getElementById(id).value='';});
     updateBadge();
-    showToast('✅ '+food.name+' added');
+    showToast('✅ '+food.name+' added!');
+    setTimeout(function(){
+      document.body.style.opacity='0';
+      document.body.style.transition='opacity 0.15s ease';
+      setTimeout(function(){window.location.href='index.html';},150);
+    },600);
     return;
   }
   showToast('Tap + Add on a food item');
