@@ -772,7 +772,7 @@ function renderRiList(items){
       +'<div><div class="ri-field-lbl">Amount</div><input class="ri-field-inp" id="ri-amt-'+i+'" value="'+extractAmount(item.portion)+'" onclick="event.stopPropagation()"></div>'
       +'<div><div class="ri-field-lbl">Unit</div>'
       +'<select class="ri-unit-sel" id="ri-unit-'+i+'" onclick="event.stopPropagation()">'
-      +'<option>g</option><option>oz</option><option>cup</option><option>handful</option><option>palm</option><option>ml</option><option>L</option><option>piece</option><option>tbsp</option><option>tsp</option>'
+      +(function(){var u=extractUnit(item.portion);return ['g','oz','cup','handful','palm','ml','L','piece','tbsp','tsp'].map(function(o){return '<option'+(o===u?' selected':'')+'>'+o+'</option>';}).join('');})()
       +'</select></div></div>'
       +'<button class="ri-research" onclick="event.stopPropagation();reSearchItem('+i+')">🔍 Re-search with AI</button>'
       +'</div></div>';
@@ -782,6 +782,25 @@ function renderRiList(items){
 function extractAmount(portion){
   var m=portion.match(/[\d.]+/);
   return m?m[0]:'1';
+}
+
+function extractUnit(portion){
+  if(!portion)return'g';
+  var p=portion.toLowerCase();
+  // Order matters — check multi-word first
+  if(/\bpiece[s]?\b/.test(p))return'piece';
+  if(/\bslice[s]?\b/.test(p))return'piece';
+  if(/\btbsp\b|tablespoon/.test(p))return'tbsp';
+  if(/\btsp\b|teaspoon/.test(p))return'tsp';
+  if(/\bcup[s]?\b/.test(p))return'cup';
+  if(/\bml\b|milliliter/.test(p))return'ml';
+  if(/\bl\b|liter/.test(p))return'L';
+  if(/\boz\b|ounce/.test(p))return'oz';
+  if(/\blb[s]?\b|pound/.test(p))return'oz';
+  if(/\bhandful\b/.test(p))return'handful';
+  if(/\bpalm\b/.test(p))return'palm';
+  if(/\bg\b|gram/.test(p))return'g';
+  return'g';
 }
 
 function toggleRI(i){
@@ -839,7 +858,16 @@ async function reSearchItem(i){
     recalcTotal();
     showToast('Updated: '+f.name);
     btn.textContent='✅ Updated';
-    setTimeout(function(){btn.textContent='🔍 Re-search with AI';btn.disabled=false;},2000);
+    btn.style.background='#1a9e5c';
+    btn.style.color='white';
+    btn.style.border='none';
+    setTimeout(function(){
+      btn.textContent='🔍 Re-search with AI';
+      btn.style.background='';
+      btn.style.color='';
+      btn.style.border='';
+      btn.disabled=false;
+    },2000);
   }catch(e){
     showToast('Search failed — try again');
     btn.textContent='🔍 Re-search with AI';btn.disabled=false;
