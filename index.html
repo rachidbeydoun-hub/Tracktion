@@ -202,8 +202,8 @@ a[href]{transition:opacity 0.1s ease;}
   <!-- AI PANEL — open by default, COACH tab active -->
   <div class="ai-panel" id="ai-panel">
     <div class="ai-tabs">
-      <div class="ai-tab" id="tab-tips" onclick="setAITab('tips')">TIPS</div>
-      <div class="ai-tab on" id="tab-coach" onclick="setAITab('coach')">AI COACH</div>
+      <div class="ai-tab on" id="tab-tips" onclick="setAITab('tips')">TIPS</div>
+      <div class="ai-tab" id="tab-coach" onclick="setAITab('coach')">AI COACH</div>
     </div>
 
     <!-- TIPS CONTENT -->
@@ -358,6 +358,10 @@ function init(){
   document.getElementById('btn-rest').className='dbtn'+(day==='rest'?' on':'');
   renderCoachHistory();
   render();
+  // Default to tips tab
+  var savedTab='tips';
+  try{savedTab=localStorage.getItem('tracktion_ai_tab')||'tips';}catch(e){}
+  setAITab(savedTab);
   // Auto-load tip on init
   loadTip(false);
 }
@@ -378,7 +382,8 @@ function render(){
   .forEach(function(o){
     document.getElementById('val-'+o.id).textContent=o.v+' / '+o.tg+o.u;
     document.getElementById('bar-'+o.id).style.width=Math.min(100,o.tg>0?Math.round(o.v/o.tg*100):0)+'%';
-    if(o.v>o.tg){document.getElementById('bar-'+o.id).style.background='#ff2244';}else{document.getElementById('bar-'+o.id).style.background='';}
+    var barColors={kcal:'#ff0000',prot:'#34c97a',carb:'#2d8fff',fat:'#f5a623'};
+    if(o.v>o.tg){document.getElementById('bar-'+o.id).style.background='#ff2244';}else{document.getElementById('bar-'+o.id).style.background=barColors[o.id]||'';}
     var oel=document.getElementById('over-'+o.id);
     if(o.v>o.tg){oel.textContent='+'+(o.v-o.tg)+o.u+' over';oel.style.display='block';}
     else oel.style.display='none';
@@ -441,6 +446,7 @@ function setAITab(tab){
   document.getElementById('tab-coach').classList.toggle('on',!isTips);
   document.getElementById('tips-body').style.display=isTips?'block':'none';
   document.getElementById('coach-body').classList.toggle('show',!isTips);
+  try{localStorage.setItem('tracktion_ai_tab',tab);}catch(e){}
 }
 
 // ═══════════════════════════════════════

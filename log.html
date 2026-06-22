@@ -218,6 +218,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .fi-add:active{background:#0044cc;transform:scale(0.93);}
 .fi-add.added{background:#1a9e5c;}
 .fi-ai-badge{font-size:9px;font-weight:800;background:rgba(0,102,255,0.08);color:#0066ff;padding:2px 6px;border-radius:5px;margin-left:5px;letter-spacing:0.3px;vertical-align:middle;}
+.food-item{cursor:pointer;}
+.food-expand{background:#f4f5f8;border-top:0.5px solid rgba(0,0,0,0.06);padding:12px 14px;display:none;}
+.food-expand.open{display:block;}
+.food-expand-row{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.food-expand-lbl{font-size:11px;font-weight:800;color:#1a1a2e;letter-spacing:0.5px;text-transform:uppercase;width:56px;flex-shrink:0;}
+.food-expand-inp{flex:1;background:white;border:1.5px solid rgba(0,102,255,0.2);border-radius:8px;padding:7px 10px;font-size:14px;font-weight:700;font-family:monospace;color:#1a1a2e;outline:none;text-align:right;}
+.food-expand-inp:focus{border-color:#0066ff;}
+.food-expand-unit{font-size:12px;font-weight:700;color:#1a1a2e;opacity:0.45;width:28px;}
+.food-expand-add{width:100%;padding:11px;background:#0066ff;border:none;border-radius:9px;color:white;font-family:monospace;font-size:12px;font-weight:900;letter-spacing:0.5px;cursor:pointer;}
+.food-expand-add:active{opacity:0.85;}
+.food-expand-add.added{background:#1a9e5c;}
 .search-empty{text-align:center;padding:20px 14px;}
 .search-empty-icon{font-size:28px;margin-bottom:8px;}
 .search-empty-title{font-size:13px;font-weight:700;color:#1a1a2e;margin-bottom:4px;}
@@ -496,6 +507,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </div>
 
   </div>
+</div>
+
+<!-- PINNED ANALYZE BTN -->
+<div class="analyze-pin" id="analyze-pin">
+  <button class="analyze-btn" id="analyze-btn" onclick="analyzePhoto()">
+    <span>⚡</span> Analyze this meal
+  </button>
 </div>
 
 <div class="add-bar">
@@ -954,8 +972,8 @@ function renderFoods(cat){
     return;
   }
   list.innerHTML=filtered.slice(0,10).map(function(f){
-    var id='fi-'+Math.random().toString(36).slice(2,7);
-    return '<div class="food-item" id="'+id+'">'
+    var enc=encodeURIComponent(JSON.stringify(f));
+    return '<div class="food-item" data-food="'+enc+'" onclick="expandFood(decodeURIComponent(this.dataset.food),this)">'
       +'<div class="fi-left">'
       +'<div class="fi-name">'+f.name+'</div>'
       +'<div class="fi-portion">'+f.portion+'</div>'
@@ -965,12 +983,67 @@ function renderFoods(cat){
       +'<span class="fi-num" style="color:#2d8fff;">C '+f.carbs+'g</span>'
       +'<span class="fi-num" style="color:#f5a623;">F '+f.fat+'g</span>'
       +'</div></div>'
-      +'<button class="fi-add" data-food="'+encodeURIComponent(JSON.stringify(f))+'" onclick="safeAddFood(decodeURIComponent(this.dataset.food),this)" aria-label="Add">+</button>'
+      +'<span style="font-size:18px;color:#1a1a2e;opacity:0.2;flex-shrink:0;">›</span>'
       +'</div>';
   }).join('');
   if(filtered.length>10){
     list.insertAdjacentHTML('beforeend','<div style="text-align:center;padding:10px;font-size:11px;font-weight:700;color:#0066ff;">+'+(filtered.length-10)+' more — refine your search</div>');
   }
+}
+
+var expandedFood=null;
+
+function expandFood(foodJson,row){
+  var enc=encodeURIComponent(foodJson);
+  // Close any other open expand
+  document.querySelectorAll('.food-expand.open').forEach(function(el){
+    el.classList.remove('open');
+    // Reset arrow on parent
+    var arr=el.previousSibling;
+  });
+  // Check if this row already has expand panel
+  var existing=row.nextElementSibling;
+  if(existing&&existing.classList.contains('food-expand')){
+    existing.classList.toggle('open');
+    return;
+  }
+  var f=JSON.parse(foodJson);
+  expandedFood=f;
+  var panel=document.createElement('div');
+  panel.className='food-expand open';
+  var amt=extractAmount(f.portion||'100g');
+  var unit=extractUnit(f.portion||'100g');
+  panel.innerHTML=
+    '<div class="food-expand-row">'
+    +'<span class="food-expand-lbl">Amount</span>'
+    +'<input class="food-expand-inp" id="expand-amt" type="text" inputmode="decimal" value="'+amt+'">'
+    +'<span class="food-expand-unit">'+unit+'</span>'
+    +'</div>'
+    +'<button class="food-expand-add" id="expand-add-btn" data-food="'+enc+'" onclick="addExpandedFood(decodeURIComponent(this.dataset.food),this)">+ ADD TO LOG</button>';
+  row.parentNode.insertBefore(panel, row.nextSibling);
+  document.getElementById('expand-amt').focus();
+}
+
+function addExpandedFood(foodJson,btn){
+  var f=JSON.parse(foodJson);
+  var amtEl=document.getElementById('expand-amt');
+  var amt=parseFloat(amtEl?amtEl.value:1)||1;
+  var origAmt=parseFloat(extractAmount(f.portion||'100'))||100;
+  var ratio=origAmt>0?amt/origAmt:1;
+  var scaled={
+    name:f.name,
+    portion:amt+' '+(extractUnit(f.portion||'g')),
+    kcal:Math.round(f.kcal*ratio),
+    prot:Math.round(f.prot*ratio),
+    carbs:Math.round((f.carbs||0)*ratio),
+    fat:Math.round(f.fat*ratio),
+    tag:currentTag,
+    time:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})
+  };
+  btn.textContent='✓ Added!';
+  btn.classList.add('added');
+  btn.disabled=true;
+  quickAddFood(scaled);
 }
 
 function safeAddFood(encoded,btn){
@@ -1041,8 +1114,8 @@ async function askAISearch(auto){
     var raw=data.content[0].text.trim().replace(/^```json[\r\n]*/,"").replace(/^```[\r\n]*/,"").replace(/[\r\n]*```$/,"").trim();
     var food=JSON.parse(raw);
     box.style.display='block';
-    var id='ai-'+Math.random().toString(36).slice(2,7);
-    box.innerHTML='<div class="food-item" id="'+id+'">'
+    var enc=encodeURIComponent(JSON.stringify(food));
+    box.innerHTML='<div class="food-item" data-food="'+enc+'" onclick="expandFood(decodeURIComponent(this.dataset.food),this)">'
       +'<div class="fi-left">'
       +'<div class="fi-name">'+food.name+'<span class="fi-ai-badge">AI</span></div>'
       +'<div class="fi-portion">'+food.portion+'</div>'
@@ -1052,7 +1125,7 @@ async function askAISearch(auto){
       +'<span class="fi-num" style="color:#2d8fff;">C '+food.carbs+'g</span>'
       +'<span class="fi-num" style="color:#f5a623;">F '+food.fat+'g</span>'
       +'</div></div>'
-      +'<button class="fi-add" data-food="'+encodeURIComponent(JSON.stringify(food))+'" onclick="safeAddFood(decodeURIComponent(this.dataset.food),this)" aria-label="Add">+</button>'
+      +'<span style="font-size:18px;color:#1a1a2e;opacity:0.2;flex-shrink:0;">›</span>'
       +'</div>';
     // Also update food list to show the AI result context
     var list=document.getElementById('food-list');
