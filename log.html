@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" style="background:#f4f5f8;">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -122,7 +122,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 /* ANALYZE BUTTON */
 .analyze-btn{width:100%;padding:14px;background:#0066ff;color:white;border:none;border-radius:12px;font-size:14px;font-weight:800;letter-spacing:0.5px;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;font-family:monospace;box-shadow:0 4px 16px rgba(0,102,255,0.28);}
-.analyze-pin{position:fixed;bottom:calc(82px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);width:calc(100% - 24px);max-width:406px;z-index:100;display:none;border-radius:12px;overflow:hidden;box-shadow:0 4px 20px rgba(0,102,255,0.35);}
+.analyze-pin{position:fixed;bottom:calc(70px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);width:100%;max-width:430px;padding:10px 12px;background:#f4f5f8;border-top:0.5px solid rgba(0,0,0,0.06);z-index:98;display:none;}
 .analyze-pin.show{display:block;}
 .analyze-btn:disabled{opacity:0.6;cursor:not-allowed;}
 .analyze-btn::after{content:'';position:absolute;inset:0;background:rgba(255,255,255,0.1);transform:translateX(-100%);animation:shimmer 2.5s infinite;}
@@ -218,20 +218,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .fi-add:active{background:#0044cc;transform:scale(0.93);}
 .fi-add.added{background:#1a9e5c;}
 .fi-ai-badge{font-size:9px;font-weight:800;background:rgba(0,102,255,0.08);color:#0066ff;padding:2px 6px;border-radius:5px;margin-left:5px;letter-spacing:0.3px;vertical-align:middle;}
-.fi-save-btn{background:none;border:none;font-size:18px;cursor:pointer;flex-shrink:0;padding:4px;line-height:1;transition:transform 0.2s;}
-.fi-save-btn:active{transform:scale(1.3);}
 .search-empty{text-align:center;padding:20px 14px;}
 .search-empty-icon{font-size:28px;margin-bottom:8px;}
 .search-empty-title{font-size:13px;font-weight:700;color:#1a1a2e;margin-bottom:4px;}
 .search-empty-sub{font-size:11px;font-weight:500;color:#1a1a2e;opacity:0.5;}
 .ai-results-box{background:white;border-radius:14px;border:0.5px solid rgba(0,0,0,0.06);overflow:hidden;margin-bottom:8px;box-shadow:0 1px 4px rgba(0,0,0,0.04);}
-.pyramid-tip{background:rgba(255,179,0,0.07);border-left:3px solid #ffb300;border-radius:0 10px 10px 0;padding:10px 12px;margin-bottom:10px;display:flex;gap:10px;align-items:flex-start;}
-.pyramid-tip-text{font-size:12px;font-weight:500;color:#1a1a2e;line-height:1.55;flex:1;}
-.pyramid-sec{background:white;border-radius:14px;border:0.5px solid rgba(0,0,0,0.06);margin-bottom:8px;overflow:hidden;}
-.pyramid-sec-hdr{padding:10px 14px 8px;display:flex;align-items:center;gap:8px;}
-.pyramid-sec-icon{font-size:16px;}
-.pyramid-sec-title{font-size:11px;font-weight:800;color:#1a1a2e;letter-spacing:0.5px;text-transform:uppercase;flex:1;}
-.pyramid-sec-count{font-size:10px;font-weight:700;color:#1a1a2e;opacity:0.35;}
 
 /* MEALS */
 .sec-lbl{font-size:10px;font-weight:700;color:#1a1a2e;letter-spacing:0.5px;text-transform:uppercase;padding:0 2px;margin-bottom:6px;margin-top:4px;display:block;}
@@ -422,12 +413,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
           <div class="conf-pill high" id="conf-pill">✓ High · see details ▾</div>
         </div>
         <div class="conf-detail" id="conf-detail"></div>
-        <div class="breakdown-hint" id="breakdown-hint" style="display:none;">
-  <span style="font-size:14px;">💡</span>
-  <span style="flex:1;font-size:11px;font-weight:600;color:#1a1a2e;line-height:1.5;">Tap <strong>✓</strong> to confirm correct · Tap <strong>✎</strong> to adjust portion</span>
-  <span onclick="document.getElementById('breakdown-hint').style.display='none'" style="font-size:13px;font-weight:800;color:#1a1a2e;opacity:0.25;cursor:pointer;padding:2px 4px;">✕</span>
-</div>
-<div id="ri-list"></div>
+        <div id="ri-list"></div>
         <div class="total-bar">
           <div class="total-lbl">Total</div>
           <div class="total-grid">
@@ -449,34 +435,30 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
     <!-- ══ SEARCH ══ -->
     <div class="panel" id="panel-search">
-      <!-- SEARCH INPUT -->
       <div class="search-box">
         <div class="search-row">
           <div class="search-inp-wrap">
             <span class="search-icon">🔍</span>
-            <input type="text" class="search-inp" id="search-input" placeholder="Type any food — AI finds it..." oninput="onSearchInput(this.value)" autocomplete="off">
+            <input type="text" class="search-inp" id="search-input" placeholder="Search or type any food..." oninput="onSearchInput(this.value)" autocomplete="off">
             <span class="search-clear" id="search-clear" onclick="clearSearch()">✕</span>
           </div>
         </div>
+        <div class="cat-row">
+          <div class="cat-pill on" onclick="filterCat('all',this)">All</div>
+          <div class="cat-pill" onclick="filterCat('protein',this)">💪 Protein</div>
+          <div class="cat-pill" onclick="filterCat('carb',this)">🌾 Carbs</div>
+          <div class="cat-pill" onclick="filterCat('fat',this)">🥑 Fats</div>
+          <div class="cat-pill" onclick="filterCat('meal',this)">🍽 Meals</div>
+          <div class="cat-pill" onclick="filterCat('drink',this)">🥤 Drinks</div>
+        </div>
       </div>
-      <!-- AI status -->
+      <!-- AI searching status -->
       <div class="ai-status" id="ai-status">
         <div class="ai-status-dot"></div>
         <span class="ai-status-txt">AI searching for "<span id="ai-query-lbl"></span>"...</span>
       </div>
-      <!-- AI result -->
+      <div class="food-list" id="food-list"></div>
       <div class="ai-results-box" id="ai-search-results" style="display:none;"></div>
-      <!-- EMPTY STATE — my pyramid -->
-      <div id="pyramid-state">
-        <div class="pyramid-tip">
-          <span style="font-size:16px;">🏗</span>
-          <div class="pyramid-tip-text">Build your food pyramid — type any food above and add it. The more you log, the smarter your list becomes.</div>
-        </div>
-        <div id="pyramid-recent"></div>
-        <div id="pyramid-proteins"></div>
-        <div id="pyramid-carbs"></div>
-        <div id="pyramid-fats"></div>
-      </div>
     </div>
 
     <!-- ══ MEALS ══ -->
@@ -603,7 +585,7 @@ function init(){
   try{favMeals=JSON.parse(localStorage.getItem('tracktion_favs')||'[]');}catch(e){favMeals=[];}
   updateBadge();
   autoSuggestTag();
-  renderPyramid();
+  renderFoods('all');
 }
 
 function updateBadge(){
@@ -649,7 +631,7 @@ function showTab(name,el){
   document.getElementById('panel-'+name).classList.add('on');
   el.classList.add('on');
   if(name==='meals')renderMeals();
-  if(name==='search'){document.getElementById('pyramid-state').style.display='block';renderPyramid();document.getElementById('ai-search-results').style.display='none';}
+  if(name==='search')renderFoods(currentCat);
 }
 
 // PHOTO BUTTON ANIMATIONS
@@ -804,7 +786,6 @@ function showResults(result){
   }).join('')+(result.confidence_reason?'<div class="conf-note">'+result.confidence_reason+'</div>':'');
   // Items
   renderRiList(result.items);
-  showBreakdownHint();
   // Total
   document.getElementById('tot-kcal').textContent=result.total.kcal;
   document.getElementById('tot-prot').textContent=result.total.prot+'g';
@@ -822,34 +803,20 @@ function showResults(result){
   }
 }
 
-function showBreakdownHint(){
-  var seen=false;
-  try{seen=localStorage.getItem('tracktion_breakdown_hint')==='1';}catch(e){}
-  if(seen)return;
-  var hint=document.getElementById('breakdown-hint');
-  if(hint)hint.style.display='flex';
-  try{localStorage.setItem('tracktion_breakdown_hint','1');}catch(e){}
-  setTimeout(function(){var h=document.getElementById('breakdown-hint');if(h)h.style.display='none';},5000);
-}
-
 function renderRiList(items){
   var list=document.getElementById('ri-list');
   list.innerHTML=items.map(function(item,i){
     var warn=(item.confidence==='Medium'||item.confidence==='Low');
     return '<div class="ri'+(warn?' warn':'')+'" onclick="toggleRI('+i+')" id="ri-'+i+'">'
       +'<div class="ri-top"><div>'
-      +'<div class="ri-name">'+item.name+(warn?'<span class="ri-flag" id="ri-flag-'+i+'">⚠ check</span>':'')+'</div>'
+      +'<div class="ri-name">'+item.name+(warn?'<span class="ri-flag">⚠ check</span>':'')+'</div>'
       +'<div class="ri-portion">'+item.portion+'</div>'
       +'<div class="ri-nums">'
       +'<span class="ri-num" style="color:#ff0000;">'+item.kcal+' kcal</span>'
       +'<span class="ri-num" style="color:#34c97a;">P '+item.prot+'g</span>'
       +'<span class="ri-num" style="color:#2d8fff;">C '+item.carbs+'g</span>'
       +'<span class="ri-num" style="color:#f5a623;">F '+item.fat+'g</span>'
-      +'</div></div>'
-      +'<div style="display:flex;align-items:center;gap:5px;">'
-      +(warn?'<button class="ri-confirm-btn" id="ri-cfm-'+i+'" onclick="event.stopPropagation();confirmItem('+i+')">✓</button>':'')
-      +'<div class="ri-edit-icon">✎</div>'
-      +'</div></div>'
+      +'</div></div><div class="ri-edit-icon">✎</div></div>'
       +'<div class="ri-panel'+(warn?' open':'')+'" id="rp-'+i+'">'
       +'<div class="ri-edit-row">'
       +'<div><div class="ri-field-lbl">Food</div><input class="ri-field-inp" id="ri-food-'+i+'" value="'+item.name+'" onclick="event.stopPropagation()"></div>'
@@ -885,23 +852,6 @@ function extractUnit(portion){
   if(/\bpalm\b/.test(p))return'palm';
   if(/\bg\b|gram/.test(p))return'g';
   return'g';
-}
-
-function confirmItem(i){
-  if(aiItems[i]){aiItems[i].confidence='High';aiItems[i].confidence_note='User confirmed';}
-  var cfm=document.getElementById('ri-cfm-'+i);
-  if(cfm){
-    cfm.style.background='#1a9e5c';cfm.style.color='white';
-    setTimeout(function(){
-      var row=document.getElementById('ri-'+i);
-      var flag=document.getElementById('ri-flag-'+i);
-      if(row)row.classList.remove('warn');
-      if(flag)flag.remove();
-      if(cfm&&cfm.parentNode)cfm.remove();
-      var allGood=aiItems.every(function(it){return(it.confidence||'High')==='High';});
-      if(allGood){var pill=document.getElementById('conf-pill');if(pill){pill.className='conf-pill high';pill.textContent='✓ High · see details ▾';}}
-    },500);
-  }
 }
 
 function toggleRI(i){
@@ -1023,21 +973,6 @@ function renderFoods(cat){
   }
 }
 
-function saveToLibrary(enc,btn){
-  var f=JSON.parse(decodeURIComponent(enc));
-  var lib=[];
-  try{lib=JSON.parse(localStorage.getItem('tracktion_food_library')||'[]');}catch(e){}
-  var exists=lib.some(function(x){return x.name===f.name;});
-  if(!exists){
-    f.savedAt=new Date().toISOString();
-    lib.unshift(f);
-    try{localStorage.setItem('tracktion_food_library',JSON.stringify(lib));}catch(e){}
-  }
-  btn.textContent='✅';
-  btn.disabled=true;
-  showToast(exists?'Already in My Foods':'⭐ Saved to My Foods');
-}
-
 function safeAddFood(encoded,btn){
   try{
     var f=JSON.parse(encoded);
@@ -1051,13 +986,7 @@ function safeAddFood(encoded,btn){
 function onSearchInput(val){
   var clear=document.getElementById('search-clear');
   if(clear)clear.classList.toggle('show',val.length>0);
-  var pyr=document.getElementById('pyramid-state');
-  if(val.trim().length>0){
-    if(pyr)pyr.style.display='none';
-  } else {
-    if(pyr)pyr.style.display='block';
-    renderPyramid();
-  }
+  renderFoods(currentCat);
   document.getElementById('ai-search-results').style.display='none';
   if(searchTimer)clearTimeout(searchTimer);
   if(val.trim().length>=2){
@@ -1075,66 +1004,8 @@ function clearSearch(){
   if(clear)clear.classList.remove('show');
   document.getElementById('ai-search-results').style.display='none';
   document.getElementById('ai-status').classList.remove('show');
-  var pyr=document.getElementById('pyramid-state');
-  if(pyr){pyr.style.display='block';renderPyramid();}
+  renderFoods(currentCat);
   inp.focus();
-}
-
-function renderPyramid(){
-  var foods=[];
-  try{foods=JSON.parse(localStorage.getItem('tracktion_foods')||'[]');}catch(e){}
-  var lib=[];
-  try{lib=JSON.parse(localStorage.getItem('tracktion_food_library')||'[]');}catch(e){}
-  var hist={};
-  try{hist=JSON.parse(localStorage.getItem('tracktion_history')||'{}');}catch(e){}
-  // Build frequency map from history + today
-  var freq={};
-  Object.values(hist).forEach(function(d){(d.foods||[]).forEach(function(f){freq[f.name]=(freq[f.name]||0)+1;});});
-  foods.forEach(function(f){freq[f.name]=(freq[f.name]||0)+1;});
-  // Recent — last 5 unique foods logged today
-  var recentEl=document.getElementById('pyramid-recent');
-  var recent=foods.slice(-5).reverse().filter(function(f,i,a){return a.findIndex(function(x){return x.name===f.name;})==i;});
-  if(recent.length){
-    recentEl.innerHTML='<div class="pyramid-sec"><div class="pyramid-sec-hdr"><span class="pyramid-sec-icon">🕐</span><span class="pyramid-sec-title">Recently logged</span></div>'
-      +recent.map(function(f){return pyramidRow(f);}).join('')+'</div>';
-  } else { recentEl.innerHTML=''; }
-  // Top proteins from library
-  var prots=lib.filter(function(f){return(f.cat==='protein'||((f.prot||0)>=(f.carbs||0)&&(f.prot||0)>=(f.fat||0)));}).sort(function(a,b){return(freq[b.name]||0)-(freq[a.name]||0);}).slice(0,4);
-  var protEl=document.getElementById('pyramid-proteins');
-  if(prots.length){
-    protEl.innerHTML='<div class="pyramid-sec"><div class="pyramid-sec-hdr"><span class="pyramid-sec-icon">💪</span><span class="pyramid-sec-title">My proteins</span><span class="pyramid-sec-count">'+prots.length+' saved</span></div>'
-      +prots.map(function(f){return pyramidRow(f);}).join('')+'</div>';
-  } else { protEl.innerHTML=''; }
-  // Top carbs
-  var carbs=lib.filter(function(f){return(f.cat==='carb'||((f.carbs||0)>(f.prot||0)&&(f.carbs||0)>(f.fat||0)));}).sort(function(a,b){return(freq[b.name]||0)-(freq[a.name]||0);}).slice(0,4);
-  var carbEl=document.getElementById('pyramid-carbs');
-  if(carbs.length){
-    carbEl.innerHTML='<div class="pyramid-sec"><div class="pyramid-sec-hdr"><span class="pyramid-sec-icon">🌾</span><span class="pyramid-sec-title">My carbs</span><span class="pyramid-sec-count">'+carbs.length+' saved</span></div>'
-      +carbs.map(function(f){return pyramidRow(f);}).join('')+'</div>';
-  } else { carbEl.innerHTML=''; }
-  // Top fats
-  var fats=lib.filter(function(f){return(f.cat==='fat'||((f.fat||0)>(f.prot||0)&&(f.fat||0)>(f.carbs||0)));}).sort(function(a,b){return(freq[b.name]||0)-(freq[a.name]||0);}).slice(0,4);
-  var fatEl=document.getElementById('pyramid-fats');
-  if(fats.length){
-    fatEl.innerHTML='<div class="pyramid-sec"><div class="pyramid-sec-hdr"><span class="pyramid-sec-icon">🥑</span><span class="pyramid-sec-title">My fats</span><span class="pyramid-sec-count">'+fats.length+' saved</span></div>'
-      +fats.map(function(f){return pyramidRow(f);}).join('')+'</div>';
-  } else { fatEl.innerHTML=''; }
-}
-
-function pyramidRow(f){
-  var enc=encodeURIComponent(JSON.stringify(f));
-  return '<div class="food-item" data-food="'+enc+'" onclick="expandFood(decodeURIComponent(this.dataset.food),this)">'
-    +'<div class="fi-left">'
-    +'<div class="fi-name">'+f.name+'</div>'
-    +'<div class="fi-portion">'+f.portion+'</div>'
-    +'<div class="fi-nums">'
-    +'<span class="fi-num" style="color:#ff0000;">'+f.kcal+' kcal</span>'
-    +'<span class="fi-num" style="color:#34c97a;">P '+f.prot+'g</span>'
-    +'<span class="fi-num" style="color:#2d8fff;">C '+(f.carbs||0)+'g</span>'
-    +'<span class="fi-num" style="color:#f5a623;">F '+f.fat+'g</span>'
-    +'</div></div>'
-    +'<span style="font-size:18px;color:#1a1a2e;opacity:0.2;flex-shrink:0;">›</span>'
-    +'</div>';
 }
 
 function filterFoods(q){renderFoods(currentCat);}
