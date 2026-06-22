@@ -122,7 +122,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 /* ANALYZE BUTTON */
 .analyze-btn{width:100%;padding:14px;background:#0066ff;color:white;border:none;border-radius:12px;font-size:14px;font-weight:800;letter-spacing:0.5px;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;font-family:monospace;box-shadow:0 4px 16px rgba(0,102,255,0.28);}
-.analyze-pin{position:fixed;bottom:calc(70px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);width:100%;max-width:430px;padding:10px 12px;background:#f4f5f8;border-top:0.5px solid rgba(0,0,0,0.06);z-index:98;display:none;}
+.analyze-pin{position:fixed;bottom:calc(70px + env(safe-area-inset-bottom));left:0;right:0;width:100%;padding:10px 12px;background:#f4f5f8;border-top:0.5px solid rgba(0,0,0,0.06);z-index:100;display:none;}
 .analyze-pin.show{display:block;}
 .analyze-btn:disabled{opacity:0.6;cursor:not-allowed;}
 .analyze-btn::after{content:'';position:absolute;inset:0;background:rgba(255,255,255,0.1);transform:translateX(-100%);animation:shimmer 2.5s infinite;}
@@ -691,6 +691,7 @@ function retakePhoto(){
   document.getElementById('notes-section').style.display='none';
   try{document.getElementById('ctx-section').style.display='none';}catch(e){}
   try{document.getElementById('analyze-pin').style.display='none';}catch(e){}
+  try{var _ab=document.getElementById('add-bar');if(_ab)_ab.style.display='';}catch(e){}
   document.getElementById('analyze-section').style.display='none';
   document.getElementById('results-wrap').classList.remove('show');
   document.getElementById('tip-bar').classList.remove('show');
@@ -727,6 +728,7 @@ function handlePhoto(input){
     document.getElementById('ctx-section').style.display='block';
     document.getElementById('analyze-pin').style.display='block';
         document.getElementById('analyze-section').style.display='block';
+        var ab=document.getElementById('add-bar');if(ab)ab.style.display='none';
       },220);
     };
     img.src=e.target.result;
