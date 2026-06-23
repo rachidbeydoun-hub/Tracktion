@@ -122,7 +122,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 /* ANALYZE BUTTON */
 .analyze-btn{width:100%;padding:14px;background:#0066ff;color:white;border:none;border-radius:12px;font-size:14px;font-weight:800;letter-spacing:0.5px;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;font-family:monospace;box-shadow:0 4px 16px rgba(0,102,255,0.28);}
-.analyze-pin{position:fixed;bottom:calc(82px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);width:calc(100% - 24px);max-width:406px;z-index:100;display:none;border-radius:12px;overflow:hidden;box-shadow:0 4px 20px rgba(0,102,255,0.35);}
+.analyze-pin{position:fixed;bottom:calc(90px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);width:calc(100% - 24px);max-width:406px;z-index:100;display:none;}
 .analyze-pin.show{display:block;}
 .analyze-btn:disabled{opacity:0.6;cursor:not-allowed;}
 .analyze-btn::after{content:'';position:absolute;inset:0;background:rgba(255,255,255,0.1);transform:translateX(-100%);animation:shimmer 2.5s infinite;}
@@ -254,13 +254,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 @keyframes spin{to{transform:rotate(360deg);}}
 
 /* ADD BAR */
-.add-bar{position:fixed;bottom:calc(70px + env(safe-area-inset-bottom));left:0;right:0;background:white;padding:10px 12px;border-top:0.5px solid rgba(0,0,0,0.07);box-shadow:0 -3px 10px rgba(0,0,0,0.06);z-index:99;display:flex;justify-content:center;}
+.add-bar{position:fixed;bottom:calc(90px + env(safe-area-inset-bottom));left:0;right:0;background:white;padding:10px 12px;border-top:0.5px solid rgba(0,0,0,0.07);box-shadow:0 -3px 10px rgba(0,0,0,0.06);z-index:99;display:none;justify-content:center;}
 .add-bar-inner{width:100%;max-width:430px;}
 .add-to-log-btn{width:100%;padding:15px;background:linear-gradient(135deg,#0066ff,#0044cc);color:white;border:none;border-radius:14px;font-size:15px;font-weight:700;cursor:pointer;transition:all 0.2s;box-shadow:0 4px 14px rgba(0,102,255,0.3);letter-spacing:0.3px;}
 .add-to-log-btn:active{transform:scale(0.98);}
 
 /* NAV */
-.bnav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:white;border-top:0.5px solid rgba(0,0,0,0.08);z-index:100;}
+.bnav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:white;border-top:0.5px solid rgba(0,0,0,0.08);z-index:102;}
 .bnav-inner{width:100%;display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr;align-items:center;padding:8px 2px 14px;}
 .nbtn{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:0.3px;color:#1a1a2e;cursor:pointer;padding:4px 2px;text-decoration:none;}
 .nbtn.on{color:#0066ff;}
@@ -516,13 +516,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   </div>
 </div>
 
-<div class="analyze-pin" id="analyze-pin">
-  <button class="analyze-btn" id="analyze-btn" onclick="analyzePhoto()">
-    <span>⚡</span> Analyze this meal
-  </button>
+<div class="analyze-pin" id="analyze-pin" style="display:none;">
+  <button class="analyze-btn" id="analyze-btn" onclick="analyzePhoto()">⚡ Analyze this meal</button>
 </div>
 
-<div class="add-bar">
+<div class="add-bar" id="add-bar" style="display:none;">
   <div class="add-bar-inner">
     <button class="add-to-log-btn" id="add-to-log-btn" onclick="addToLog()">ADD TO LOG</button>
   </div>
@@ -603,6 +601,24 @@ function checkRollover(){
   }
 }
 
+function showAddBar(){
+  var el=document.getElementById('add-bar');
+  if(el){el.style.display='flex';}
+}
+function hideAddBar(){
+  var el=document.getElementById('add-bar');
+  if(el){el.style.display='none';}
+}
+function showAnalyzePin(){
+  var el=document.getElementById('analyze-pin');
+  if(el){el.style.display='block';}
+  hideAddBar();
+}
+function hideAnalyzePin(){
+  var el=document.getElementById('analyze-pin');
+  if(el){el.style.display='none';}
+}
+
 function init(){
   checkRollover();
   try{loggedFoods=JSON.parse(localStorage.getItem('tracktion_foods')||'[]');}catch(e){loggedFoods=[];}
@@ -610,6 +626,7 @@ function init(){
   updateBadge();
   autoSuggestTag();
   renderPyramid();
+  showAddBar();
 }
 
 function updateBadge(){
@@ -696,7 +713,7 @@ function retakePhoto(){
   document.getElementById('photo-retake').style.display='none';
   document.getElementById('notes-section').style.display='none';
   try{document.getElementById('ctx-section').style.display='none';}catch(e){}
-  try{document.getElementById('analyze-pin').style.display='none';}catch(e){}
+  hideAnalyzePin();
   document.getElementById('analyze-section').style.display='none';
   document.getElementById('results-wrap').classList.remove('show');
   document.getElementById('tip-bar').classList.remove('show');
@@ -731,9 +748,8 @@ function handlePhoto(input){
         document.getElementById('photo-retake').style.display='block';
         document.getElementById('notes-section').style.display='block';
     document.getElementById('ctx-section').style.display='block';
-    document.getElementById('analyze-pin').style.display='block';
+    showAnalyzePin();
         document.getElementById('analyze-section').style.display='block';
-        try{var _ab=document.getElementById('add-bar');if(_ab)_ab.style.display='none';}catch(e){}
       },220);
     };
     img.src=e.target.result;
@@ -822,8 +838,8 @@ function showResults(result){
   // Show results
   document.getElementById('results-wrap').classList.add('show');
   // Swap bars — hide analyze, show add to log
-  try{document.getElementById('analyze-pin').style.display='none';}catch(e){}
-  try{var _ab=document.getElementById('add-bar');if(_ab)_ab.style.display='flex';}catch(e){}
+  hideAnalyzePin();
+  showAddBar();
   // Tip
   if(result.tip){
     var tb=document.getElementById('tip-bar');
