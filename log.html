@@ -733,6 +733,7 @@ function handlePhoto(input){
     document.getElementById('ctx-section').style.display='block';
     document.getElementById('analyze-pin').style.display='block';
         document.getElementById('analyze-section').style.display='block';
+        try{var _ab=document.getElementById('add-bar');if(_ab)_ab.style.display='none';}catch(e){}
       },220);
     };
     img.src=e.target.result;
@@ -820,6 +821,9 @@ function showResults(result){
   document.getElementById('log-name-inp').value=result.items.map(function(i){return i.name;}).join(' + ');
   // Show results
   document.getElementById('results-wrap').classList.add('show');
+  // Swap bars — hide analyze, show add to log
+  try{document.getElementById('analyze-pin').style.display='none';}catch(e){}
+  try{var _ab=document.getElementById('add-bar');if(_ab)_ab.style.display='flex';}catch(e){}
   // Tip
   if(result.tip){
     var tb=document.getElementById('tip-bar');
@@ -842,8 +846,8 @@ function renderRiList(items){
   var list=document.getElementById('ri-list');
   list.innerHTML=items.map(function(item,i){
     var warn=(item.confidence==='Medium'||item.confidence==='Low');
-    return '<div class="ri'+(warn?' warn':'')+'" onclick="toggleRI('+i+')" id="ri-'+i+'">'
-      +'<div class="ri-top"><div>'
+    return '<div class="ri'+(warn?' warn':'')+'" id="ri-'+i+'">'
+      +'<div class="ri-top" onclick="toggleRI('+i+')" style="cursor:pointer;"><div>'
       +'<div class="ri-name">'+item.name+(warn?'<span class="ri-flag" id="ri-flag-'+i+'">⚠ check</span>':'')+'</div>'
       +'<div class="ri-portion">'+item.portion+'</div>'
       +'<div class="ri-nums">'
