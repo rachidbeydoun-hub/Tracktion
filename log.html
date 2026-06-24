@@ -101,11 +101,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .notes-inp::placeholder{color:rgba(26,26,46,0.35);font-size:12px;}
 
 /* CONTEXT */
-.ctx-toggle{display:flex;align-items:center;gap:6px;margin-top:10px;cursor:pointer;padding:2px 0;}
+.ctx-toggle{display:flex;align-items:center;gap:6px;margin-top:12px;cursor:pointer;padding:12px 0;margin-bottom:-4px;}
 .ctx-arrow{font-size:11px;color:#0066ff;transition:transform 0.2s;display:inline-block;}
 .ctx-arrow.open{transform:rotate(90deg);}
 .ctx-lbl{font-size:12px;font-weight:700;color:#0066ff;}
-.ctx-cats{font-size:11px;font-weight:500;color:#1a1a2e;opacity:0.4;}
+.ctx-cats{font-size:11px;font-weight:600;color:#1a1a2e;opacity:0.55;}
 .ctx-body{margin-top:10px;display:none;flex-direction:column;gap:8px;}
 .ctx-body.open{display:flex;}
 .ctx-row{display:flex;align-items:flex-start;gap:8px;}
@@ -764,12 +764,39 @@ function togglePhoto(){
   lbl.textContent=open?'Tap to collapse':'Tap to expand';
 }
 
+function tapCtxChip(el,text){
+  var on=el.classList.toggle('on');
+  var inp=document.getElementById('description');
+  if(!inp)return;
+  var cur=inp.value.trim();
+  if(on){
+    inp.value=cur?cur+', '+text:text;
+  } else {
+    inp.value=cur.split(', ').filter(function(s){return s.toLowerCase()!==text.toLowerCase();}).join(', ');
+  }
+}
+function tapSoloChip(el,text,grp){
+  var wasOn=el.classList.contains('on');
+  document.querySelectorAll(grp).forEach(function(c){
+    if(c!==el&&c.classList.contains('on')){
+      c.classList.remove('on');
+      var inp=document.getElementById('description');
+      if(inp){
+        var t=c.textContent.toLowerCase().trim();
+        inp.value=inp.value.split(', ').filter(function(s){return s.toLowerCase()!==t;}).join(', ');
+      }
+    }
+  });
+  if(!wasOn)tapCtxChip(el,text);
+}
 function toggleCtx(){
   var b=document.getElementById('ctx-body');
   var a=document.getElementById('ctx-arrow');
+  var c=document.getElementById('ctx-cats');
   var open=b.classList.contains('open');
   b.classList.toggle('open',!open);
   a.classList.toggle('open',!open);
+  if(c)c.style.display=open?'inline':'none';
 }
 function toggleChip(el){el.classList.toggle('on');}
 
