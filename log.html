@@ -110,11 +110,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .ctx-body.open{display:flex;}
 .ctx-row{display:flex;align-items:flex-start;gap:8px;}
 .ctx-row-lbl{font-size:9px;font-weight:800;color:#1a1a2e;letter-spacing:0.8px;text-transform:uppercase;width:52px;flex-shrink:0;padding-top:6px;}
-.snap-hint{background:rgba(255,179,0,0.08);border-left:3px solid #ffb300;border-radius:0 8px 8px 0;padding:8px 10px;display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:8px;}
-.snap-hint-txt{font-size:11px;font-weight:600;color:#1a1a2e;line-height:1.5;flex:1;}
-.snap-hint-x{font-size:13px;font-weight:800;color:#1a1a2e;opacity:0.25;cursor:pointer;padding:2px 6px;flex-shrink:0;}
-.field-lbl-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;}
-.field-lbl{font-size:14px;font-weight:500;color:#1a1a2e;}
+.refine-toggle{display:flex;align-items:center;gap:6px;padding:8px 0 4px;cursor:pointer;}
+.refine-arr{font-size:10px;color:#0066ff;transition:transform 0.22s;display:inline-block;flex-shrink:0;}
+.refine-arr.open{transform:rotate(90deg);}
+.refine-lbl{font-size:12px;font-weight:600;color:#0066ff;line-height:1.4;}
+.refine-panel{display:none;margin-top:8px;padding-top:8px;border-top:0.5px solid rgba(0,0,0,0.06);}
+.refine-panel.open{display:block;}
 .acc-badge{font-size:9px;font-weight:800;background:rgba(26,158,92,0.1);color:#1a9e5c;padding:3px 8px;border-radius:6px;letter-spacing:0.3px;white-space:nowrap;}
 .chips{display:flex;flex-wrap:wrap;gap:4px;}
 .chip{padding:4px 10px;border:1px solid rgba(0,0,0,0.12);border-radius:20px;font-size:10px;font-weight:600;color:#1a1a2e;background:white;cursor:pointer;transition:all 0.15s;white-space:nowrap;}
@@ -346,27 +347,20 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
         </div>
       </div>
 
-      <div class="section" id="notes-section" style="display:none;">
-        <div class="sec-body">
-          <!-- HINT — dismissible, controlled by settings -->
-          <div class="snap-hint" id="snap-hint">
-            <span class="snap-hint-txt">Sauce, oil, or mixed dish? Describe it below for better accuracy.</span>
-            <span class="snap-hint-x" onclick="document.getElementById('snap-hint').style.display='none'">✕</span>
-          </div>
-        </div>
-      </div>
 
-      <!-- CONTEXT CARD — separate section, always shown after photo -->
+
+      <!-- CONTEXT CARD — refine toggle -->
       <div class="section" id="ctx-section" style="display:none;">
         <div class="sec-body">
-          <div class="field-lbl-row">
-            <span class="field-lbl">Anything the photo can't show?</span>
-            <span style="font-size:10px;font-weight:700;color:#1a9e5c;">✓ helps AI be more precise</span>
+          <div class="refine-toggle" onclick="toggleRefine()">
+            <span class="refine-arr" id="refine-arr">▸</span>
+            <span class="refine-lbl">Food not clear? <strong>Add description</strong> to improve accuracy</span>
           </div>
-          <textarea class="notes-inp" id="description" placeholder="e.g. olive oil, garlic sauce, Zabiha Halal, half portion..."></textarea>
-          <div class="ctx-toggle" onclick="toggleCtx()">
+          <div class="refine-panel" id="refine-panel">
+          <textarea class="notes-inp" id="description" placeholder="e.g. olive oil, garlic sauce, Zabiha Halal, half portion..." style="margin-top:8px;"></textarea>
+          <div class="ctx-toggle" onclick="toggleCtx()" style="margin-top:4px;">
             <span class="ctx-arrow" id="ctx-arrow">▸</span>
-            <span class="ctx-lbl">Add detail</span>
+            <span class="ctx-lbl">Add cooking detail</span>
             <span class="ctx-cats" id="ctx-cats">cooking · extras · portion · source</span>
           </div>
           <div class="ctx-body" id="ctx-body">
@@ -409,6 +403,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
               </div>
             </div>
           </div>
+          </div><!-- /refine-panel -->
         </div>
       </div>
 
@@ -711,8 +706,8 @@ function retakePhoto(){
   document.getElementById('photo-preview-wrap').style.display='none';
   document.getElementById('photo-full-wrap').classList.remove('open');
   document.getElementById('photo-retake').style.display='none';
-  document.getElementById('notes-section').style.display='none';
   try{document.getElementById('ctx-section').style.display='none';}catch(e){}
+  try{var rp=document.getElementById('refine-panel');if(rp)rp.classList.remove('open');var ra=document.getElementById('refine-arr');if(ra)ra.classList.remove('open');}catch(e){}
   hideAnalyzePin();
   document.getElementById('analyze-section').style.display='none';
   document.getElementById('results-wrap').classList.remove('show');
@@ -746,7 +741,6 @@ function handlePhoto(input){
         document.getElementById('photo-btns').style.display='none';
         document.getElementById('photo-preview-wrap').style.display='block';
         document.getElementById('photo-retake').style.display='block';
-        document.getElementById('notes-section').style.display='block';
     document.getElementById('ctx-section').style.display='block';
     showAnalyzePin();
         document.getElementById('analyze-section').style.display='block';
@@ -789,6 +783,20 @@ function tapSoloChip(el,text,grp){
   });
   if(!wasOn)tapCtxChip(el,text);
 }
+function toggleRefine(){
+  var panel=document.getElementById('refine-panel');
+  var arr=document.getElementById('refine-arr');
+  if(!panel||!arr)return;
+  var open=panel.classList.toggle('open');
+  arr.classList.toggle('open',open);
+  if(open){
+    setTimeout(function(){
+      var inp=document.getElementById('description');
+      if(inp)inp.focus();
+    },50);
+  }
+}
+
 function toggleCtx(){
   var b=document.getElementById('ctx-body');
   var a=document.getElementById('ctx-arrow');
@@ -1276,7 +1284,7 @@ function resetSnap(){
   document.getElementById('photo-full-wrap').classList.remove('open');
   document.getElementById('photo-retake').style.display='none';
   // Hide notes + analyze + results + tip
-  document.getElementById('notes-section').style.display='none';
+
   document.getElementById('analyze-section').style.display='none';
   document.getElementById('results-wrap').classList.remove('show');
   document.getElementById('tip-bar').classList.remove('show');
