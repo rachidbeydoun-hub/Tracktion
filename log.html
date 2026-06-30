@@ -113,10 +113,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .ctx-body.open{display:flex;}
 .ctx-row{display:flex;align-items:flex-start;gap:8px;}
 .ctx-row-lbl{font-size:9px;font-weight:800;color:#1a1a2e;letter-spacing:0.8px;text-transform:uppercase;width:52px;flex-shrink:0;padding-top:6px;}
-.refine-toggle{display:flex;align-items:center;gap:6px;padding:8px 0 4px;cursor:pointer;}
-.refine-arr{font-size:10px;color:#0066ff;transition:transform 0.22s;display:inline-block;flex-shrink:0;}
+.refine-toggle{display:flex;align-items:center;gap:8px;padding:10px 0;cursor:pointer;}
+.refine-arr{font-size:11px;color:#1a1a2e;opacity:0.35;transition:transform 0.2s;display:inline-block;flex-shrink:0;}
 .refine-arr.open{transform:rotate(90deg);}
-.refine-lbl{font-size:12px;font-weight:600;color:#0066ff;line-height:1.4;}
+.refine-spark{font-size:13px;flex-shrink:0;}
+.refine-lbl{font-size:13px;font-weight:600;color:#0066ff;line-height:1.4;}
 .refine-panel{display:none;margin-top:8px;padding-top:8px;border-top:0.5px solid rgba(0,0,0,0.06);}
 .refine-panel.open{display:block;}
 .acc-badge{font-size:9px;font-weight:800;background:rgba(26,158,92,0.1);color:#1a9e5c;padding:3px 8px;border-radius:6px;letter-spacing:0.3px;white-space:nowrap;}
@@ -361,7 +362,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
         <div class="sec-body">
           <div class="refine-toggle" onclick="toggleRefine()">
             <span class="refine-arr" id="refine-arr">▸</span>
-            <span class="refine-lbl">Food not clear? <strong>Add description</strong> to improve accuracy</span>
+            <span class="refine-spark">✦</span>
+            <span class="refine-lbl">Improve accuracy — add a quick description</span>
           </div>
           <div class="refine-panel" id="refine-panel">
           <textarea class="notes-inp" id="description" placeholder="e.g. olive oil, garlic sauce, Zabiha Halal, half portion..." style="margin-top:8px;"></textarea>
@@ -412,10 +414,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
           </div>
           </div><!-- /refine-panel -->
         </div>
-      </div>
-
-      <div class="section" id="analyze-section" style="display:none;">
-        <div style="height:8px;"></div>
       </div>
 
       <div class="results-wrap" id="results-wrap">
@@ -714,7 +712,6 @@ function retakePhoto(){
   try{document.getElementById('ctx-section').style.display='none';}catch(e){}
   try{var rp=document.getElementById('refine-panel');if(rp)rp.classList.remove('open');var ra=document.getElementById('refine-arr');if(ra)ra.classList.remove('open');}catch(e){}
   hideAnalyzePin();
-  document.getElementById('analyze-section').style.display='none';
   document.getElementById('results-wrap').classList.remove('show');
   document.getElementById('tip-bar').classList.remove('show');
   try{document.getElementById('retake-tip').classList.remove('show');}catch(e){}
@@ -749,7 +746,6 @@ function handlePhoto(input){
         document.getElementById('photo-retake').style.display='block';
     document.getElementById('ctx-section').style.display='block';
     showAnalyzePin();
-        document.getElementById('analyze-section').style.display='block';
       },220);
     };
     img.src=e.target.result;
@@ -1300,7 +1296,7 @@ function resetSnap(){
   document.getElementById('photo-retake').style.display='none';
   // Hide notes + analyze + results + tip
 
-  document.getElementById('analyze-section').style.display='none';
+
   document.getElementById('results-wrap').classList.remove('show');
   document.getElementById('tip-bar').classList.remove('show');
   // Reset notes + chips
