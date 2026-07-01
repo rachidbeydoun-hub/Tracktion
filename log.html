@@ -93,7 +93,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .photo-preview{display:flex;align-items:center;gap:10px;margin-top:12px;background:white;border-radius:10px;padding:9px 12px;cursor:pointer;border:0.5px solid rgba(0,0,0,0.06);}
 .photo-thumb{width:36px;height:36px;border-radius:8px;object-fit:cover;flex-shrink:0;display:block;}
 .photo-fname{font-size:12px;font-weight:700;color:#1a1a2e;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.photo-expand-lbl{font-size:10px;font-weight:700;color:#1a9e5c;white-space:nowrap;}
+.photo-chev{font-size:16px;color:rgba(26,26,46,0.3);flex-shrink:0;transition:transform 0.25s ease;line-height:1;}
+.photo-chev.open{transform:rotate(180deg);}
 .photo-full-wrap{overflow:hidden;max-height:0;transition:max-height 0.3s ease;}
 .photo-full-wrap.open{max-height:300px;}
 .photo-full{width:100%;border-radius:10px;margin-top:8px;display:block;object-fit:cover;}
@@ -140,7 +141,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .results-wrap.show{display:block;}
 
 .conf-bar{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;cursor:pointer;border-bottom:0.5px solid rgba(0,0,0,0.05);}
-
+.retake-tip{display:none;align-items:center;gap:8px;padding:10px 14px;background:rgba(255,179,0,0.07);border-bottom:0.5px solid rgba(0,0,0,0.05);}
+.retake-tip.show{display:flex;}
+.retake-tip-txt{flex:1;font-size:11px;font-weight:600;color:#1a1a2e;line-height:1.5;}
+.retake-tip-btn{font-size:11px;font-weight:800;color:#0066ff;background:rgba(0,102,255,0.08);border:0.5px solid rgba(0,102,255,0.2);border-radius:7px;padding:5px 10px;cursor:pointer;white-space:nowrap;flex-shrink:0;}
 .conf-label{font-size:12px;font-weight:700;color:#1a1a2e;letter-spacing:0.3px;}
 .conf-pill{font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;display:flex;align-items:center;gap:4px;}
 .conf-pill.high{background:#f0fff5;color:#1a9e5c;}
@@ -153,18 +157,30 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .conf-tag{font-size:10px;font-weight:700;}
 .conf-note{font-size:11px;color:#1a1a2e;margin-top:7px;line-height:1.5;padding-top:7px;border-top:0.5px solid rgba(0,0,0,0.06);}
 
-.ri{padding:11px 14px;border-bottom:0.5px solid rgba(0,0,0,0.05);cursor:pointer;transition:background 0.15s;}
+.ri{padding:11px 14px;border-bottom:0.5px solid rgba(0,0,0,0.05);transition:background 0.15s;}
 .ri:last-of-type{border-bottom:none;}
-.ri.warn{background:#fffcf5;}
+.ri.warn{background:white;border-left:3px solid #c87000;padding-left:11px;}
 .ri-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;}
 .ri-name{font-size:13px;font-weight:700;color:#1a1a2e;}
-.ri-flag{font-size:9px;font-weight:700;color:#c87000;margin-left:5px;}
 .ri-portion{font-size:11px;color:#1a1a2e;margin-top:2px;opacity:0.5;}
 .ri-nums{display:flex;gap:8px;margin-top:4px;flex-wrap:wrap;}
 .ri-num{font-family:monospace;font-size:11px;font-weight:700;}
-.ri-edit-icon{font-size:13px;color:#0066ff;flex-shrink:0;padding:2px 4px;}
+/* Action strip */
+.ri-actions{display:flex;align-items:center;gap:3px;flex-shrink:0;align-self:center;}
+.ri-act-btn{width:28px;height:28px;border-radius:50%;border:none;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;font-size:14px;transition:background 0.15s;}
+.ri-act-btn:active{background:rgba(0,0,0,0.06);}
+.ri-act-confirm{color:#1a9e5c;}
+.ri-act-edit{color:#0066ff;}
+.ri-act-delete{color:#e03131;}
+.ri-act-warn{color:#c87000;}
+.ri-act-divider{width:0.5px;height:16px;background:rgba(0,0,0,0.12);flex-shrink:0;margin:0 2px;}
+/* Confidence note bar — shown on ⚠ tap */
+.ri-conf-note{display:none;padding:8px 14px 10px;background:rgba(200,112,0,0.06);border-top:0.5px solid rgba(200,112,0,0.15);}
+.ri-conf-note.show{display:flex;align-items:flex-start;gap:7px;}
+.ri-conf-note-ico{font-size:13px;color:#c87000;flex-shrink:0;margin-top:1px;}
+.ri-conf-note-txt{font-size:11px;font-weight:500;color:#8a5500;line-height:1.5;flex:1;}
 
-.ri-panel{display:none;margin-top:10px;padding-top:10px;border-top:0.5px solid rgba(0,0,0,0.06);}
+.ri-panel{display:none;padding:10px 14px 12px;border-top:0.5px solid rgba(0,0,0,0.06);}
 .ri-panel.open{display:block;}
 .ri-edit-row{display:grid;grid-template-columns:1fr 70px 80px;gap:6px;margin-bottom:8px;align-items:end;}
 .ri-field-lbl{font-size:9px;font-weight:600;color:#1a1a2e;opacity:0.5;text-transform:uppercase;letter-spacing:0.4px;margin-bottom:3px;}
@@ -343,7 +359,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
             <div class="photo-preview" onclick="togglePhoto()">
               <img class="photo-thumb" id="photo-thumb-img" src="" alt="meal">
               <div class="photo-fname" id="photo-fname">photo.jpg</div>
-              <div class="photo-expand-lbl" id="photo-expand-lbl">Tap to expand</div>
+              <span class="photo-chev" id="photo-chev">&#8964;</span>
             </div>
             <div class="photo-full-wrap" id="photo-full-wrap">
               <img class="photo-full" id="photo-full-img" src="" alt="meal full">
@@ -396,7 +412,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
                 <div class="chip p-chip" onclick="tapSoloChip(this,'half portion','.p-chip')">Half</div>
                 <div class="chip p-chip on" onclick="tapSoloChip(this,'normal portion','.p-chip')">Normal</div>
                 <div class="chip p-chip" onclick="tapSoloChip(this,'double portion','.p-chip')">Double</div>
-                <div class="chip p-chip" onclick="tapSoloChip(this,'restaurant portion','.p-chip')">Restaurant</div>
+                <div class="chip p-chip" onclick="tapSoloChip(this,'large portion','.p-chip')">Large</div>
               </div>
             </div>
             <div class="ctx-row">
@@ -418,7 +434,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
           <div class="conf-label">AI Breakdown</div>
           <div class="conf-pill high" id="conf-pill">✓ High · see details ▾</div>
         </div>
-
+        <div class="retake-tip" id="retake-tip">
+          <span style="font-size:14px;">💡</span>
+          <span class="retake-tip-txt">Lighting or angle made this harder to read.</span>
+          <button class="retake-tip-btn" onclick="retakePhoto()">Retake</button>
+        </div>
         <div class="conf-detail" id="conf-detail"></div>
         <div class="breakdown-hint" id="breakdown-hint" style="display:none;">
   <span style="font-size:14px;">💡</span>
@@ -624,7 +644,7 @@ function init(){
   updateBadge();
   autoSuggestTag();
   renderPyramid();
-  // ADD TO LOG is hidden on load — only shown after analysis completes
+  showAddBar();
 }
 
 function updateBadge(){
@@ -696,9 +716,7 @@ function openGallery(){var i=document.getElementById('file-input');i.removeAttri
 
 function retakePhoto(){
   currentPhoto=null;currentFileName='';
-  var btns=document.getElementById('photo-btns');
-  btns.classList.remove('exit');
-  btns.style.display='grid';
+  document.getElementById('photo-btns').style.display='grid';
   document.getElementById('btn-camera').classList.add('selected');
   document.getElementById('btn-gallery').classList.remove('selected');
   document.getElementById('photo-preview-wrap').style.display='none';
@@ -709,6 +727,7 @@ function retakePhoto(){
   hideAnalyzePin();
   document.getElementById('results-wrap').classList.remove('show');
   document.getElementById('tip-bar').classList.remove('show');
+  try{document.getElementById('retake-tip').classList.remove('show');}catch(e){}
   document.getElementById('photo-hdr-left').innerHTML='<div class="sec-title">📷 Photo</div>';
   pendingFood=null;aiItems=[];
 }
@@ -749,9 +768,9 @@ function handlePhoto(input){
 
 function togglePhoto(){
   var wrap=document.getElementById('photo-full-wrap');
-  var lbl=document.getElementById('photo-expand-lbl');
+  var chev=document.getElementById('photo-chev');
   var open=wrap.classList.toggle('open');
-  lbl.textContent=open?'Tap to collapse':'Tap to expand';
+  if(chev)chev.classList.toggle('open',open);
 }
 
 function tapCtxChip(el,text){
@@ -848,6 +867,15 @@ function showResults(result){
   var icon=result.confidence==='High'?'✓':result.confidence==='Medium'?'⚠':'✗';
   pill.className='conf-pill '+cls;
   pill.textContent=icon+' '+result.confidence+' · see details ▾';
+  // Retake tip — only show on Medium/Low confidence
+  var retakeTip=document.getElementById('retake-tip');
+  if(retakeTip){
+    if(result.confidence==='Medium'||result.confidence==='Low'){
+      retakeTip.classList.add('show');
+    } else {
+      retakeTip.classList.remove('show');
+    }
+  }
   // Confidence detail
   var detail=document.getElementById('conf-detail');
   detail.innerHTML=result.items.map(function(item){
@@ -893,9 +921,12 @@ function renderRiList(items){
   var list=document.getElementById('ri-list');
   list.innerHTML=items.map(function(item,i){
     var warn=(item.confidence==='Medium'||item.confidence==='Low');
+    var note=item.confidence_note||'';
     return '<div class="ri'+(warn?' warn':'')+'" id="ri-'+i+'">'
-      +'<div class="ri-top" onclick="toggleRI('+i+')" style="cursor:pointer;"><div>'
-      +'<div class="ri-name">'+item.name+(warn?'<span class="ri-flag" id="ri-flag-'+i+'">⚠ check</span>':'')+'</div>'
+      // Top row
+      +'<div class="ri-top" style="padding:0;">'
+      +'<div style="flex:1;min-width:0;">'
+      +'<div class="ri-name">'+item.name+'</div>'
       +'<div class="ri-portion">'+item.portion+'</div>'
       +'<div class="ri-nums">'
       +'<span class="ri-num" style="color:#ff0000;">'+item.kcal+' kcal</span>'
@@ -903,10 +934,20 @@ function renderRiList(items){
       +'<span class="ri-num" style="color:#2d8fff;">C '+item.carbs+'g</span>'
       +'<span class="ri-num" style="color:#f5a623;">F '+item.fat+'g</span>'
       +'</div></div>'
-      +'<div style="display:flex;align-items:center;gap:5px;">'
-      +(warn?'<button class="ri-confirm-btn" id="ri-cfm-'+i+'" onclick="event.stopPropagation();confirmItem('+i+')">✓</button>':'')
-      +'<div class="ri-edit-icon">✎</div>'
+      // Action strip — always confirm, edit, delete; warn button only if flagged
+      +'<div class="ri-actions">'
+      +'<button class="ri-act-btn ri-act-confirm" id="ri-cfm-'+i+'" onclick="event.stopPropagation();confirmItem('+i+')" title="Confirm correct">✓</button>'
+      +'<button class="ri-act-btn ri-act-edit" onclick="event.stopPropagation();toggleRI('+i+')" title="Edit">✎</button>'
+      +'<button class="ri-act-btn ri-act-delete" onclick="event.stopPropagation();deleteItem('+i+')" title="Remove">🗑</button>'
+      +(warn?'<div class="ri-act-divider"></div>'
+        +'<button class="ri-act-btn ri-act-warn" id="ri-warn-'+i+'" onclick="event.stopPropagation();toggleWarnNote('+i+')" title="Why flagged">⚠</button>':'')
       +'</div></div>'
+      // Confidence note bar — hidden until ⚠ tapped
+      +(warn?'<div class="ri-conf-note" id="ri-note-'+i+'">'
+        +'<span class="ri-conf-note-ico">ℹ</span>'
+        +'<span class="ri-conf-note-txt">'+(note||'Portion or item uncertain — tap ✎ to adjust.')+'</span>'
+        +'</div>':'')
+      // Edit panel — always collapsed
       +'<div class="ri-panel" id="rp-'+i+'">'
       +'<div class="ri-edit-row">'
       +'<div><div class="ri-field-lbl">Food</div><input class="ri-field-inp" id="ri-food-'+i+'" value="'+item.name+'" onclick="event.stopPropagation()"></div>'
@@ -916,7 +957,8 @@ function renderRiList(items){
       +(function(){var u=extractUnit(item.portion);return ['g','oz','cup','handful','palm','ml','L','piece','tbsp','tsp'].map(function(o){return '<option'+(o===u?' selected':'')+'>'+o+'</option>';}).join('');})()
       +'</select></div></div>'
       +'<button class="ri-research" onclick="event.stopPropagation();reSearchItem('+i+')">🔍 Re-search with AI</button>'
-      +'</div></div>';
+      +'</div>'
+      +'</div>';
   }).join('');
 }
 
@@ -944,38 +986,100 @@ function extractUnit(portion){
   return'g';
 }
 
+function toggleWarnNote(i){
+  var note=document.getElementById('ri-note-'+i);
+  var panel=document.getElementById('rp-'+i);
+  var warnBtn=document.getElementById('ri-warn-'+i);
+  if(!note)return;
+  var showing=note.classList.contains('show');
+  note.classList.toggle('show',!showing);
+  // Also open edit panel when revealing note
+  if(!showing){
+    document.querySelectorAll('.ri-panel').forEach(function(p){p.classList.remove('open');});
+    document.querySelectorAll('.ri-conf-note').forEach(function(n){if(n!==note)n.classList.remove('show');});
+    panel.classList.add('open');
+    if(warnBtn)warnBtn.style.background='rgba(200,112,0,0.18)';
+  } else {
+    panel.classList.remove('open');
+    if(warnBtn)warnBtn.style.background='';
+  }
+}
+
 function confirmItem(i){
   if(aiItems[i]){aiItems[i].confidence='High';aiItems[i].confidence_note='User confirmed';}
   var cfm=document.getElementById('ri-cfm-'+i);
   if(cfm){
-    cfm.style.background='#1a9e5c';cfm.style.color='white';
+    cfm.style.color='#1a9e5c';cfm.style.fontWeight='900';
     setTimeout(function(){
       var row=document.getElementById('ri-'+i);
-      var flag=document.getElementById('ri-flag-'+i);
-      if(row)row.classList.remove('warn');
-      if(flag)flag.remove();
-      if(cfm&&cfm.parentNode)cfm.remove();
-      // Update conf-detail row for this item to High
+      var note=document.getElementById('ri-note-'+i);
+      var panel=document.getElementById('rp-'+i);
+      if(row){row.classList.remove('warn');row.style.borderLeft='';}
+      if(note)note.remove();
+      if(panel)panel.classList.remove('open');
+      var warnBtn=document.getElementById('ri-warn-'+i);
+      if(warnBtn)warnBtn.remove();
+      var divider=row?row.querySelector('.ri-act-divider'):null;
+      if(divider)divider.remove();
+      // Update conf-detail row
       var confRows=document.querySelectorAll('.conf-row-item');
-      if(confRows[i]){
-        var nameEl=confRows[i].querySelector('.conf-name');
-        var tagEl=confRows[i].querySelector('.conf-tag');
-        if(tagEl){tagEl.style.color='#1a9e5c';tagEl.textContent='● High';}
-      }
-      // Recalc overall pill — if all items now High, flip to ✓ High
+      if(confRows[i]){var t=confRows[i].querySelector('.conf-tag');if(t){t.style.color='#1a9e5c';t.textContent='● High';}}
+      // Recalc pill
       var allGood=aiItems.every(function(it){return(it.confidence||'High')==='High';});
-      if(allGood){
-        var pill=document.getElementById('conf-pill');
-        if(pill){pill.className='conf-pill high';pill.textContent='✓ High · see details ▾';}
-      }
-    },500);
+      if(allGood){var pill=document.getElementById('conf-pill');if(pill){pill.className='conf-pill high';pill.textContent='✓ High · see details ▾';}}
+    },400);
   }
+}
+
+function deleteItem(i){
+  // Remove from aiItems array
+  if(i<0||i>=aiItems.length)return;
+  aiItems.splice(i,1);
+  // Remove DOM row
+  var row=document.getElementById('ri-'+i);
+  if(row)row.remove();
+  // Re-index remaining rows
+  var rows=document.querySelectorAll('#ri-list .ri');
+  rows.forEach(function(r,newIdx){
+    r.id='ri-'+newIdx;
+    var panel=r.querySelector('.ri-panel');if(panel)panel.id='rp-'+newIdx;
+    var cfm=r.querySelector('[id^="ri-cfm-"]');if(cfm)cfm.id='ri-cfm-'+newIdx;
+    var note=r.querySelector('[id^="ri-note-"]');if(note)note.id='ri-note-'+newIdx;
+    var warnBtn=r.querySelector('[id^="ri-warn-"]');if(warnBtn)warnBtn.id='ri-warn-'+newIdx;
+    var food=r.querySelector('[id^="ri-food-"]');if(food)food.id='ri-food-'+newIdx;
+    var amt=r.querySelector('[id^="ri-amt-"]');if(amt)amt.id='ri-amt-'+newIdx;
+    var unit=r.querySelector('[id^="ri-unit-"]');if(unit)unit.id='ri-unit-'+newIdx;
+    // Rebind onclick attributes via fresh buttons
+    var btns=r.querySelectorAll('.ri-act-btn');
+    btns.forEach(function(btn){
+      if(btn.classList.contains('ri-act-confirm'))btn.onclick=function(e){e.stopPropagation();confirmItem(newIdx);};
+      if(btn.classList.contains('ri-act-edit'))btn.onclick=function(e){e.stopPropagation();toggleRI(newIdx);};
+      if(btn.classList.contains('ri-act-delete'))btn.onclick=function(e){e.stopPropagation();deleteItem(newIdx);};
+      if(btn.classList.contains('ri-act-warn'))btn.onclick=function(e){e.stopPropagation();toggleWarnNote(newIdx);};
+    });
+    var res=r.querySelector('.ri-research');
+    if(res)res.onclick=function(e){e.stopPropagation();reSearchItem(newIdx);};
+  });
+  // Recalc totals
+  recalcTotal();
+  // Recalc confidence pill
+  if(aiItems.length===0){
+    document.getElementById('results-wrap').classList.remove('show');
+    hideAddBar();
+    return;
+  }
+  var allHigh=aiItems.every(function(it){return(it.confidence||'High')==='High';});
+  if(allHigh){var pill=document.getElementById('conf-pill');if(pill){pill.className='conf-pill high';pill.textContent='✓ High · see details ▾';}}
+  showToast('Item removed');
 }
 
 function toggleRI(i){
   var panel=document.getElementById('rp-'+i);
+  if(!panel)return;
   var isOpen=panel.classList.contains('open');
   document.querySelectorAll('.ri-panel').forEach(function(p){p.classList.remove('open');});
+  document.querySelectorAll('.ri-conf-note').forEach(function(n){n.classList.remove('show');});
+  document.querySelectorAll('.ri-act-warn').forEach(function(b){b.style.background='';});
   if(!isOpen)panel.classList.add('open');
 }
 
@@ -1284,27 +1388,15 @@ function renderMeals(){
 // ADD FOOD
 function resetSnap(){
   currentPhoto=null;currentFileName='';pendingFood=null;aiItems=[];openRiIdx=null;
-  // Reset photo section header
+  // Reset photo section
   document.getElementById('photo-hdr-left').innerHTML='<div class="sec-title">📷 Photo</div>';
-  // Restore camera/gallery buttons — clear exit animation, show grid
-  var btns=document.getElementById('photo-btns');
-  btns.classList.remove('exit');
-  btns.style.display='grid';
-  // Reset button selection state — camera selected by default
-  document.getElementById('btn-camera').classList.add('selected');
-  document.getElementById('btn-gallery').classList.remove('selected');
-  // Hide preview
+  document.getElementById('photo-btns').style.display='grid';
   document.getElementById('photo-preview-wrap').style.display='none';
   document.getElementById('photo-full-wrap').classList.remove('open');
   document.getElementById('photo-retake').style.display='none';
-  // Hide context / refine section
-  document.getElementById('ctx-section').style.display='none';
-  // Collapse refine panel
-  var rp=document.getElementById('refine-panel');
-  var ra=document.getElementById('refine-arr');
-  if(rp)rp.classList.remove('open');
-  if(ra)ra.classList.remove('open');
-  // Hide results
+  // Hide notes + analyze + results + tip
+
+
   document.getElementById('results-wrap').classList.remove('show');
   document.getElementById('tip-bar').classList.remove('show');
   // Reset notes + chips
@@ -1312,17 +1404,15 @@ function resetSnap(){
   document.getElementById('ctx-body').classList.remove('open');
   document.getElementById('ctx-arrow').classList.remove('open');
   document.querySelectorAll('.chip').forEach(function(c){c.classList.remove('on');});
-  // Reset chip defaults — Normal portion selected
-  document.querySelectorAll('.chip').forEach(function(c){if(c.textContent==='Normal')c.classList.add('on');});
+  // Reset chip defaults
+  var normals=document.querySelectorAll('.chip');
+  normals.forEach(function(c){if(c.textContent==='Normal')c.classList.add('on');});
   // Reset analyze button
   var btn=document.getElementById('analyze-btn');
   btn.innerHTML='<span class="thunder">⚡</span> Analyze this meal';
   btn.style.background='';btn.disabled=false;
   // Reset log name
   document.getElementById('log-name-inp').value='';
-  // Hide both action bars — clean slate
-  hideAnalyzePin();
-  hideAddBar();
   // Scroll to top
   window.scrollTo({top:0,behavior:'smooth'});
 }
