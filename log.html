@@ -83,14 +83,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .gallery-fire{animation:galleryflip 0.4s ease forwards;}
 
 /* Photo preview — slide in */
-.photo-preview{display:flex;align-items:center;gap:10px;margin-top:12px;background:#f0fff5;border-radius:10px;padding:9px 12px;cursor:pointer;border:0.5px solid rgba(52,201,122,0.2);animation:slideUp 0.3s ease;}
+.photo-preview{display:flex;align-items:center;gap:10px;margin-top:12px;background:white;border-radius:10px;padding:9px 12px;cursor:pointer;border:0.5px solid rgba(0,0,0,0.06);animation:slideUp 0.3s ease;}
 @keyframes slideUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
 
 /* Photo buttons exit */
 .photo-btns.exit{animation:slideDown 0.25s ease forwards;}
 @keyframes slideDown{from{opacity:1;transform:translateY(0);}to{opacity:0;transform:translateY(-6px);}}
 
-.photo-preview{display:flex;align-items:center;gap:10px;margin-top:12px;background:#f0fff5;border-radius:10px;padding:9px 12px;cursor:pointer;border:0.5px solid rgba(52,201,122,0.2);}
+.photo-preview{display:flex;align-items:center;gap:10px;margin-top:12px;background:white;border-radius:10px;padding:9px 12px;cursor:pointer;border:0.5px solid rgba(0,0,0,0.06);}
 .photo-thumb{width:36px;height:36px;border-radius:8px;object-fit:cover;flex-shrink:0;display:block;}
 .photo-fname{font-size:12px;font-weight:700;color:#1a1a2e;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .photo-expand-lbl{font-size:10px;font-weight:700;color:#1a9e5c;white-space:nowrap;}
@@ -140,10 +140,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .results-wrap.show{display:block;}
 
 .conf-bar{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;cursor:pointer;border-bottom:0.5px solid rgba(0,0,0,0.05);}
-.retake-tip{display:none;align-items:center;gap:8px;padding:10px 14px;background:rgba(255,179,0,0.07);border-bottom:0.5px solid rgba(0,0,0,0.05);}
-.retake-tip.show{display:flex;}
-.retake-tip-txt{flex:1;font-size:11px;font-weight:600;color:#1a1a2e;line-height:1.5;}
-.retake-tip-btn{font-size:11px;font-weight:800;color:#0066ff;background:rgba(0,102,255,0.08);border:0.5px solid rgba(0,102,255,0.2);border-radius:7px;padding:5px 10px;cursor:pointer;white-space:nowrap;flex-shrink:0;}
+
 .conf-label{font-size:12px;font-weight:700;color:#1a1a2e;letter-spacing:0.3px;}
 .conf-pill{font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;display:flex;align-items:center;gap:4px;}
 .conf-pill.high{background:#f0fff5;color:#1a9e5c;}
@@ -421,11 +418,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
           <div class="conf-label">AI Breakdown</div>
           <div class="conf-pill high" id="conf-pill">✓ High · see details ▾</div>
         </div>
-        <div class="retake-tip" id="retake-tip">
-          <span style="font-size:14px;">💡</span>
-          <span class="retake-tip-txt">Lighting or angle made this harder to read.</span>
-          <button class="retake-tip-btn" onclick="retakePhoto()">Retake</button>
-        </div>
+
         <div class="conf-detail" id="conf-detail"></div>
         <div class="breakdown-hint" id="breakdown-hint" style="display:none;">
   <span style="font-size:14px;">💡</span>
@@ -631,7 +624,7 @@ function init(){
   updateBadge();
   autoSuggestTag();
   renderPyramid();
-  showAddBar();
+  // ADD TO LOG is hidden on load — only shown after analysis completes
 }
 
 function updateBadge(){
@@ -703,7 +696,9 @@ function openGallery(){var i=document.getElementById('file-input');i.removeAttri
 
 function retakePhoto(){
   currentPhoto=null;currentFileName='';
-  document.getElementById('photo-btns').style.display='grid';
+  var btns=document.getElementById('photo-btns');
+  btns.classList.remove('exit');
+  btns.style.display='grid';
   document.getElementById('btn-camera').classList.add('selected');
   document.getElementById('btn-gallery').classList.remove('selected');
   document.getElementById('photo-preview-wrap').style.display='none';
@@ -714,7 +709,6 @@ function retakePhoto(){
   hideAnalyzePin();
   document.getElementById('results-wrap').classList.remove('show');
   document.getElementById('tip-bar').classList.remove('show');
-  try{document.getElementById('retake-tip').classList.remove('show');}catch(e){}
   document.getElementById('photo-hdr-left').innerHTML='<div class="sec-title">📷 Photo</div>';
   pendingFood=null;aiItems=[];
 }
@@ -854,15 +848,6 @@ function showResults(result){
   var icon=result.confidence==='High'?'✓':result.confidence==='Medium'?'⚠':'✗';
   pill.className='conf-pill '+cls;
   pill.textContent=icon+' '+result.confidence+' · see details ▾';
-  // Retake tip — only show on Medium/Low confidence
-  var retakeTip=document.getElementById('retake-tip');
-  if(retakeTip){
-    if(result.confidence==='Medium'||result.confidence==='Low'){
-      retakeTip.classList.add('show');
-    } else {
-      retakeTip.classList.remove('show');
-    }
-  }
   // Confidence detail
   var detail=document.getElementById('conf-detail');
   detail.innerHTML=result.items.map(function(item){
@@ -922,7 +907,7 @@ function renderRiList(items){
       +(warn?'<button class="ri-confirm-btn" id="ri-cfm-'+i+'" onclick="event.stopPropagation();confirmItem('+i+')">✓</button>':'')
       +'<div class="ri-edit-icon">✎</div>'
       +'</div></div>'
-      +'<div class="ri-panel'+(warn?' open':'')+'" id="rp-'+i+'">'
+      +'<div class="ri-panel" id="rp-'+i+'">'
       +'<div class="ri-edit-row">'
       +'<div><div class="ri-field-lbl">Food</div><input class="ri-field-inp" id="ri-food-'+i+'" value="'+item.name+'" onclick="event.stopPropagation()"></div>'
       +'<div><div class="ri-field-lbl">Amount</div><input class="ri-field-inp" id="ri-amt-'+i+'" value="'+extractAmount(item.portion)+'" onclick="event.stopPropagation()"></div>'
@@ -970,8 +955,19 @@ function confirmItem(i){
       if(row)row.classList.remove('warn');
       if(flag)flag.remove();
       if(cfm&&cfm.parentNode)cfm.remove();
+      // Update conf-detail row for this item to High
+      var confRows=document.querySelectorAll('.conf-row-item');
+      if(confRows[i]){
+        var nameEl=confRows[i].querySelector('.conf-name');
+        var tagEl=confRows[i].querySelector('.conf-tag');
+        if(tagEl){tagEl.style.color='#1a9e5c';tagEl.textContent='● High';}
+      }
+      // Recalc overall pill — if all items now High, flip to ✓ High
       var allGood=aiItems.every(function(it){return(it.confidence||'High')==='High';});
-      if(allGood){var pill=document.getElementById('conf-pill');if(pill){pill.className='conf-pill high';pill.textContent='✓ High · see details ▾';}}
+      if(allGood){
+        var pill=document.getElementById('conf-pill');
+        if(pill){pill.className='conf-pill high';pill.textContent='✓ High · see details ▾';}
+      }
     },500);
   }
 }
@@ -1288,15 +1284,27 @@ function renderMeals(){
 // ADD FOOD
 function resetSnap(){
   currentPhoto=null;currentFileName='';pendingFood=null;aiItems=[];openRiIdx=null;
-  // Reset photo section
+  // Reset photo section header
   document.getElementById('photo-hdr-left').innerHTML='<div class="sec-title">📷 Photo</div>';
-  document.getElementById('photo-btns').style.display='grid';
+  // Restore camera/gallery buttons — clear exit animation, show grid
+  var btns=document.getElementById('photo-btns');
+  btns.classList.remove('exit');
+  btns.style.display='grid';
+  // Reset button selection state — camera selected by default
+  document.getElementById('btn-camera').classList.add('selected');
+  document.getElementById('btn-gallery').classList.remove('selected');
+  // Hide preview
   document.getElementById('photo-preview-wrap').style.display='none';
   document.getElementById('photo-full-wrap').classList.remove('open');
   document.getElementById('photo-retake').style.display='none';
-  // Hide notes + analyze + results + tip
-
-
+  // Hide context / refine section
+  document.getElementById('ctx-section').style.display='none';
+  // Collapse refine panel
+  var rp=document.getElementById('refine-panel');
+  var ra=document.getElementById('refine-arr');
+  if(rp)rp.classList.remove('open');
+  if(ra)ra.classList.remove('open');
+  // Hide results
   document.getElementById('results-wrap').classList.remove('show');
   document.getElementById('tip-bar').classList.remove('show');
   // Reset notes + chips
@@ -1304,15 +1312,17 @@ function resetSnap(){
   document.getElementById('ctx-body').classList.remove('open');
   document.getElementById('ctx-arrow').classList.remove('open');
   document.querySelectorAll('.chip').forEach(function(c){c.classList.remove('on');});
-  // Reset chip defaults
-  var normals=document.querySelectorAll('.chip');
-  normals.forEach(function(c){if(c.textContent==='Normal')c.classList.add('on');});
+  // Reset chip defaults — Normal portion selected
+  document.querySelectorAll('.chip').forEach(function(c){if(c.textContent==='Normal')c.classList.add('on');});
   // Reset analyze button
   var btn=document.getElementById('analyze-btn');
   btn.innerHTML='<span class="thunder">⚡</span> Analyze this meal';
   btn.style.background='';btn.disabled=false;
   // Reset log name
   document.getElementById('log-name-inp').value='';
+  // Hide both action bars — clean slate
+  hideAnalyzePin();
+  hideAddBar();
   // Scroll to top
   window.scrollTo({top:0,behavior:'smooth'});
 }
