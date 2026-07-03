@@ -15,14 +15,14 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 *::-webkit-scrollbar{display:none;}*{scrollbar-width:none;}
-html,body{height:100%;overflow:hidden;}
+html,body{min-height:100%;overflow-y:auto;}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;-webkit-font-smoothing:antialiased;background:#f4f5f8;color:#1a1a2e;display:flex;justify-content:center;align-items:flex-start;animation:pgIn 0.15s ease;}
 @keyframes pgIn{from{opacity:0;}to{opacity:1;}}
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
 @keyframes ringFill1{from{stroke-dasharray:0 553;}to{stroke-dasharray:415 138;}}
 @keyframes ringFill2{from{stroke-dasharray:0 402;}to{stroke-dasharray:302 100;}}
 @keyframes ringFill3{from{stroke-dasharray:0 251;}to{stroke-dasharray:188 63;}}
-.screen{width:100%;max-width:430px;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:44px 24px 36px;background:#f4f5f8;overflow:hidden;}
+.screen{width:100%;max-width:430px;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:44px 24px 36px;background:#f4f5f8;margin:0 auto;}
 .wordmark{font-family:monospace;font-size:42px;font-weight:900;letter-spacing:-1px;line-height:1;display:flex;align-items:center;animation:fadeUp 0.4s ease both;}
 .wm-track{color:#0066ff;}
 .wm-ti{color:#ff2244;}
