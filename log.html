@@ -897,9 +897,23 @@ async function analyzePhoto(){
   var desc=document.getElementById('description').value;
   var chipsTxt=chips?'\nPreparation: '+chips+'.':'';
   var descTxt=desc?'\nUser notes: '+desc+'.':'';
-  var prompt='You are a professional nutritionist analyzing a food photo. Photo is the PRIMARY source. Description/chips only modify context.'
-    +chipsTxt+descTxt
-    +'\nBe specific about each food item. Estimate realistic portions. When uncertain flag it. No conservative bias — be accurate.'
+  var hasDesc=desc.trim().length>0;
+  var prompt='You are a professional nutritionist analyzing a meal.'
+    +(hasDesc
+      ? '\n\nSOURCE OF TRUTH — USER DESCRIPTION (highest priority):\n"'+desc.trim()+'"'
+        +'\nThe user has explicitly named these foods. Treat every item they named as CONFIRMED — set confidence:"High" for those items. Do NOT downgrade confidence on items the user explicitly named, even if the photo is unclear.'
+        +'\nThe photo supplements the description: use it to catch additional items the user did NOT mention, and to help estimate portion sizes.'
+        +(chips?'\nPreparation context: '+chips+'.':'')
+      : '\nThe photo is the primary source. Analyze carefully.'
+        +(chips?'\nPreparation context: '+chips+'.':'')
+        +(desc?'\nAdditional notes: '+desc+'.':'')
+    )
+    +'\n\nRules:'
+    +'\n- Items explicitly named by the user → confidence:"High"'
+    +'\n- Items spotted in photo but NOT named by user → confidence:"Medium" or "Low" depending on certainty'
+    +'\n- Portion size uncertainty is acceptable but does NOT lower confidence on food identity'
+    +'\n- Overall confidence is "High" if all user-named items are confirmed and photo adds no surprises'
+    +'\n- Be specific, realistic portions, no conservative bias'
     +'\nRespond ONLY in this exact JSON (no markdown):\n{"confidence":"High|Medium|Low","confidence_reason":"brief","items":[{"name":"","portion":"","kcal":0,"prot":0,"carbs":0,"fat":0,"confidence":"High|Medium|Low","confidence_note":""}],"total":{"kcal":0,"prot":0,"carbs":0,"fat":0},"tip":""}';
   try{
     var res=await fetch('https://api.anthropic.com/v1/messages',{
@@ -911,7 +925,7 @@ async function analyzePhoto(){
     var raw=data.content[0].text.trim().replace(/^```json\n?/,'').replace(/^```\n?/,'').replace(/\n?```$/,'').trim();
     var result=JSON.parse(raw);
     aiItems=result.items.map(function(item,i){return Object.assign({},item,{idx:i});});
-    pendingFood={name:result.items.map(function(i){return i.name;}).join(' + '),kcal:result.total.kcal,prot:result.total.prot,carbs:result.total.carbs,fat:result.total.fat};
+    pendingFood={name:result.items.length?result.items[0].name:'Meal',kcal:result.total.kcal,prot:result.total.prot,carbs:result.total.carbs,fat:result.total.fat};
     showResults(result);
     btn.innerHTML='<span>✅</span> Analysis complete';
     btn.style.background='linear-gradient(135deg,#1a9e5c,#148a4e)';
@@ -945,8 +959,8 @@ function showResults(result){
   document.getElementById('tot-prot').textContent=result.total.prot+'g';
   document.getElementById('tot-carbs').textContent=result.total.carbs+'g';
   document.getElementById('tot-fat').textContent=result.total.fat+'g';
-  // Log name
-  document.getElementById('log-name-inp').value=result.items.map(function(i){return i.name;}).join(' + ');
+  // Log name — first item only, not the full joined list
+  document.getElementById('log-name-inp').value=result.items.length?result.items[0].name:'';
   // Show results
   document.getElementById('results-wrap').classList.add('show');
   // Swap bars — hide analyze, show add to log
@@ -1126,7 +1140,7 @@ function confirmItem(i,pfx){
   if(items[i]){items[i].confidence='High';items[i].confidence_note='User confirmed';}
   var cfm=document.getElementById(pfx+'ri-cfm-'+i);
   if(cfm){
-    cfm.style.color='#1a9e5c';cfm.style.fontWeight='900';
+    cfm.style.color='#1a9e5c';cfm.style.fontWeight='900';cfm.disabled=true;
     setTimeout(function(){
       var row=document.getElementById(pfx+'ri-'+i);
       var note=document.getElementById(pfx+'ri-note-'+i);
@@ -1134,8 +1148,13 @@ function confirmItem(i,pfx){
       var wBtn=document.getElementById(pfx+'ri-warn-'+i);
       var divider=row?row.querySelector('.ri-act-divider'):null;
       if(row){row.classList.remove('warn-med');row.classList.remove('warn-low');row.style.borderLeft='';}
-      if(note)note.remove();if(panel)panel.classList.remove('open');
-      if(wBtn)wBtn.remove();if(divider)divider.remove();
+      if(note)note.remove();
+      if(panel)panel.classList.remove('open');
+      if(wBtn)wBtn.remove();
+      if(divider)divider.remove();
+      // Remove confirm button — item is confirmed, no longer needed
+      var cfmEl=document.getElementById(pfx+'ri-cfm-'+i);
+      if(cfmEl)cfmEl.remove();
       var allGood=items.every(function(it){return(it.confidence||'High')==='High';});
       if(allGood){var pillId=pfx?'search-conf-pill':'conf-pill';var pill=document.getElementById(pillId);if(pill){pill.className='conf-pill high';pill.textContent='✓ High · see details ▾';}}
     },400);
