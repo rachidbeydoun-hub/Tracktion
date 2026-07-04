@@ -1152,9 +1152,7 @@ function confirmItem(i,pfx){
       if(panel)panel.classList.remove('open');
       if(wBtn)wBtn.remove();
       if(divider)divider.remove();
-      // Remove confirm button — item is confirmed, no longer needed
-      var cfmEl=document.getElementById(pfx+'ri-cfm-'+i);
-      if(cfmEl)cfmEl.remove();
+      if(cfm&&cfm.parentNode)cfm.parentNode.removeChild(cfm);
       var allGood=items.every(function(it){return(it.confidence||'High')==='High';});
       if(allGood){var pillId=pfx?'search-conf-pill':'conf-pill';var pill=document.getElementById(pillId);if(pill){pill.className='conf-pill high';pill.textContent='✓ High · see details ▾';}}
     },400);
