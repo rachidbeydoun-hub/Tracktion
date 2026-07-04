@@ -35,57 +35,63 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 /* CARD */
 .card{background:white;border-radius:16px;margin:8px 12px;padding:16px;border:0.5px solid rgba(0,0,0,0.06);box-shadow:0 1px 4px rgba(0,0,0,0.04);}
 
-/* DAY TOGGLE */
-.dtoggle{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 12px 14px;}
-.dbtn{padding:10px 8px;border-radius:24px;border:1.5px solid #eee;background:white;font-size:11px;font-weight:800;color:rgba(26,26,46,0.4);cursor:pointer;transition:all 0.2s;text-align:center;letter-spacing:0.5px;-webkit-tap-highlight-color:transparent;}
-.dbtn.on{background:#0066ff;color:white;border-color:#0066ff;box-shadow:0 4px 12px rgba(0,102,255,0.25);}
+/* DAY TOGGLE — inside rings card */
+.dtoggle{display:grid;grid-template-columns:1fr 1fr;gap:7px;padding:0 14px 14px;}
+.dbtn{padding:8px;border-radius:20px;border:1.5px solid #ddd;background:white;font-size:10px;font-weight:700;color:#1a1a2e;cursor:pointer;transition:all 0.2s;text-align:center;letter-spacing:0.3px;-webkit-tap-highlight-color:transparent;}
+.dbtn.on{background:#0066ff;color:white;border-color:#0066ff;box-shadow:0 3px 10px rgba(0,102,255,0.2);}
 
 /* RINGS HERO */
 .rings-hero{display:flex;flex-direction:column;align-items:center;margin-bottom:14px;}
 .rem-main{font-family:monospace;font-size:32px;font-weight:900;line-height:1;margin-top:10px;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:color 0.2s;}
-.rem-sub{font-size:11px;font-weight:700;color:#1a1a2e;margin-top:4px;opacity:0.55;}
+.rem-sub{font-size:11px;font-weight:700;color:#1a1a2e;margin-top:4px;color:rgba(26,26,46,0.6);}
 
-/* AI PANEL */
-.ai-panel{background:white;border-radius:16px;border:0.5px solid rgba(0,0,0,0.06);box-shadow:0 1px 4px rgba(0,0,0,0.04);margin:8px 12px;overflow:hidden;}
-.ai-tabs{display:grid;grid-template-columns:1fr 1fr;border-bottom:0.5px solid rgba(0,0,0,0.06);}
-.ai-tab{text-align:center;padding:10px;font-size:11px;font-weight:800;letter-spacing:0.5px;color:#1a1a2e;cursor:pointer;-webkit-tap-highlight-color:transparent;}
-.ai-tab.on{color:#0066ff;border-bottom:2px solid #0066ff;}
-
-/* TIPS TAB */
-.tips-body{padding:13px 16px 10px;}
-.tips-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
-.tips-label{font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#1a1a2e;}
-.tips-refresh{display:flex;align-items:center;gap:4px;background:none;border:none;cursor:pointer;color:#0066ff;font-size:10px;font-weight:800;letter-spacing:0.5px;padding:4px 8px;border-radius:8px;-webkit-tap-highlight-color:transparent;}
-.tips-refresh:active{background:#f0f5ff;}
-.tips-refresh-icon{font-size:13px;display:inline-block;transition:transform 0.4s;}
-.tips-refresh-icon.spinning{transform:rotate(360deg);}
-.tips-text{font-size:13px;font-weight:500;line-height:1.65;color:#1a1a2e;min-height:40px;}
-.tips-count{font-size:10px;font-weight:700;color:#1a1a2e;margin-top:8px;text-align:right;}
-
-/* COACH TAB */
-.coach-body{display:none;flex-direction:column;}
-.coach-body.show{display:flex;}
-.coach-history{max-height:280px;overflow-y:auto;padding:10px 14px 6px;}
-.coach-msg{margin-bottom:8px;display:flex;}
+/* AI COACH DRAWER */
+.coach-drawer{background:white;border-radius:16px;margin:8px 12px;border:0.5px solid rgba(0,0,0,0.06);box-shadow:0 1px 4px rgba(0,0,0,0.04);overflow:hidden;}
+.coach-toggle{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.coach-toggle-left{display:flex;align-items:center;gap:9px;}
+.coach-pulse{width:7px;height:7px;border-radius:50%;background:#0066ff;flex-shrink:0;animation:pulse 1.6s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.35;}}
+.coach-title{font-size:13px;font-weight:600;color:#1a1a2e;line-height:1.2;}
+.coach-hint{font-size:11px;font-weight:400;color:#1a1a2e;margin-top:1px;}
+.coach-chev{font-size:16px;color:#1a1a2e;transition:transform 0.25s ease;line-height:1;flex-shrink:0;}
+.coach-chev.open{transform:rotate(180deg);}
+.coach-body{display:none;border-top:0.5px solid rgba(0,0,0,0.06);padding:12px 14px 14px;}
+.coach-body.open{display:block;}
+/* Tip card */
+.tip-card{background:#fafafa;border-radius:10px;border-left:2px solid #ffb300;padding:10px 12px;display:flex;gap:8px;align-items:flex-start;margin-bottom:10px;}
+.tip-ico{font-size:14px;color:#ffb300;flex-shrink:0;margin-top:1px;}
+.tip-txt{font-size:12px;font-weight:400;color:#1a1a2e;line-height:1.6;flex:1;}
+.tip-foot{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.tip-count{font-size:10px;font-weight:700;color:#0066ff;}
+.tip-refresh-btn{display:flex;align-items:center;gap:4px;background:none;border:0.5px solid rgba(0,0,0,0.12);border-radius:8px;padding:5px 10px;cursor:pointer;font-size:10px;font-weight:600;color:#0066ff;-webkit-tap-highlight-color:transparent;}
+.tip-refresh-btn:active{background:#f0f5ff;}
+.tip-refresh-icon{font-size:12px;display:inline-block;transition:transform 0.4s;}
+.tip-refresh-icon.spinning{transform:rotate(360deg);}
+/* Coach chat */
+.coach-history{max-height:200px;overflow-y:auto;margin-bottom:8px;}
+.coach-msg{margin-bottom:6px;display:flex;}
 .coach-msg.user{justify-content:flex-end;}
 .coach-msg.ai{justify-content:flex-start;}
-.msg-bubble{max-width:80%;padding:9px 13px;border-radius:14px;font-size:13px;line-height:1.55;font-weight:500;}
-.coach-msg.user .msg-bubble{background:#0066ff;color:white;border-radius:14px 14px 4px 14px;}
-.coach-msg.ai .msg-bubble{background:#f0f2f5;color:#1a1a2e;border-radius:14px 14px 14px 4px;}
-.coach-empty{padding:14px 16px;font-size:12px;color:#1a1a2e;font-weight:600;text-align:center;}
-.coach-clear{font-size:9px;font-weight:800;color:#1a1a2e;letter-spacing:0.5px;text-align:right;padding:4px 14px 6px;cursor:pointer;background:none;border:none;display:block;width:100%;text-align:right;}
-.coach-input-row{display:flex;gap:6px;padding:8px 14px 14px;border-top:0.5px solid rgba(0,0,0,0.05);}
-.coach-input-row input{flex:1;border:1px solid rgba(0,0,0,0.1);border-radius:10px;padding:9px 11px;font-size:12px;font-family:inherit;}
-.coach-input-row button{background:#0066ff;color:white;border:none;border-radius:10px;padding:9px 16px;font-size:11px;font-weight:800;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.msg-bubble{max-width:82%;padding:8px 12px;border-radius:12px;font-size:12px;line-height:1.55;font-weight:400;}
+.coach-msg.user .msg-bubble{background:#0066ff;color:white;border-radius:12px 12px 4px 12px;}
+.coach-msg.ai .msg-bubble{background:#f0f2f5;color:#1a1a2e;border-radius:12px 12px 12px 4px;}
+.coach-empty-txt{font-size:11px;font-weight:600;color:#1a1a2e;text-align:center;padding:8px 0 10px;line-height:1.5;}
+.coach-clear-btn{font-size:9px;font-weight:700;color:#0066ff;letter-spacing:0.5px;text-align:right;padding:2px 0 8px;cursor:pointer;background:none;border:none;display:block;width:100%;text-transform:uppercase;}
+.coach-input-wrap{display:flex;gap:6px;align-items:center;}
+.coach-input-wrap input{flex:1;border:0.5px solid rgba(0,0,0,0.12);border-radius:9px;padding:9px 11px;font-size:12px;font-family:inherit;color:#1a1a2e;background:white;}
+.coach-input-wrap input:focus{outline:none;border-color:#0066ff;}
+.coach-input-wrap button{background:#0066ff;color:white;border:none;border-radius:9px;padding:9px 16px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;-webkit-tap-highlight-color:transparent;}
+.coach-limit-txt{font-size:10px;font-weight:700;color:#0066ff;text-align:right;margin-top:6px;}
 
 /* MACRO BARS */
-.mrow{display:grid;grid-template-columns:44px 1fr auto;align-items:center;gap:10px;margin-bottom:11px;}
-.mrow:last-child{margin-bottom:0;}
+.mrow{display:grid;grid-template-columns:44px 1fr auto;align-items:center;gap:10px;padding:9px 14px;}
+.mrow+.mrow{border-top:0.5px solid rgba(0,0,0,0.05);}
+.mrow:last-child{padding-bottom:12px;}
 .mlbl{font-size:10px;font-weight:800;letter-spacing:0.5px;}
-.btrack{height:6px;background:#e4e6eb;border-radius:10px;overflow:hidden;}
+.btrack{height:6px;background:rgba(0,0,0,0.08);border-radius:10px;overflow:hidden;}
 .bfill{height:100%;border-radius:10px;transition:width 0.5s ease;}
-.mval{font-family:monospace;font-size:11px;font-weight:700;text-align:right;white-space:nowrap;display:flex;flex-direction:column;align-items:flex-end;gap:1px;min-width:76px;}
-.over{font-size:9px;font-weight:800;color:#ff2244;display:none;}
+.mval{font-size:12px;font-weight:800;text-align:right;white-space:nowrap;display:flex;flex-direction:column;align-items:flex-end;gap:1px;min-width:76px;}
+.over{font-size:9px;font-weight:700;color:#ff2244;display:none;}
 
 /* EMPTY STATE */
 .empty-state{background:white;border-radius:16px;margin:8px 12px 0;padding:14px 16px 12px;border:0.5px solid rgba(0,0,0,0.06);box-shadow:0 1px 4px rgba(0,0,0,0.04);text-align:center;display:none;}
@@ -97,8 +103,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 /* LOG SECTION */
 .log-section{margin:8px 12px 8px;}
-.log-header{font-size:10px;font-weight:800;color:rgba(26,26,46,0.45);letter-spacing:1.2px;text-transform:uppercase;margin-bottom:8px;}
-.empty-log{text-align:center;padding:12px 0;color:rgba(26,26,46,0.35);font-size:13px;font-weight:600;}
+.log-header{font-size:10px;font-weight:800;color:#1a1a2e;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:8px;}
+.empty-log{text-align:center;padding:12px 0;color:#1a1a2e;font-size:13px;font-weight:600;}
 
 /* MEAL CARD */
 .meal{background:white;border-radius:14px;margin-bottom:8px;border:0.5px solid rgba(0,0,0,0.06);box-shadow:0 1px 4px rgba(0,0,0,0.04);position:relative;overflow:hidden;transition:transform 0.1s;cursor:pointer;-webkit-tap-highlight-color:transparent;}
@@ -111,7 +117,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .meal-name{font-size:14px;font-weight:700;color:#1a1a2e;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:175px;}
 .meal-kcal-lbl{font-family:monospace;font-size:13px;font-weight:800;color:#ff0000;white-space:nowrap;flex-shrink:0;}
 .meal-line2{display:flex;align-items:center;gap:6px;}
-.meal-tag-lbl{font-size:10px;font-weight:700;color:rgba(26,26,46,0.4);letter-spacing:0.3px;}
+.meal-tag-lbl{font-size:10px;font-weight:700;color:#1a1a2e;letter-spacing:0.3px;}
 .meal-dot{width:3px;height:3px;border-radius:50%;background:rgba(26,26,46,0.2);flex-shrink:0;}
 .meal-actions{display:flex;align-items:center;gap:10px;margin-left:8px;flex-shrink:0;}
 .star-btn{background:none;border:none;cursor:pointer;font-size:18px;padding:4px;line-height:1;transition:transform 0.15s;-webkit-tap-highlight-color:transparent;}
@@ -123,11 +129,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 /* MEAL EXPANDED */
 .meal-expand{display:none;border-top:0.5px solid rgba(0,0,0,0.05);padding:14px 16px;}
 .meal-expand.open{display:block;}
-.exp-meta{font-size:11px;font-weight:700;color:rgba(26,26,46,0.45);margin-bottom:10px;}
+.exp-meta{font-size:11px;font-weight:700;color:#1a1a2e;margin-bottom:10px;}
 .exp-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:10px;}
 .exp-stat{background:#f8f9fb;border-radius:10px;padding:10px 4px;text-align:center;}
 .exp-num{font-family:monospace;font-size:20px;font-weight:700;line-height:1;}
-.exp-lbl{font-size:9px;font-weight:800;letter-spacing:0.6px;text-transform:uppercase;color:rgba(26,26,46,0.4);margin-top:4px;}
+.exp-lbl{font-size:9px;font-weight:800;letter-spacing:0.6px;text-transform:uppercase;color:#1a1a2e;margin-top:4px;}
 .exp-acts{display:flex;justify-content:flex-end;gap:14px;align-items:center;}
 .edit-btn{background:none;border:none;cursor:pointer;color:#0066ff;font-size:11px;font-weight:800;letter-spacing:0.5px;padding:4px 6px;-webkit-tap-highlight-color:transparent;}
 .exp-name-input{width:100%;font-size:14px;font-weight:700;color:#1a1a2e;border:1px solid rgba(0,0,0,0.1);border-radius:8px;padding:8px 10px;margin-bottom:10px;font-family:inherit;}
@@ -166,67 +172,71 @@ a[href]{transition:opacity 0.1s ease;}
       <span class="wm-ti">TI</span>
       <span class="wm-on">ON</span>
     </div>
-    <div class="askai on" id="askai" onclick="toggleAI()">
+    <div class="askai" id="askai" onclick="toggleAI()">
       <div class="pulse"></div>
       <div class="askai-txt">AI COACH</div>
     </div>
   </div>
 
-  <!-- DAY TOGGLE -->
-  <div class="dtoggle">
-    <div class="dbtn on" id="btn-train" onclick="setDay('train')">⚡ TRAINING</div>
-    <div class="dbtn" id="btn-rest" onclick="setDay('rest')">🥗 REST</div>
-  </div>
-
-  <!-- RINGS HERO -->
-  <div class="rings-hero">
-    <svg id="ring-svg" width="170" height="170" viewBox="0 0 170 170">
-      <!-- Tracks -->
-      <circle cx="85" cy="85" r="78" fill="none" stroke="#ffe5e5" stroke-width="9"/>
-      <circle cx="85" cy="85" r="61" fill="none" stroke="#e8f5ee" stroke-width="8"/>
-      <circle cx="85" cy="85" r="44" fill="none" stroke="#ddeaff" stroke-width="8"/>
-      <circle cx="85" cy="85" r="27" fill="none" stroke="#fff3e0" stroke-width="7"/>
-      <!-- Fills: outer=red=kcal, r2=green=prot, r3=blue=carbs, inner=gold=fat -->
-      <circle id="r-kcal" cx="85" cy="85" r="78" fill="none" stroke="#ff0000" stroke-width="9" stroke-dasharray="490.1" stroke-dashoffset="490.1" stroke-linecap="round" transform="rotate(-90 85 85)" style="transition:stroke-dashoffset 0.6s ease;"/>
-      <circle id="r-prot" cx="85" cy="85" r="61" fill="none" stroke="#34c97a" stroke-width="8" stroke-dasharray="383.3" stroke-dashoffset="383.3" stroke-linecap="round" transform="rotate(-90 85 85)" style="transition:stroke-dashoffset 0.6s ease;"/>
-      <circle id="r-carb" cx="85" cy="85" r="44" fill="none" stroke="#2d8fff" stroke-width="8" stroke-dasharray="276.5" stroke-dashoffset="276.5" stroke-linecap="round" transform="rotate(-90 85 85)" style="transition:stroke-dashoffset 0.6s ease;"/>
-      <circle id="r-fat" cx="85" cy="85" r="27" fill="none" stroke="#f5a623" stroke-width="7" stroke-dasharray="169.6" stroke-dashoffset="169.6" stroke-linecap="round" transform="rotate(-90 85 85)" style="transition:stroke-dashoffset 0.6s ease;"/>
-      <!-- RB initials -->
-      <text x="80" y="91" text-anchor="middle" font-family="monospace" font-size="17" font-weight="900" fill="#f5a623">R</text>
-      <text x="95" y="91" text-anchor="middle" font-family="monospace" font-size="17" font-weight="900" fill="#0066ff">B</text>
-    </svg>
-    <div class="rem-main" id="rem-num" onclick="cycleMetric()">2500</div>
-    <div class="rem-sub" id="rem-sub">kcal remaining · tap to change</div>
-  </div>
-
-  <!-- AI PANEL — open by default, COACH tab active -->
-  <div class="ai-panel" id="ai-panel">
-    <div class="ai-tabs">
-      <div class="ai-tab on" id="tab-tips" onclick="setAITab('tips')">TIPS</div>
-      <div class="ai-tab" id="tab-coach" onclick="setAITab('coach')">AI COACH</div>
+  <!-- RINGS HERO + DAY TOGGLE in one card -->
+  <div class="card">
+    <div class="rings-hero">
+      <svg id="ring-svg" width="170" height="170" viewBox="0 0 170 170">
+        <!-- Tracks -->
+        <circle cx="85" cy="85" r="78" fill="none" stroke="#ffe5e5" stroke-width="9"/>
+        <circle cx="85" cy="85" r="61" fill="none" stroke="#e8f5ee" stroke-width="8"/>
+        <circle cx="85" cy="85" r="44" fill="none" stroke="#ddeaff" stroke-width="8"/>
+        <circle cx="85" cy="85" r="27" fill="none" stroke="#fff3e0" stroke-width="7"/>
+        <circle id="r-kcal" cx="85" cy="85" r="78" fill="none" stroke="#ff0000" stroke-width="9" stroke-dasharray="490.1" stroke-dashoffset="490.1" stroke-linecap="round" transform="rotate(-90 85 85)" style="transition:stroke-dashoffset 0.6s ease;"/>
+        <circle id="r-prot" cx="85" cy="85" r="61" fill="none" stroke="#34c97a" stroke-width="8" stroke-dasharray="383.3" stroke-dashoffset="383.3" stroke-linecap="round" transform="rotate(-90 85 85)" style="transition:stroke-dashoffset 0.6s ease;"/>
+        <circle id="r-carb" cx="85" cy="85" r="44" fill="none" stroke="#2d8fff" stroke-width="8" stroke-dasharray="276.5" stroke-dashoffset="276.5" stroke-linecap="round" transform="rotate(-90 85 85)" style="transition:stroke-dashoffset 0.6s ease;"/>
+        <circle id="r-fat" cx="85" cy="85" r="27" fill="none" stroke="#f5a623" stroke-width="7" stroke-dasharray="169.6" stroke-dashoffset="169.6" stroke-linecap="round" transform="rotate(-90 85 85)" style="transition:stroke-dashoffset 0.6s ease;"/>
+        <text x="80" y="91" text-anchor="middle" font-family="monospace" font-size="17" font-weight="900" fill="#f5a623">R</text>
+        <text x="95" y="91" text-anchor="middle" font-family="monospace" font-size="17" font-weight="900" fill="#0066ff">B</text>
+      </svg>
+      <div class="rem-main" id="rem-num" onclick="cycleMetric()">2500</div>
+      <div class="rem-sub" id="rem-sub">kcal remaining · tap to change</div>
     </div>
+    <!-- DAY TOGGLE — inside rings card -->
+    <div class="dtoggle">
+      <div class="dbtn on" id="btn-train" onclick="setDay('train')">⚡ TRAINING</div>
+      <div class="dbtn" id="btn-rest" onclick="setDay('rest')">🥗 REST</div>
+    </div>
+  </div>
 
-    <!-- TIPS CONTENT -->
-    <div class="tips-body" id="tips-body" style="display:none;">
-      <div class="tips-header">
-        <span class="tips-label">Your tip</span>
-        <button class="tips-refresh" id="refresh-btn" onclick="refreshTip()">
-          <span class="tips-refresh-icon" id="refresh-icon">↺</span> REFRESH
+  <!-- AI COACH DRAWER — hidden by default, header button controls visibility -->
+  <div class="coach-drawer" id="coach-drawer" style="display:none;">
+    <div class="coach-toggle" onclick="toggleCoach()">
+      <div class="coach-toggle-left">
+        <div class="coach-pulse"></div>
+        <div>
+          <div class="coach-title">AI Coach</div>
+          <div class="coach-hint" id="coach-hint-txt">1 tip waiting · tap to read</div>
+        </div>
+      </div>
+      <span class="coach-chev" id="coach-chev">▾</span>
+    </div>
+    <div class="coach-body" id="coach-body">
+      <!-- Tip card -->
+      <div class="tip-card" id="tip-card">
+        <span class="tip-ico">💡</span>
+        <span class="tip-txt" id="tips-text">Loading your tip...</span>
+      </div>
+      <div class="tip-foot">
+        <span class="tip-count" id="tips-count">5 of 5 refreshes left</span>
+        <button class="tip-refresh-btn" id="refresh-btn" onclick="refreshTip()">
+          <span class="tip-refresh-icon" id="refresh-icon">↺</span> New tip
         </button>
       </div>
-      <div class="tips-text" id="tips-text">Loading your personalised tip...</div>
-      <div class="tips-count" id="tips-count"></div>
-    </div>
-
-    <!-- COACH CONTENT -->
-    <div class="coach-body show" id="coach-body">
-      <div class="coach-empty" id="coach-empty">Ask me anything — I can see your profile, last 7 days, and today. Try: "Am I on track?" or "Why is my weight not moving?"</div>
+      <!-- Chat history -->
       <div class="coach-history" id="coach-history"></div>
-      <button class="coach-clear" id="coach-clear" onclick="clearCoach()" style="display:none;">CLEAR HISTORY</button>
-      <div class="coach-input-row">
+      <div class="coach-empty-txt" id="coach-empty">Try: "Am I on track?" or "Why is my protein low?"</div>
+      <button class="coach-clear-btn" id="coach-clear" onclick="clearCoach()" style="display:none;">Clear history</button>
+      <div class="coach-input-wrap">
         <input type="text" id="coach-input" placeholder="Ask your AI coach..." onkeydown="if(event.key==='Enter')sendCoachMsg()">
         <button onclick="sendCoachMsg()">Send</button>
       </div>
+      <div class="coach-limit-txt" id="coach-limit-txt">5 of 5 questions left today</div>
     </div>
   </div>
 
@@ -325,6 +335,7 @@ let targets={train:{kcal:2500,prot:168,carb:260,fat:68},rest:{kcal:2200,prot:160
 let expandedIdx=null, editingIdx=null, metricIdx=0;
 let coachHistory=[];
 let tipRefreshCount=0, tipRefreshDate='';
+let coachQuestionCount=0, coachQuestionDate='';
 
 function init(){
   checkRollover();
@@ -354,15 +365,19 @@ function init(){
     else{tipRefreshCount=0;localStorage.setItem('tracktion_tip_date',today);localStorage.setItem('tracktion_tip_count','0');}
     tipRefreshDate=today;
   }catch(e){}
+  // coach question count — reset daily
+  try{
+    const cd=localStorage.getItem('tracktion_coach_date');
+    if(cd===today){coachQuestionCount=parseInt(localStorage.getItem('tracktion_coach_count')||'0');}
+    else{coachQuestionCount=0;localStorage.setItem('tracktion_coach_date',today);localStorage.setItem('tracktion_coach_count','0');}
+    coachQuestionDate=today;
+  }catch(e){}
+  updateCoachLimitTxt();
   document.getElementById('btn-train').className='dbtn'+(day==='train'?' on':'');
   document.getElementById('btn-rest').className='dbtn'+(day==='rest'?' on':'');
   renderCoachHistory();
   render();
-  // Default to tips tab
-  var savedTab='tips';
-  try{savedTab=localStorage.getItem('tracktion_ai_tab')||'tips';}catch(e){}
-  setAITab(savedTab);
-  // Auto-load tip on init
+  // Auto-load tip silently on init
   loadTip(false);
 }
 
@@ -425,28 +440,43 @@ function cycleMetric(){
 }
 
 // ═══════════════════════════════════════
-// AI PANEL TOGGLE
+// HEADER AI COACH BUTTON — global show/hide
 // ═══════════════════════════════════════
 function toggleAI(){
-  const btn=document.getElementById('askai');
-  const panel=document.getElementById('ai-panel');
-  const isOn=btn.classList.contains('on');
+  var btn=document.getElementById('askai');
+  var drawer=document.getElementById('coach-drawer');
+  var isOn=btn.classList.contains('on');
   if(isOn){
     btn.classList.remove('on');
-    panel.style.display='none';
+    drawer.style.display='none';
   } else {
     btn.classList.add('on');
-    panel.style.display='block';
+    drawer.style.display='block';
   }
 }
 
-function setAITab(tab){
-  const isTips=tab==='tips';
-  document.getElementById('tab-tips').classList.toggle('on',isTips);
-  document.getElementById('tab-coach').classList.toggle('on',!isTips);
-  document.getElementById('tips-body').style.display=isTips?'block':'none';
-  document.getElementById('coach-body').classList.toggle('show',!isTips);
-  try{localStorage.setItem('tracktion_ai_tab',tab);}catch(e){}
+// ═══════════════════════════════════════
+// COACH DRAWER TOGGLE — expand/collapse
+// ═══════════════════════════════════════
+function toggleCoach(){
+  var body=document.getElementById('coach-body');
+  var chev=document.getElementById('coach-chev');
+  var hint=document.getElementById('coach-hint-txt');
+  var isOpen=body.classList.contains('open');
+  body.classList.toggle('open',!isOpen);
+  chev.classList.toggle('open',!isOpen);
+  if(!isOpen){
+    // Opening — update hint with contextual insight
+    var t=targets[day];
+    var k=0,p=0;
+    loggedFoods.forEach(function(m){k+=m.kcal||0;p+=m.prot||0;});
+    var protLeft=t.prot-p;
+    if(protLeft>20)hint.textContent='Protein low · need '+protLeft+'g more';
+    else if(k<t.kcal*0.3)hint.textContent='Early in the day · log your meals';
+    else hint.textContent='On track · ask me anything';
+  } else {
+    hint.textContent='1 tip waiting · tap to read';
+  }
 }
 
 // ═══════════════════════════════════════
@@ -503,9 +533,9 @@ function loadTip(isManual){
   try{apikey=localStorage.getItem('tracktion_apikey')||'';}catch(e){}
   const textEl=document.getElementById('tips-text');
   if(!apikey){
-    textEl.textContent='💡 '+getFallbackTip();
-    document.getElementById('tips-count').textContent='Add API key in Settings for personalised AI tips.';
-    document.getElementById('refresh-btn').style.display='none';
+    textEl.textContent=getFallbackTip();
+    // API key hint removed — handled by onboarding only
+    // refresh btn handled below
     return;
   }
   if(isManual){
@@ -531,7 +561,7 @@ function loadTip(isManual){
     textEl.textContent=txt;
     updateTipCount();
   }).catch(function(){
-    textEl.textContent='💡 '+getFallbackTip();
+    textEl.textContent=getFallbackTip();
     updateTipCount();
   });
 }
@@ -543,6 +573,15 @@ function refreshTip(){
 // ═══════════════════════════════════════
 // COACH — persistent chat history
 // ═══════════════════════════════════════
+function updateCoachLimitTxt(){
+  var el=document.getElementById('coach-limit-txt');
+  if(el){
+    var left=Math.max(0,5-coachQuestionCount);
+    el.textContent=left+' of 5 questions left today';
+    el.style.color=left===0?'#e03131':'#0066ff';
+  }
+}
+
 function renderCoachHistory(){
   const container=document.getElementById('coach-history');
   const empty=document.getElementById('coach-empty');
@@ -594,6 +633,11 @@ function sendCoachMsg(){
   const input=document.getElementById('coach-input');
   const msg=input.value.trim();
   if(!msg)return;
+  // Check daily question limit
+  if(coachQuestionCount>=5){
+    showToast('5 questions used today — resets at midnight');
+    return;
+  }
   var apikey='';
   try{apikey=localStorage.getItem('tracktion_apikey')||'';}catch(e){}
   if(!apikey){
@@ -603,6 +647,9 @@ function sendCoachMsg(){
     input.value='';
     return;
   }
+  coachQuestionCount++;
+  try{localStorage.setItem('tracktion_coach_count',String(coachQuestionCount));}catch(e){}
+  updateCoachLimitTxt();
   coachHistory.push({role:'user',text:msg});
   coachHistory.push({role:'ai',text:'Thinking...'});
   renderCoachHistory();
@@ -696,7 +743,7 @@ function renderLog(){
   const favNames=new Set(favMeals.map(function(f){return f.name;}));
   list.innerHTML=loggedFoods.map(function(m,i){
     const tag=normalizeTag(m.mealTag);
-    const color=MEAL_COLORS[tag]||'#aaa';
+    const color=MEAL_COLORS[tag]||'#0066ff';
     const isFav=favNames.has(m.name);
     const isOpen=expandedIdx===i;
     const isEditing=editingIdx===i;
