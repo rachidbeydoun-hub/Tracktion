@@ -1118,18 +1118,21 @@ function extractAmount(portion){
 function extractUnit(portion){
   if(!portion)return'g';
   var p=portion.toLowerCase();
-  // Order matters — check multi-word first
-  if(/\bpiece[s]?\b/.test(p))return'piece';
-  if(/\bslice[s]?\b/.test(p))return'piece';
+  // Check grams first — if the primary quantity is in grams (e.g. "150g"), use g even if "pieces" appears later in the string
+  if(/^\s*[\d.]+\s*g\b/.test(p))return'g';
+  if(/\bkg\b/.test(p))return'kg';
   if(/\btbsp\b|tablespoon/.test(p))return'tbsp';
   if(/\btsp\b|teaspoon/.test(p))return'tsp';
   if(/\bcup[s]?\b/.test(p))return'cup';
+  if(/[\d.]+\s*ml/.test(p))return'ml';
   if(/\bml\b|milliliter/.test(p))return'ml';
   if(/\bl\b|liter/.test(p))return'L';
   if(/\boz\b|ounce/.test(p))return'oz';
   if(/\blb[s]?\b|pound/.test(p))return'oz';
   if(/\bhandful\b/.test(p))return'handful';
   if(/\bpalm\b/.test(p))return'palm';
+  if(/\bpiece[s]?\b/.test(p))return'piece';
+  if(/\bslice[s]?\b/.test(p))return'piece';
   if(/\bg\b|gram/.test(p))return'g';
   return'g';
 }
