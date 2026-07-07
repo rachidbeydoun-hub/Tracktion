@@ -37,11 +37,11 @@ body{min-height:100vh;background:#f4f5f8;display:flex;flex-direction:column;alig
 .hero-inner{display:flex;align-items:center;gap:14px;}
 .hero-info{flex:1;min-width:0;}
 .hero-name{font-size:17px;font-weight:800;color:#1a1a2e;margin-bottom:2px;}
-.hero-sub{font-size:12px;font-weight:600;color:#1a1a2e;opacity:0.5;}
+.hero-sub{font-size:12px;font-weight:600;color:#0066ff;}
 .hero-pills{display:flex;gap:6px;margin-top:10px;}
 .hero-pill{background:#f4f5f8;border-radius:9px;padding:6px 8px;text-align:center;flex:1;}
 .hero-pill-val{font-family:monospace;font-size:13px;font-weight:800;color:#1a1a2e;display:block;}
-.hero-pill-lbl{font-size:9px;font-weight:700;color:#1a1a2e;opacity:0.5;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-top:1px;}
+.hero-pill-lbl{font-size:9px;font-weight:700;color:#1a1a2e;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-top:1px;}
 
 /* BODY SCAN AI */
 .bscan-card{background:#0066ff;border-radius:16px;margin:0 12px 8px;padding:16px;position:relative;overflow:hidden;}
@@ -57,7 +57,7 @@ body{min-height:100vh;background:#f4f5f8;display:flex;flex-direction:column;alig
 .bscan-metrics{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:12px;}
 .bscan-metric{background:rgba(255,255,255,0.12);border-radius:10px;padding:10px 12px;}
 .bscan-mval{font-family:monospace;font-size:16px;font-weight:800;color:#fff;display:block;}
-.bscan-mlbl{font-size:9px;font-weight:700;color:rgba(255,255,255,0.65);text-transform:uppercase;letter-spacing:0.5px;display:block;margin-top:3px;}
+.bscan-mlbl{font-size:9px;font-weight:700;color:rgba(255,255,255,0.85);text-transform:uppercase;letter-spacing:0.5px;display:block;margin-top:3px;}
 
 /* AI RESULT INSIDE BSCAN */
 .bscan-result{background:rgba(255,255,255,0.12);border-radius:12px;padding:12px;margin-top:12px;display:none;}
@@ -78,14 +78,14 @@ body{min-height:100vh;background:#f4f5f8;display:flex;flex-direction:column;alig
 .act-cell{padding:12px 16px;border-bottom:0.5px solid rgba(0,0,0,0.05);}
 .act-cell:nth-child(odd){border-right:0.5px solid rgba(0,0,0,0.05);}
 .act-cell:nth-last-child(-n+2){border-bottom:none;}
-.act-lbl{font-size:10px;font-weight:800;color:#1a1a2e;opacity:0.5;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:5px;}
+.act-lbl{font-size:10px;font-weight:800;color:#1a1a2e;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:5px;}
 .act-sel{background:transparent;border:none;outline:none;font-size:14px;font-weight:800;color:#0066ff;font-family:monospace;cursor:pointer;-webkit-appearance:none;width:100%;}
 
 /* TARGETS CARD */
 .targets-card{background:white;border-radius:16px;margin:0 12px 8px;border:0.5px solid rgba(0,0,0,0.06);box-shadow:0 1px 4px rgba(0,0,0,0.04);padding:14px;}
 .tcard-top{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
 .ttabs{display:flex;background:#f4f5f8;border-radius:8px;padding:2px;gap:2px;flex:1;}
-.ttab{flex:1;padding:6px;border-radius:6px;font-size:10px;font-weight:800;text-align:center;color:#1a1a2e;opacity:0.4;cursor:pointer;border:none;background:transparent;}
+.ttab{flex:1;padding:6px;border-radius:6px;font-size:10px;font-weight:700;text-align:center;color:#1a1a2e;cursor:pointer;border:none;background:transparent;white-space:nowrap;}
 .ttab.on{background:white;color:#0066ff;opacity:1;box-shadow:0 1px 3px rgba(0,0,0,0.08);}
 .edit-targets-btn{font-family:monospace;font-size:9px;font-weight:900;color:#0066ff;background:rgba(0,102,255,0.08);border:0.5px solid rgba(0,102,255,0.2);border-radius:7px;padding:5px 11px;cursor:pointer;letter-spacing:0.5px;white-space:nowrap;}
 .edit-targets-btn:active{opacity:0.75;}
@@ -94,11 +94,28 @@ body{min-height:100vh;background:#f4f5f8;display:flex;flex-direction:column;alig
 .macro-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
 .macro-box{background:#f4f5f8;border-radius:10px;padding:10px 8px;text-align:center;}
 .macro-val{font-family:monospace;font-size:20px;font-weight:800;display:block;}
-.macro-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-top:3px;color:#1a1a2e;opacity:0.5;}
+.macro-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-top:3px;color:#1a1a2e;}
 
-/* TRAINING DAYS */
+/* EDIT MODE */
+.edit-mode-only{display:none;}
+.lock-icon{font-size:11px;color:#1a1a2e;margin-left:4px;opacity:0.3;}
+body.editing .edit-mode-only{display:block;}
+body.editing .lock-icon{display:none;}
+body.editing .prof-val input,body.editing .act-sel,body.editing .day-num{pointer-events:auto;}
+body:not(.editing) .act-sel{pointer-events:none;}
+body:not(.editing) .day-num{pointer-events:none;}
+
+/* AGGRESSIVE CUT WARNING */
+.cut-warning{display:none;margin:0 12px 8px;padding:10px 12px;background:rgba(255,179,0,0.08);border-left:3px solid #ffb300;border-radius:0 10px 10px 0;}
+.cut-warning.show{display:flex;gap:8px;align-items:flex-start;}
+.cut-warning-ico{font-size:14px;flex-shrink:0;margin-top:1px;}
+.cut-warning-txt{font-size:11px;font-weight:600;color:#1a1a2e;line-height:1.55;}
+
+/* TRAINING DAYS — letters */
 .day-btns{display:flex;gap:5px;padding:13px 16px;}
-.day-num{width:38px;height:38px;border-radius:10px;border:0.5px solid rgba(0,0,0,0.12);background:white;color:#1a1a2e;font-size:14px;font-weight:700;cursor:pointer;}
+.day-lbl{font-size:10px;font-weight:700;color:#1a1a2e;text-align:center;margin-bottom:3px;width:38px;}
+.day-wrap{display:flex;flex-direction:column;align-items:center;}
+.day-num{width:38px;height:38px;border-radius:10px;border:0.5px solid rgba(0,0,0,0.12);background:white;color:#1a1a2e;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;}
 .day-num.on{background:rgba(0,102,255,0.08);border-color:#0066ff;color:#0066ff;font-weight:800;}
 
 /* PROGRESS HISTORY */
@@ -116,12 +133,12 @@ body{min-height:100vh;background:#f4f5f8;display:flex;flex-direction:column;alig
 .sheet-handle{width:36px;height:4px;background:rgba(0,0,0,0.1);border-radius:2px;margin:12px auto 16px;}
 .sheet-header{text-align:center;padding:0 20px 12px;border-bottom:0.5px solid rgba(0,0,0,0.06);}
 .sheet-title{font-size:16px;font-weight:800;color:#1a1a2e;margin-bottom:3px;}
-.sheet-sub{font-size:12px;color:#1a1a2e;opacity:0.5;font-weight:500;}
+.sheet-sub{font-size:12px;color:#1a1a2e;font-weight:500;}
 .bscan-upload-zone{margin:16px 16px 0;border:1.5px dashed rgba(0,102,255,0.3);border-radius:14px;padding:24px;text-align:center;cursor:pointer;background:rgba(0,102,255,0.02);}
 .bscan-upload-zone:active{background:rgba(0,102,255,0.06);}
 .bscan-upload-icon{font-size:36px;display:block;margin-bottom:8px;}
 .bscan-upload-title{font-size:14px;font-weight:800;color:#0066ff;margin-bottom:4px;}
-.bscan-upload-sub{font-size:12px;color:#1a1a2e;opacity:0.5;font-weight:500;}
+.bscan-upload-sub{font-size:12px;color:#1a1a2e;font-weight:500;}
 .bscan-preview{width:100%;border-radius:12px;margin-top:12px;display:none;max-height:220px;object-fit:cover;}
 .bscan-preview.show{display:block;}
 .bscan-notes{margin:12px 16px 0;}
@@ -133,7 +150,7 @@ body{min-height:100vh;background:#f4f5f8;display:flex;flex-direction:column;alig
 .bscan-analyze-btn:disabled{opacity:0.5;}
 .bscan-ai-result{margin:14px 16px 0;background:#f4f5f8;border-radius:14px;padding:14px;display:none;}
 .bscan-ai-result.show{display:block;}
-.bscan-ai-result-lbl{font-size:9px;font-weight:800;color:#1a1a2e;opacity:0.5;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;}
+.bscan-ai-result-lbl{font-size:9px;font-weight:800;color:#1a1a2e;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;}
 .bscan-ai-result-text{font-size:14px;color:#1a1a2e;line-height:1.65;font-weight:500;}
 .bscan-ai-save{margin:10px 16px 16px;width:calc(100% - 32px);padding:13px;border-radius:12px;border:none;background:#1a9e5c;color:white;font-family:monospace;font-size:12px;font-weight:900;letter-spacing:1px;cursor:pointer;display:none;}
 .bscan-ai-save.show{display:block;}
@@ -149,9 +166,9 @@ body{min-height:100vh;background:#f4f5f8;display:flex;flex-direction:column;alig
 .override-overlay.open .override-sheet{transform:translateY(0);}
 .ov-handle{width:36px;height:4px;background:rgba(0,0,0,0.1);border-radius:2px;margin:12px auto 16px;}
 .ov-title{font-size:16px;font-weight:800;color:#1a1a2e;text-align:center;margin-bottom:3px;}
-.ov-sub{font-size:12px;color:#1a1a2e;opacity:0.5;text-align:center;font-weight:500;margin-bottom:14px;}
+.ov-sub{font-size:12px;color:#1a1a2e;text-align:center;font-weight:500;margin-bottom:14px;}
 .ov-tabs{display:flex;background:#f4f5f8;border-radius:9px;padding:2px;gap:2px;margin:0 16px 14px;}
-.ov-tab{flex:1;padding:7px;border-radius:7px;font-size:10px;font-weight:800;text-align:center;color:#1a1a2e;opacity:0.4;cursor:pointer;border:none;background:transparent;}
+.ov-tab{flex:1;padding:7px;border-radius:7px;font-size:10px;font-weight:700;text-align:center;color:#1a1a2e;cursor:pointer;border:none;background:transparent;}
 .ov-tab.on{background:white;color:#0066ff;opacity:1;box-shadow:0 1px 3px rgba(0,0,0,0.08);}
 .ov-calc-note{background:rgba(0,102,255,0.05);border-radius:9px;padding:9px 14px;margin:0 16px 12px;font-size:11px;color:#1a1a2e;font-weight:600;line-height:1.5;}
 .ov-calc-note span{color:#0066ff;font-family:monospace;font-weight:800;}
@@ -160,7 +177,7 @@ body{min-height:100vh;background:#f4f5f8;display:flex;flex-direction:column;alig
 .ov-field-right{display:flex;align-items:center;gap:6px;}
 .ov-inp{width:88px;background:#f4f5f8;border-radius:9px;padding:8px 10px;font-family:monospace;font-size:15px;font-weight:800;color:#1a1a2e;text-align:right;border:1.5px solid transparent;outline:none;}
 .ov-inp:focus{background:white;}
-.ov-unit{font-size:12px;font-weight:700;color:#1a1a2e;opacity:0.45;width:24px;}
+.ov-unit{font-size:12px;font-weight:700;color:#1a1a2e;width:24px;}
 .ov-save{margin:14px 16px 6px;width:calc(100% - 32px);padding:14px;border-radius:12px;border:none;background:#0066ff;color:white;font-family:monospace;font-size:13px;font-weight:900;letter-spacing:1px;cursor:pointer;}
 .ov-save:active{opacity:0.85;}
 .ov-reset{text-align:center;padding:10px 16px 20px;font-size:13px;font-weight:700;color:#ff2244;cursor:pointer;}
@@ -194,7 +211,7 @@ body{min-height:100vh;background:#f4f5f8;display:flex;flex-direction:column;alig
     <div class="wordmark">
       <span class="wm-track">TRACK</span><span class="wm-ti">TI</span><span class="wm-n">ON</span>
     </div>
-    <button class="save-btn" onclick="saveProfile()">SAVE</button>
+    <button class="save-btn" id="edit-save-btn" onclick="toggleEditMode()">✎ EDIT</button>
   </div>
 
   <!-- RINGS HERO -->
@@ -265,28 +282,28 @@ body{min-height:100vh;background:#f4f5f8;display:flex;flex-direction:column;alig
       <span class="prof-lbl">Sex</span>
       <div style="display:flex;gap:6px;">
         <button id="pr-g-m" onclick="prSetGender('m')" style="padding:6px 14px;border-radius:8px;border:0.5px solid #0066ff;background:rgba(0,102,255,0.08);color:#0066ff;font-size:12px;font-weight:800;cursor:pointer;">Male</button>
-        <button id="pr-g-f" onclick="prSetGender('f')" style="padding:6px 14px;border-radius:8px;border:0.5px solid rgba(0,0,0,0.12);background:transparent;color:#1a1a2e;opacity:0.5;font-size:12px;font-weight:800;cursor:pointer;">Female</button>
+        <button id="pr-g-f" onclick="prSetGender('f')" style="padding:6px 14px;border-radius:8px;border:0.5px solid rgba(0,0,0,0.12);background:transparent;color:#1a1a2e;font-size:12px;font-weight:800;cursor:pointer;">Female</button>
       </div>
     </div>
     <div class="prof-row">
       <span class="prof-lbl">Height</span>
       <div style="display:flex;align-items:center;gap:4px;">
         <input id="pr-height" type="text" inputmode="numeric" placeholder="170" oninput="prCalc()" style="background:transparent;border:none;outline:none;font-family:monospace;font-size:16px;font-weight:800;color:#0066ff;text-align:right;width:60px;">
-        <span style="font-size:12px;font-weight:700;color:#1a1a2e;opacity:0.45;">cm</span>
+        <span style="font-size:12px;font-weight:700;color:#1a1a2e;">cm</span>
       </div>
     </div>
     <div class="prof-row">
       <span class="prof-lbl">Weight</span>
       <div style="display:flex;align-items:center;gap:4px;">
         <input id="pr-weight" type="text" inputmode="decimal" placeholder="74.5" oninput="prCalc();updateHeroPills()" style="background:transparent;border:none;outline:none;font-family:monospace;font-size:16px;font-weight:800;color:#0066ff;text-align:right;width:60px;">
-        <span style="font-size:12px;font-weight:700;color:#1a1a2e;opacity:0.45;">kg</span>
+        <span style="font-size:12px;font-weight:700;color:#1a1a2e;">kg</span>
       </div>
     </div>
     <div class="prof-row">
       <span class="prof-lbl">Body fat %</span>
       <div style="display:flex;align-items:center;gap:4px;">
         <input id="pr-bf" type="text" inputmode="decimal" placeholder="14.5" oninput="updateHeroPills()" style="background:transparent;border:none;outline:none;font-family:monospace;font-size:16px;font-weight:800;color:#0066ff;text-align:right;width:60px;">
-        <span style="font-size:12px;font-weight:700;color:#1a1a2e;opacity:0.45;">%</span>
+        <span style="font-size:12px;font-weight:700;color:#1a1a2e;">%</span>
       </div>
     </div>
   </div>
@@ -367,24 +384,30 @@ body{min-height:100vh;background:#f4f5f8;display:flex;flex-direction:column;alig
     </div>
   </div>
 
+  <!-- AGGRESSIVE CUT WARNING -->
+  <div class="cut-warning" id="cut-warning">
+    <span class="cut-warning-ico">⚠️</span>
+    <span class="cut-warning-txt">Aggressive cut risks muscle loss. Keep protein at 2.2g/kg and avoid going below 1,800 kcal on rest days.</span>
+  </div>
+
   <!-- TRAINING -->
   <span class="sec-lbl">Training</span>
   <div class="card">
     <div class="day-btns">
-      <button class="day-num" id="pr-d-1" onclick="prSetDays(1)">1</button>
-      <button class="day-num" id="pr-d-2" onclick="prSetDays(2)">2</button>
-      <button class="day-num" id="pr-d-3" onclick="prSetDays(3)">3</button>
-      <button class="day-num on" id="pr-d-4" onclick="prSetDays(4)">4</button>
-      <button class="day-num" id="pr-d-5" onclick="prSetDays(5)">5</button>
-      <button class="day-num" id="pr-d-6" onclick="prSetDays(6)">6</button>
-      <button class="day-num" id="pr-d-7" onclick="prSetDays(7)">7</button>
+      <div class="day-wrap"><span class="day-lbl">M</span><button class="day-num" id="pr-d-1" onclick="prSetDays(1)"></button></div>
+      <div class="day-wrap"><span class="day-lbl">T</span><button class="day-num" id="pr-d-2" onclick="prSetDays(2)"></button></div>
+      <div class="day-wrap"><span class="day-lbl">W</span><button class="day-num" id="pr-d-3" onclick="prSetDays(3)"></button></div>
+      <div class="day-wrap"><span class="day-lbl">T</span><button class="day-num on" id="pr-d-4" onclick="prSetDays(4)"></button></div>
+      <div class="day-wrap"><span class="day-lbl">F</span><button class="day-num" id="pr-d-5" onclick="prSetDays(5)"></button></div>
+      <div class="day-wrap"><span class="day-lbl">S</span><button class="day-num" id="pr-d-6" onclick="prSetDays(6)"></button></div>
+      <div class="day-wrap"><span class="day-lbl">S</span><button class="day-num" id="pr-d-7" onclick="prSetDays(7)"></button></div>
     </div>
   </div>
 
   <!-- PROGRESS HISTORY -->
   <span class="sec-lbl">Progress History</span>
   <div class="card" id="pr-history-card">
-    <div style="text-align:center;padding:16px;font-size:13px;font-weight:600;color:#1a1a2e;opacity:0.4;" id="pr-history-empty">No measurements yet — save your profile to start tracking.</div>
+    <div style="text-align:center;padding:16px;font-size:13px;font-weight:600;color:#1a1a2e;" id="pr-history-empty">No measurements yet — save your profile to start tracking.</div>
   </div>
 
   <div style="height:20px;"></div>
@@ -570,7 +593,13 @@ var pState={
     if(profile.steps)document.getElementById('pr-steps').value=profile.steps;
     if(profile.job)document.getElementById('pr-job').value=profile.job;
     if(profile.goal)document.getElementById('pr-goal').value=profile.goal;
-    if(profile.trainDays)prSetDays(profile.trainDays);
+  if(profile.trainDays){
+    pState.trainDays=profile.trainDays;
+    for(var i=1;i<=7;i++){
+      var b=document.getElementById('pr-d-'+i);
+      if(b)b.className='day-num'+(i<=profile.trainDays?' on':'');
+    }
+  }
   }
 
   // Check for custom override
@@ -591,6 +620,27 @@ var pState={
   renderHistory();
 })();
 
+// ─── EDIT MODE ────────────────────────────────────────────
+var isEditing=false;
+function toggleEditMode(){
+  isEditing=!isEditing;
+  var btn=document.getElementById('edit-save-btn');
+  if(isEditing){
+    document.body.classList.add('editing');
+    btn.textContent='✓ SAVE';
+    btn.style.background='rgba(26,158,92,0.1)';
+    btn.style.borderColor='rgba(26,158,92,0.4)';
+    btn.style.color='#1a9e5c';
+  } else {
+    saveProfile();
+    document.body.classList.remove('editing');
+    btn.textContent='✎ EDIT';
+    btn.style.background='';
+    btn.style.borderColor='';
+    btn.style.color='';
+  }
+}
+
 // ─── GENDER ───────────────────────────────────────────────
 function prSetGender(g){
   pState.gender=g;
@@ -608,10 +658,11 @@ function prSetGender(g){
 
 // ─── TRAINING DAYS ────────────────────────────────────────
 function prSetDays(n){
+  if(!isEditing)return;
   pState.trainDays=n;
   for(var i=1;i<=7;i++){
     var b=document.getElementById('pr-d-'+i);
-    if(b)b.className='day-num'+(i===n?' on':'');
+    if(b)b.className='day-num'+(i<=n?' on':'');
   }
 }
 
@@ -641,6 +692,9 @@ function prCalc(){
     train:{kcal:trainKcal,prot:prot,carb:trainCarb,fat:fat},
     rest:{kcal:restKcal,prot:prot,carb:restCarb,fat:fat}
   };
+  // Show aggressive cut warning
+  var cutWarn=document.getElementById('cut-warning');
+  if(cutWarn){cutWarn.classList.toggle('show',goal<=-0.20);}
   updateTargetsDisplay();
   updateOvCalcNote();
   updateRings();
