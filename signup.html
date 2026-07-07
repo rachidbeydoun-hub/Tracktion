@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 <meta name="theme-color" content="#f4f5f8">
 <title>TRACKTION — Account</title>
 <style>
@@ -34,7 +35,7 @@ body{display:flex;justify-content:center;align-items:flex-start;animation:pgIn 0
 .finp:focus{border:1.5px solid #0066ff;}
 .finp::placeholder{color:rgba(26,26,46,0.35);}
 .pw-wrap{position:relative;}
-.eye-btn{position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;font-size:18px;color:rgba(26,26,46,0.4);cursor:pointer;padding:0;}
+.eye-btn{position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;font-size:18px;color:#1a1a2e;cursor:pointer;padding:4px;line-height:1;}
 
 /* STRENGTH BAR */
 .str-wrap{height:3px;border-radius:2px;background:rgba(0,0,0,0.08);margin-top:6px;display:none;}
@@ -90,10 +91,11 @@ body{display:flex;justify-content:center;align-items:flex-start;animation:pgIn 0
       <label class="finp-lbl" for="c-pwd">Password</label>
       <div class="pw-wrap">
         <input class="finp" id="c-pwd" type="password" placeholder="Min. 8 characters" autocomplete="new-password" oninput="chkStr(this.value)" style="padding-right:48px;">
-        <button class="eye-btn" onclick="toggleEye('c-pwd',this)" type="button">👁</button>
+        <button class="eye-btn" onclick="toggleEye('c-pwd',this)" type="button" aria-label="Show password"><i class="ti ti-eye"></i></button>
       </div>
       <div class="str-wrap" id="pwd-strength"><div class="str-bar" id="pwd-strength-bar"></div></div>
       <div class="str-lbl" id="pwd-strength-lbl"></div>
+      <div style="font-size:11px;font-weight:600;color:#1a1a2e;margin-top:5px;">Min. 8 characters · use a mix of letters and numbers</div>
     </div>
 
     <div>
@@ -106,6 +108,7 @@ body{display:flex;justify-content:center;align-items:flex-start;animation:pgIn 0
 
   <div style="display:flex;flex-direction:column;gap:10px;margin-top:24px;animation:fadeUp 0.4s ease 0.4s both;">
     <button class="btn-primary" onclick="doCreate()">CREATE ACCOUNT →</button>
+    <div style="font-size:11px;font-weight:600;color:#0066ff;text-align:center;">Next: 5 quick questions to set your targets</div>
     <div class="terms-txt">By continuing you agree to our <a href="#">Terms</a> &amp; <a href="#">Privacy Policy</a></div>
     <div class="divider"></div>
     <div class="switch-txt">Already have an account? <button onclick="showSignin()">Sign in →</button></div>
@@ -134,13 +137,11 @@ body{display:flex;justify-content:center;align-items:flex-start;animation:pgIn 0
       <label class="finp-lbl" for="si-pwd">Password</label>
       <div class="pw-wrap">
         <input class="finp" id="si-pwd" type="password" placeholder="Your password" autocomplete="current-password" style="padding-right:48px;">
-        <button class="eye-btn" onclick="toggleEye('si-pwd',this)" type="button">👁</button>
+        <button class="eye-btn" onclick="toggleEye('si-pwd',this)" type="button" aria-label="Show password"><i class="ti ti-eye"></i></button>
       </div>
     </div>
 
-    <div style="text-align:right;margin-top:-4px;">
-      <button style="background:none;border:none;cursor:pointer;font-size:12px;color:#0066ff;font-weight:700;padding:0;">Forgot password?</button>
-    </div>
+
 
   </div>
 
@@ -175,7 +176,8 @@ function chkStr(v){
 function toggleEye(id,btn){
   var inp=document.getElementById(id);
   inp.type=inp.type==='password'?'text':'password';
-  btn.textContent=inp.type==='password'?'👁':'🙈';
+  var ico=btn.querySelector('i');
+  if(ico)ico.className=inp.type==='password'?'ti ti-eye':'ti ti-eye-off';
 }
 function showErr(id,msg){var el=document.getElementById(id);if(el){el.textContent=msg;el.style.display='block';}}
 function hideErrs(){['err-name','err-email','err-pwd'].forEach(function(id){var el=document.getElementById(id);if(el)el.style.display='none';});}
@@ -184,38 +186,45 @@ function doCreate(){
       email=document.getElementById('c-email').value.trim(),
       pwd=document.getElementById('c-pwd').value,
       pwd2=document.getElementById('c-pwd2').value;
-  if(!name||!email||pwd.length<8||pwd!==pwd2){
-    if(!name||!email||pwd.length<8){
-      var lbl=document.getElementById('pwd-strength-lbl');
-      if(lbl&&pwd.length<8&&pwd.length>0){lbl.textContent='Password too short';lbl.style.color='#ff2244';lbl.style.display='block';}
-    }
-    if(pwd!==pwd2&&pwd2){
-      var ml=document.getElementById('pwd-match-lbl');
-      if(ml){ml.textContent='✗ Passwords do not match';ml.style.color='#ff2244';ml.style.display='block';}
-    }
+  if(!name){alert('Please enter your full name.');return;}
+  if(!email||!email.includes('@')){alert('Please enter a valid email.');return;}
+  if(pwd.length<8){
+    var lbl=document.getElementById('pwd-strength-lbl');
+    if(lbl){lbl.textContent='Password too short — min 8 characters';lbl.style.color='#ff2244';lbl.style.display='block';}
     return;
   }
-  try{localStorage.setItem('tracktion_user',JSON.stringify({name:name,email:email}));}catch(e){}
+  if(pwd!==pwd2){
+    var ml=document.getElementById('pwd-match-lbl');
+    if(ml){ml.textContent='✗ Passwords do not match';ml.style.color='#ff2244';ml.style.display='block';}
+    return;
+  }
+  try{localStorage.setItem('tracktion_user',JSON.stringify({name:name,email:email,pwd:btoa(pwd)}));}catch(e){}
   goTo('baseline.html');
 }
+
 function doSignIn(){
-  var email=document.getElementById('si-email').value.trim(),pwd=document.getElementById('si-pwd').value;
+  var email=document.getElementById('si-email').value.trim(),
+      pwd=document.getElementById('si-pwd').value;
   if(!email||!pwd)return;
   var user=null;
   try{user=JSON.parse(localStorage.getItem('tracktion_user')||'null');}catch(e){}
-  if(user&&user.email===email){
-    try{goTo(localStorage.getItem('tracktion_targets')?'index.html':'baseline.html');}catch(e){goTo('baseline.html');}
-  }else{
-    var lbl=document.querySelector('#panel-signin .switch-txt');
-    var errDiv=document.getElementById('si-err');
-    if(!errDiv){
-      errDiv=document.createElement('div');
-      errDiv.id='si-err';
-      errDiv.style.cssText='font-size:12px;font-weight:700;color:#ff2244;text-align:center;margin-top:4px;';
-      document.querySelector('#panel-signin .btn-primary').after(errDiv);
-    }
-    errDiv.textContent='Account not found. Please create an account first.';
+  var errDiv=document.getElementById('si-err');
+  if(!errDiv){
+    errDiv=document.createElement('div');
+    errDiv.id='si-err';
+    errDiv.style.cssText='font-size:12px;font-weight:700;color:#ff2244;text-align:center;margin-top:8px;';
+    document.querySelector('#panel-signin .btn-primary').after(errDiv);
   }
+  if(!user||user.email!==email){
+    errDiv.textContent='Account not found — please create an account first.';
+    return;
+  }
+  if(user.pwd&&user.pwd!==btoa(pwd)){
+    errDiv.textContent='Incorrect password — please try again.';
+    return;
+  }
+  errDiv.textContent='';
+  try{goTo(localStorage.getItem('tracktion_targets')?'index.html':'baseline.html');}catch(e){goTo('baseline.html');}
 }
 (function(){
   try{if(window.location.search.includes('mode=signin'))showSignin();}catch(e){}
