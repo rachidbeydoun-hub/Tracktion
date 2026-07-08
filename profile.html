@@ -564,42 +564,47 @@ var pState={
     opt.value=y;opt.textContent=y;ysel.appendChild(opt);
   }
 
-  // Load from localStorage
+  // Load from localStorage — tracktion_profile is source of truth (written by baseline.html)
   var user=null,profile=null,targets=null,bscanData=null;
   try{user=JSON.parse(localStorage.getItem('tracktion_user')||'null');}catch(e){}
   try{profile=JSON.parse(localStorage.getItem('tracktion_profile')||'null');}catch(e){}
   try{targets=JSON.parse(localStorage.getItem('tracktion_targets')||'null');}catch(e){}
   try{bscanData=JSON.parse(localStorage.getItem('tracktion_bscan')||'null');}catch(e){}
 
-  // Pre-fill name from signup (tracktion_user) if profile has none yet
-  var nameVal='';
-  if(profile&&profile.name){nameVal=profile.name;}
-  else if(user&&user.name){nameVal=user.name;}
-  if(nameVal)document.getElementById('pr-name').value=nameVal;
-
-  // Fill profile fields
+  // Pre-fill all fields from tracktion_profile (baseline.html always saves here)
   if(profile){
+    // Name
+    var nameVal=profile.name||(user&&user.name)||'';
+    if(nameVal)document.getElementById('pr-name').value=nameVal;
+    // DOB
     if(profile.dob){
       var parts=profile.dob.split('-');
-      if(parts[2])document.getElementById('pr-dob-d').value=parts[2];
-      if(parts[1])document.getElementById('pr-dob-m').value=parts[1];
       if(parts[0])document.getElementById('pr-dob-y').value=parts[0];
+      if(parts[1])document.getElementById('pr-dob-m').value=parts[1];
+      if(parts[2])document.getElementById('pr-dob-d').value=parts[2];
     }
+    // Gender
     if(profile.gender)prSetGender(profile.gender);
+    // Body stats — baseline always converts to cm/kg before saving
     if(profile.height)document.getElementById('pr-height').value=profile.height;
     if(profile.weight)document.getElementById('pr-weight').value=profile.weight;
     if(profile.bf)document.getElementById('pr-bf').value=profile.bf;
+    // Activity & goal
     if(profile.activity)document.getElementById('pr-activity').value=profile.activity;
     if(profile.steps)document.getElementById('pr-steps').value=profile.steps;
     if(profile.job)document.getElementById('pr-job').value=profile.job;
     if(profile.goal)document.getElementById('pr-goal').value=profile.goal;
-  if(profile.trainDays){
-    pState.trainDays=profile.trainDays;
-    for(var i=1;i<=7;i++){
-      var b=document.getElementById('pr-d-'+i);
-      if(b)b.className='day-num'+(i<=profile.trainDays?' on':'');
+    // Training days
+    if(profile.trainDays){
+      pState.trainDays=profile.trainDays;
+      for(var i=1;i<=7;i++){
+        var b=document.getElementById('pr-d-'+i);
+        if(b)b.className='day-num'+(i<=profile.trainDays?' on':'');
+      }
     }
-  }
+  } else if(user&&user.name){
+    // No profile yet — pre-fill name from signup
+    document.getElementById('pr-name').value=user.name;
   }
 
   // Check for custom override
