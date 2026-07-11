@@ -33,15 +33,20 @@ body{min-height:100vh;background:#f4f5f8;display:flex;flex-direction:column;alig
 .sec-lbl{font-size:10px;font-weight:800;color:#1a1a2e;letter-spacing:1.2px;text-transform:uppercase;margin:12px 12px 5px;display:block;}
 
 /* HERO CARD */
-.hero-card{background:white;border-radius:16px;margin:10px 12px 8px;border:0.5px solid rgba(0,0,0,0.06);box-shadow:0 1px 4px rgba(0,0,0,0.04);padding:16px;}
-.hero-inner{display:flex;align-items:center;gap:14px;}
+.hero-card{background:white;border-radius:16px;margin:10px 12px 8px;border:0.5px solid rgba(0,0,0,0.06);box-shadow:0 1px 4px rgba(0,0,0,0.04);overflow:hidden;}
+.hero-inner{display:flex;align-items:center;gap:14px;padding:16px 16px 12px;}
 .hero-info{flex:1;min-width:0;}
-.hero-name{font-size:17px;font-weight:800;color:#1a1a2e;margin-bottom:2px;}
+.hero-name{font-size:17px;font-weight:700;color:#1a1a2e;margin-bottom:2px;}
 .hero-sub{font-size:12px;font-weight:600;color:#0066ff;}
-.hero-pills{display:flex;gap:6px;margin-top:10px;}
-.hero-pill{background:#f4f5f8;border-radius:9px;padding:6px 8px;text-align:center;flex:1;}
-.hero-pill-val{font-family:monospace;font-size:13px;font-weight:800;color:#1a1a2e;display:block;}
-.hero-pill-lbl{font-size:9px;font-weight:700;color:#1a1a2e;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-top:1px;}
+.hero-stats{display:grid;grid-template-columns:repeat(3,1fr);border-top:0.5px solid rgba(0,0,0,0.06);}
+.hero-stat{padding:11px 0;text-align:center;border-right:0.5px solid rgba(0,0,0,0.06);}
+.hero-stat:last-child{border-right:none;}
+.hero-stat-val{font-size:16px;font-weight:700;color:#1a1a2e;line-height:1;}
+.hero-stat-unit{font-size:11px;font-weight:600;color:#1a1a2e;}
+.hero-stat-lbl{font-size:9px;font-weight:600;color:#1a1a2e;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-top:3px;}
+/* Legacy pill styles kept for avatar only */
+.hero-pills{display:none;}
+.hero-pill{display:none;}
 
 /* BODY SCAN AI */
 .bscan-card{background:#0066ff;border-radius:16px;margin:0 12px 8px;padding:16px;position:relative;overflow:hidden;}
@@ -70,8 +75,32 @@ body{min-height:100vh;background:#f4f5f8;display:flex;flex-direction:column;alig
 /* PROFILE ROWS */
 .prof-row{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;border-bottom:0.5px solid rgba(0,0,0,0.05);min-height:48px;}
 .prof-row:last-child{border-bottom:none;}
-.prof-lbl{font-size:15px;font-weight:600;color:#1a1a2e;}
-.prof-val{font-size:14px;font-weight:800;color:#0066ff;font-family:monospace;}
+.prof-lbl{font-size:14px;font-weight:500;color:#1a1a2e;}
+.prof-val{font-size:14px;font-weight:700;color:#1a1a2e;}
+.prof-val input{font-size:14px;font-weight:700;color:#1a1a2e;border:none;outline:none;background:transparent;font-family:inherit;text-align:right;pointer-events:none;}
+body.editing .prof-val input{pointer-events:auto;border-bottom:1.5px solid #0066ff;}
+.prof-unit{font-size:13px;font-weight:600;color:#1a1a2e;margin-left:2px;}
+
+/* BF HELPER */
+.bf-helper{padding:4px 16px 12px;display:flex;flex-direction:column;gap:4px;}
+.bf-helper-line{font-size:11px;font-weight:500;color:#0066ff;cursor:pointer;display:flex;align-items:center;gap:4px;}
+
+/* BF HISTORY */
+.bf-history-card{background:white;border-radius:16px;margin:0 12px 8px;border:0.5px solid rgba(0,0,0,0.06);box-shadow:0 1px 4px rgba(0,0,0,0.04);overflow:hidden;}
+.bf-entry{padding:11px 16px;border-bottom:0.5px solid rgba(0,0,0,0.05);cursor:pointer;}
+.bf-entry:last-child{border-bottom:none;}
+.bf-entry-top{display:flex;align-items:center;justify-content:space-between;}
+.bf-entry-val{font-size:15px;font-weight:700;color:#1a1a2e;}
+.bf-entry-meta{display:flex;align-items:center;gap:6px;}
+.bf-entry-date{font-size:11px;font-weight:500;color:#1a1a2e;}
+.bf-badge{font-size:9px;font-weight:700;padding:2px 7px;border-radius:10px;}
+.bf-badge.ai{background:rgba(0,102,255,0.08);color:#0066ff;}
+.bf-badge.manual{background:rgba(26,158,92,0.08);color:#1a9e5c;}
+.bf-chev{font-size:12px;color:#1a1a2e;transition:transform 0.2s;display:inline-block;margin-left:2px;}
+.bf-chev.open{transform:rotate(180deg);}
+.bf-desc{font-size:12px;font-weight:400;color:#1a1a2e;line-height:1.6;margin-top:8px;padding:10px;background:#f4f5f8;border-radius:8px;display:none;}
+.bf-desc.show{display:block;}
+.bf-empty{text-align:center;padding:20px 16px;font-size:12px;font-weight:600;color:#1a1a2e;}
 
 /* ACTIVITY 2-COL GRID */
 .act-grid{display:grid;grid-template-columns:1fr 1fr;}
@@ -117,6 +146,25 @@ body:not(.editing) .day-num{pointer-events:none;}
 .day-wrap{display:flex;flex-direction:column;align-items:center;}
 .day-num{width:38px;height:38px;border-radius:10px;border:0.5px solid rgba(0,0,0,0.12);background:white;color:#1a1a2e;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;}
 .day-num.on{background:rgba(0,102,255,0.08);border-color:#0066ff;color:#0066ff;font-weight:800;}
+
+/* WEIGHT LOG */
+.weight-log-row{display:flex;gap:8px;align-items:center;padding:12px 14px;border-bottom:0.5px solid rgba(0,0,0,0.06);}
+.weight-log-inp{flex:1;border:1.5px solid rgba(0,0,0,0.1);border-radius:10px;padding:9px 12px;font-size:18px;font-weight:700;color:#1a1a2e;font-family:inherit;text-align:center;background:white;}
+.weight-log-inp:focus{outline:none;border-color:#0066ff;}
+.weight-log-unit{font-size:13px;font-weight:700;color:#1a1a2e;flex-shrink:0;}
+.weight-log-btn{padding:9px 18px;background:#0066ff;color:white;border:none;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;}
+.weight-log-btn:active{background:#0044cc;}
+.weight-delta-row{padding:4px 14px 10px;display:flex;align-items:center;gap:8px;}
+.weight-delta{font-size:12px;font-weight:700;}
+.weight-history-list{max-height:180px;overflow-y:auto;}
+.weight-entry{display:flex;align-items:center;justify-content:space-between;padding:9px 14px;border-bottom:0.5px solid rgba(0,0,0,0.05);}
+.weight-entry:last-child{border-bottom:none;}
+.weight-entry-val{font-size:14px;font-weight:700;color:#1a1a2e;}
+.weight-entry-date{font-size:11px;font-weight:500;color:#1a1a2e;}
+.weight-entry-delta{font-size:11px;font-weight:700;}
+.weight-chart-wrap{padding:10px 14px 6px;}
+.weight-empty{text-align:center;padding:20px 14px;font-size:12px;font-weight:600;color:#1a1a2e;}
+.weight-tip{font-size:11px;font-weight:500;color:#0066ff;padding:8px 14px;border-top:0.5px solid rgba(0,0,0,0.06);}
 
 /* PROGRESS HISTORY */
 .hist-row{display:flex;justify-content:space-between;align-items:center;padding:9px 16px;border-bottom:0.5px solid rgba(0,0,0,0.05);}
@@ -232,11 +280,21 @@ body:not(.editing) .day-num{pointer-events:none;}
       <div class="hero-info">
         <div class="hero-name" id="hero-name">—</div>
         <div class="hero-sub" id="hero-sub">Set up your profile</div>
-        <div class="hero-pills">
-          <div class="hero-pill"><span class="hero-pill-val" id="hero-weight">—</span><span class="hero-pill-lbl">kg</span></div>
-          <div class="hero-pill"><span class="hero-pill-val" id="hero-height">—</span><span class="hero-pill-lbl">cm</span></div>
-          <div class="hero-pill"><span class="hero-pill-val" id="hero-bf">—</span><span class="hero-pill-lbl">BF%</span></div>
-        </div>
+      </div>
+    </div>
+    <!-- Stats grid — replaces pills -->
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div><span class="hero-stat-val" id="hero-weight">—</span><span class="hero-stat-unit" id="hero-weight-unit"> kg</span></div>
+        <span class="hero-stat-lbl">Weight</span>
+      </div>
+      <div class="hero-stat">
+        <div><span class="hero-stat-val" id="hero-height">—</span><span class="hero-stat-unit"> cm</span></div>
+        <span class="hero-stat-lbl">Height</span>
+      </div>
+      <div class="hero-stat">
+        <div><span class="hero-stat-val" id="hero-bf">—</span><span class="hero-stat-unit" id="hero-bf-unit"></span></div>
+        <span class="hero-stat-lbl">Body fat</span>
       </div>
     </div>
   </div>
@@ -288,22 +346,28 @@ body:not(.editing) .day-num{pointer-events:none;}
     <div class="prof-row">
       <span class="prof-lbl">Height</span>
       <div style="display:flex;align-items:center;gap:4px;">
-        <input id="pr-height" type="text" inputmode="numeric" placeholder="170" oninput="prCalc()" style="background:transparent;border:none;outline:none;font-family:monospace;font-size:16px;font-weight:800;color:#0066ff;text-align:right;width:60px;">
-        <span style="font-size:12px;font-weight:700;color:#1a1a2e;">cm</span>
+        <input id="pr-height" type="text" inputmode="numeric" placeholder="170" oninput="prCalc()" style="background:transparent;border:none;outline:none;font-size:16px;font-weight:700;color:#1a1a2e;text-align:right;width:60px;font-family:inherit;">
+        <span style="font-size:12px;font-weight:600;color:#1a1a2e;">cm</span>
       </div>
     </div>
     <div class="prof-row">
       <span class="prof-lbl">Weight</span>
       <div style="display:flex;align-items:center;gap:4px;">
-        <input id="pr-weight" type="text" inputmode="decimal" placeholder="74.5" oninput="prCalc();updateHeroPills()" style="background:transparent;border:none;outline:none;font-family:monospace;font-size:16px;font-weight:800;color:#0066ff;text-align:right;width:60px;">
-        <span style="font-size:12px;font-weight:700;color:#1a1a2e;">kg</span>
+        <input id="pr-weight" type="text" inputmode="decimal" placeholder="74.5" oninput="prCalc();updateHeroPills()" style="background:transparent;border:none;outline:none;font-size:16px;font-weight:700;color:#1a1a2e;text-align:right;width:60px;font-family:inherit;">
+        <span style="font-size:12px;font-weight:600;color:#1a1a2e;">kg</span>
       </div>
     </div>
-    <div class="prof-row">
-      <span class="prof-lbl">Body fat %</span>
-      <div style="display:flex;align-items:center;gap:4px;">
-        <input id="pr-bf" type="text" inputmode="decimal" placeholder="14.5" oninput="updateHeroPills()" style="background:transparent;border:none;outline:none;font-family:monospace;font-size:16px;font-weight:800;color:#0066ff;text-align:right;width:60px;">
-        <span style="font-size:12px;font-weight:700;color:#1a1a2e;">%</span>
+    <div class="prof-row" style="flex-direction:column;align-items:flex-start;gap:0;padding-bottom:0;">
+      <div style="display:flex;width:100%;align-items:center;justify-content:space-between;padding:13px 0 8px;">
+        <span class="prof-lbl">Body fat %</span>
+        <div style="display:flex;align-items:center;gap:4px;">
+          <input id="pr-bf" type="text" inputmode="decimal" placeholder="—" oninput="updateHeroPills();updateBFHelper()" style="background:transparent;border:none;outline:none;font-size:16px;font-weight:700;color:#1a1a2e;text-align:right;width:60px;font-family:inherit;">
+          <span id="pr-bf-unit" style="font-size:12px;font-weight:600;color:#1a1a2e;"></span>
+        </div>
+      </div>
+      <div class="bf-helper" id="bf-helper">
+        <div class="bf-helper-line" onclick="document.getElementById('pr-bf').focus()">→ Know your body fat? Enter it here</div>
+        <div class="bf-helper-line" onclick="openBscan()">→ Upload a progress photo — AI will estimate it</div>
       </div>
     </div>
   </div>
@@ -394,20 +458,43 @@ body:not(.editing) .day-num{pointer-events:none;}
   <span class="sec-lbl">Training</span>
   <div class="card">
     <div class="day-btns">
-      <div class="day-wrap"><span class="day-lbl">M</span><button class="day-num" id="pr-d-1" onclick="prSetDays(1)"></button></div>
-      <div class="day-wrap"><span class="day-lbl">T</span><button class="day-num" id="pr-d-2" onclick="prSetDays(2)"></button></div>
-      <div class="day-wrap"><span class="day-lbl">W</span><button class="day-num" id="pr-d-3" onclick="prSetDays(3)"></button></div>
-      <div class="day-wrap"><span class="day-lbl">T</span><button class="day-num on" id="pr-d-4" onclick="prSetDays(4)"></button></div>
-      <div class="day-wrap"><span class="day-lbl">F</span><button class="day-num" id="pr-d-5" onclick="prSetDays(5)"></button></div>
-      <div class="day-wrap"><span class="day-lbl">S</span><button class="day-num" id="pr-d-6" onclick="prSetDays(6)"></button></div>
-      <div class="day-wrap"><span class="day-lbl">S</span><button class="day-num" id="pr-d-7" onclick="prSetDays(7)"></button></div>
+      <div class="day-wrap"><span class="day-lbl">M</span><button class="day-num" id="pr-d-1" onclick="prToggleDay(1)"></button></div>
+      <div class="day-wrap"><span class="day-lbl">T</span><button class="day-num" id="pr-d-2" onclick="prToggleDay(2)"></button></div>
+      <div class="day-wrap"><span class="day-lbl">W</span><button class="day-num" id="pr-d-3" onclick="prToggleDay(3)"></button></div>
+      <div class="day-wrap"><span class="day-lbl">T</span><button class="day-num" id="pr-d-4" onclick="prToggleDay(4)"></button></div>
+      <div class="day-wrap"><span class="day-lbl">F</span><button class="day-num" id="pr-d-5" onclick="prToggleDay(5)"></button></div>
+      <div class="day-wrap"><span class="day-lbl">S</span><button class="day-num" id="pr-d-6" onclick="prToggleDay(6)"></button></div>
+      <div class="day-wrap"><span class="day-lbl">S</span><button class="day-num" id="pr-d-7" onclick="prToggleDay(7)"></button></div>
     </div>
   </div>
 
-  <!-- PROGRESS HISTORY -->
-  <span class="sec-lbl">Progress History</span>
-  <div class="card" id="pr-history-card">
-    <div style="text-align:center;padding:16px;font-size:13px;font-weight:600;color:#1a1a2e;" id="pr-history-empty">No measurements yet — save your profile to start tracking.</div>
+  <!-- BODY FAT HISTORY -->
+  <span class="sec-lbl">Body Fat History</span>
+  <div class="bf-history-card" id="bf-history-card">
+    <div class="bf-empty" id="bf-history-empty">No body fat records yet — enter manually or use Body Scan AI</div>
+    <div id="bf-history-list"></div>
+  </div>
+
+  <!-- WEIGHT LOG + PROGRESS HISTORY -->
+  <span class="sec-lbl">Weight Tracking</span>
+  <div class="card" style="padding:0;overflow:hidden;">
+    <!-- Log today's weight -->
+    <div class="weight-log-row">
+      <input class="weight-log-inp" type="text" inputmode="decimal" id="weight-inp" placeholder="73.0">
+      <span class="weight-log-unit">kg</span>
+      <button class="weight-log-btn" onclick="logWeight()">Log</button>
+    </div>
+    <div class="weight-delta-row" id="weight-delta-row" style="display:none;">
+      <span class="weight-delta" id="weight-delta-txt"></span>
+    </div>
+    <div class="weight-tip">💡 Best logged in the morning, before eating — keeps measurements consistent</div>
+    <!-- History -->
+    <div class="weight-history-list" id="weight-history-list"></div>
+    <div class="weight-empty" id="weight-empty">No weigh-ins yet — log your first weight above</div>
+    <!-- Mini chart -->
+    <div class="weight-chart-wrap" id="weight-chart-wrap" style="display:none;">
+      <canvas id="weight-chart" height="80"></canvas>
+    </div>
   </div>
 
   <div style="height:20px;"></div>
@@ -594,13 +681,14 @@ var pState={
     if(profile.steps)document.getElementById('pr-steps').value=profile.steps;
     if(profile.job)document.getElementById('pr-job').value=profile.job;
     if(profile.goal)document.getElementById('pr-goal').value=profile.goal;
-    // Training days
-    if(profile.trainDays){
-      pState.trainDays=profile.trainDays;
-      for(var i=1;i<=7;i++){
-        var b=document.getElementById('pr-d-'+i);
-        if(b)b.className='day-num'+(i<=profile.trainDays?' on':'');
-      }
+    // Training days — load as array of selected days
+    if(profile.selectedDays){
+      renderDays(profile.selectedDays);
+    } else if(profile.trainDays){
+      // Legacy: convert count to M-T-W-T-F sequence
+      var legacyDays=[];
+      for(var j=1;j<=Math.min(profile.trainDays,7);j++)legacyDays.push(j);
+      renderDays(legacyDays);
     }
   } else if(user&&user.name){
     // No profile yet — pre-fill name from signup
@@ -622,7 +710,9 @@ var pState={
   // Calc and render
   prCalc();
   updateHeroPills();
+  updateBFHelper();
   renderHistory();
+  renderBFHistory();
 })();
 
 // ─── EDIT MODE ────────────────────────────────────────────
@@ -650,28 +740,136 @@ function toggleEditMode(){
 function prSetGender(g){
   pState.gender=g;
   var mb=document.getElementById('pr-g-m'),fb=document.getElementById('pr-g-f');
-  mb.style.background=g==='m'?'rgba(0,102,255,0.08)':'transparent';
+  mb.style.background=g==='m'?'rgba(0,102,255,0.08)':'white';
   mb.style.borderColor=g==='m'?'#0066ff':'rgba(0,0,0,0.12)';
   mb.style.color=g==='m'?'#0066ff':'#1a1a2e';
-  mb.style.opacity=g==='m'?'1':'0.5';
-  fb.style.background=g==='f'?'rgba(255,34,68,0.06)':'transparent';
+  mb.style.opacity='1';
+  fb.style.background=g==='f'?'rgba(255,34,68,0.06)':'white';
   fb.style.borderColor=g==='f'?'#ff2244':'rgba(0,0,0,0.12)';
   fb.style.color=g==='f'?'#ff2244':'#1a1a2e';
-  fb.style.opacity=g==='f'?'1':'0.5';
+  fb.style.opacity='1';
   prCalc();
 }
 
-// ─── TRAINING DAYS ────────────────────────────────────────
-function prSetDays(n){
+// ─── TRAINING DAYS — individual toggle ────────────────────
+var selectedDays=[];
+function prToggleDay(n){
   if(!isEditing)return;
-  pState.trainDays=n;
+  var idx=selectedDays.indexOf(n);
+  if(idx>-1){selectedDays.splice(idx,1);}
+  else{selectedDays.push(n);}
   for(var i=1;i<=7;i++){
     var b=document.getElementById('pr-d-'+i);
-    if(b)b.className='day-num'+(i<=n?' on':'');
+    if(b)b.className='day-num'+(selectedDays.indexOf(i)>-1?' on':'');
   }
+  pState.trainDays=selectedDays.length;
+  prCalc();
 }
 
-// ─── CALC (Mifflin-St Jeor — LOCKED) ──────────────────────
+function renderDays(days){
+  selectedDays=days||[];
+  for(var i=1;i<=7;i++){
+    var b=document.getElementById('pr-d-'+i);
+    if(b)b.className='day-num'+(selectedDays.indexOf(i)>-1?' on':'');
+  }
+  pState.trainDays=selectedDays.length;
+}
+
+// ─── WEIGHT LOG ───────────────────────────────────────────
+var weightHistory=[];
+try{weightHistory=JSON.parse(localStorage.getItem('tracktion_weight_history')||'[]');}catch(e){}
+
+function logWeight(){
+  var val=parseFloat(document.getElementById('weight-inp').value);
+  if(!val||val<20||val>500){alert('Please enter a valid weight.');return;}
+  var now=new Date();
+  var entry={
+    weight:val,
+    date:now.toISOString().split('T')[0],
+    time:now.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})
+  };
+  weightHistory.unshift(entry);
+  try{localStorage.setItem('tracktion_weight_history',JSON.stringify(weightHistory));}catch(e){}
+  // Update profile weight too
+  document.getElementById('pr-weight').value=val;
+  renderWeightHistory();
+  updateHeroPills();
+}
+
+function renderWeightHistory(){
+  var list=document.getElementById('weight-history-list');
+  var empty=document.getElementById('weight-empty');
+  var chartWrap=document.getElementById('weight-chart-wrap');
+  var deltaRow=document.getElementById('weight-delta-row');
+  if(!weightHistory.length){
+    list.innerHTML='';
+    empty.style.display='block';
+    chartWrap.style.display='none';
+    deltaRow.style.display='none';
+    return;
+  }
+  empty.style.display='none';
+  chartWrap.style.display='block';
+  // Delta since last entry
+  if(weightHistory.length>=2){
+    var delta=(weightHistory[0].weight-weightHistory[1].weight).toFixed(1);
+    var deltaEl=document.getElementById('weight-delta-txt');
+    var sign=delta>0?'+':'';
+    deltaEl.textContent=sign+delta+'kg since last weigh-in';
+    deltaEl.style.color=delta<0?'#1a9e5c':delta>0?'#e03131':'#0066ff';
+    deltaRow.style.display='flex';
+  }
+  // History list — last 10
+  list.innerHTML=weightHistory.slice(0,10).map(function(e,i){
+    var delta='';
+    if(i<weightHistory.length-1){
+      var d=(e.weight-weightHistory[i+1].weight).toFixed(1);
+      var col=d<0?'#1a9e5c':d>0?'#e03131':'#0066ff';
+      delta='<span class="weight-entry-delta" style="color:'+col+';">'+(d>0?'+':'')+d+'kg</span>';
+    }
+    return '<div class="weight-entry">'
+      +'<span class="weight-entry-val">'+e.weight+' kg</span>'
+      +'<span class="weight-entry-date">'+e.date+' · '+e.time+'</span>'
+      +delta
+      +'</div>';
+  }).join('');
+  // Draw chart
+  drawWeightChart();
+}
+
+function drawWeightChart(){
+  var canvas=document.getElementById('weight-chart');
+  if(!canvas||!canvas.getContext)return;
+  var data=weightHistory.slice(0,14).reverse();
+  if(data.length<2)return;
+  var ctx=canvas.getContext('2d');
+  var W=canvas.parentElement.offsetWidth-28;
+  canvas.width=W;canvas.height=80;
+  ctx.clearRect(0,0,W,80);
+  var vals=data.map(function(e){return e.weight;});
+  var mn=Math.min.apply(null,vals)-1;
+  var mx=Math.max.apply(null,vals)+1;
+  var xStep=W/(data.length-1);
+  var yScale=60/(mx-mn);
+  ctx.beginPath();
+  ctx.strokeStyle='#0066ff';ctx.lineWidth=2;ctx.lineJoin='round';
+  data.forEach(function(e,i){
+    var x=i*xStep;
+    var y=10+(mx-e.weight)*yScale;
+    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+  });
+  ctx.stroke();
+  // Dots
+  data.forEach(function(e,i){
+    var x=i*xStep;var y=10+(mx-e.weight)*yScale;
+    ctx.beginPath();ctx.arc(x,y,3,0,Math.PI*2);
+    ctx.fillStyle='#0066ff';ctx.fill();
+  });
+}
+
+// Load weight history on init
+renderWeightHistory();
+if(weightHistory.length)document.getElementById('weight-inp').value=weightHistory[0].weight;
 function prCalc(){
   var dob=getDob(),h=parseFloat(document.getElementById('pr-height').value)||null;
   var w=parseFloat(document.getElementById('pr-weight').value)||null;
@@ -778,7 +976,19 @@ function updateHeroPills(){
   document.getElementById('hero-sub').textContent=goalTxt||(pState.trainDays+'×/week');
   document.getElementById('hero-weight').textContent=w;
   document.getElementById('hero-height').textContent=h;
-  document.getElementById('hero-bf').textContent=bf?bf+'%':'—';
+  var bfEl=document.getElementById('hero-bf');
+  var bfUnit=document.getElementById('hero-bf-unit');
+  if(bfEl)bfEl.textContent=bf?bf:'—';
+  if(bfUnit)bfUnit.textContent=bf?'%':'';
+  updateBFHelper();
+}
+
+function updateBFHelper(){
+  var bf=(document.getElementById('pr-bf').value||'').trim();
+  var helper=document.getElementById('bf-helper');
+  var unit=document.getElementById('pr-bf-unit');
+  if(helper)helper.style.display=bf?'none':'flex';
+  if(unit)unit.textContent=bf?'%':'';
 }
 
 // ─── SAVE PROFILE ─────────────────────────────────────────
@@ -794,9 +1004,12 @@ function saveProfile(){
     steps:document.getElementById('pr-steps').value,
     job:document.getElementById('pr-job').value,
     goal:document.getElementById('pr-goal').value,
-    trainDays:pState.trainDays
+    trainDays:selectedDays.length,
+    selectedDays:selectedDays
   };
   try{localStorage.setItem('tracktion_profile',JSON.stringify(p));}catch(e){}
+  // Log manual BF to history if value present
+  if(p.bf)logManualBF();
   // Also keep tracktion_user name in sync
   try{
     var u=JSON.parse(localStorage.getItem('tracktion_user')||'{}');
@@ -1050,12 +1263,19 @@ function saveBscanResult(){
   if(!pState.bscanResult)return;
   var bfVal=pState.bscanResult.bf||document.getElementById('pr-bf').value||'—';
   var today=new Date().toLocaleDateString('en-CA');
-  var bscanData={bf:bfVal,date:today,note:pState.bscanResult.text};
+  var aiDesc=pState.bscanResult.text||'';
+  // Save to tracktion_bscan (latest scan)
+  var bscanData={bf:bfVal,date:today,note:aiDesc};
   try{localStorage.setItem('tracktion_bscan',JSON.stringify(bscanData));}catch(e){}
-  // Update BF display on card
+  // Save to BF history with AI description
+  var bfHistory=[];
+  try{bfHistory=JSON.parse(localStorage.getItem('tracktion_bf_history')||'[]');}catch(e){}
+  bfHistory.unshift({bf:bfVal,date:today,source:'ai',description:aiDesc});
+  try{localStorage.setItem('tracktion_bf_history',JSON.stringify(bfHistory));}catch(e){}
+  // Update display
   document.getElementById('bscan-bf-display').textContent=bfVal;
   document.getElementById('bscan-last-scan').textContent=today;
-  // Auto-fill BF field if we have a clean number
+  // Auto-fill BF field
   if(pState.bscanResult.bf){
     var num=pState.bscanResult.bf.replace('%','').split('-')[0].trim();
     if(!isNaN(parseFloat(num))){
@@ -1063,8 +1283,61 @@ function saveBscanResult(){
       updateHeroPills();
     }
   }
+  renderBFHistory();
   closeBscan(null);
   showToast('✅ Body scan saved to profile');
+}
+
+// ─── BF HISTORY ───────────────────────────────────────────
+function renderBFHistory(){
+  var history=[];
+  try{history=JSON.parse(localStorage.getItem('tracktion_bf_history')||'[]');}catch(e){}
+  var list=document.getElementById('bf-history-list');
+  var empty=document.getElementById('bf-history-empty');
+  if(!list)return;
+  if(!history.length){
+    if(empty)empty.style.display='block';
+    list.innerHTML='';
+    return;
+  }
+  if(empty)empty.style.display='none';
+  list.innerHTML=history.map(function(entry,idx){
+    var isAI=entry.source==='ai';
+    var hasDesc=isAI&&entry.description;
+    return '<div class="bf-entry"'+(hasDesc?' onclick="toggleBFDesc(this)"':'')+' id="bf-entry-'+idx+'">'
+      +'<div class="bf-entry-top">'
+      +'<span class="bf-entry-val">'+entry.bf+(entry.bf&&!entry.bf.includes('%')?'%':'')+'</span>'
+      +'<div class="bf-entry-meta">'
+      +'<span class="bf-entry-date">'+entry.date+'</span>'
+      +'<span class="bf-badge '+(isAI?'ai':'manual')+'">'+(isAI?'AI scan':'Manual')+'</span>'
+      +(hasDesc?'<span class="bf-chev">▾</span>':'')
+      +'</div></div>'
+      +(hasDesc?'<div class="bf-desc">'+entry.description+'</div>':'')
+      +'</div>';
+  }).join('');
+}
+
+function toggleBFDesc(entry){
+  var desc=entry.querySelector('.bf-desc');
+  var chev=entry.querySelector('.bf-chev');
+  if(!desc)return;
+  var open=desc.classList.contains('show');
+  desc.classList.toggle('show',!open);
+  if(chev)chev.classList.toggle('open',!open);
+}
+
+function logManualBF(){
+  var val=(document.getElementById('pr-bf').value||'').trim();
+  if(!val)return;
+  var history=[];
+  try{history=JSON.parse(localStorage.getItem('tracktion_bf_history')||'[]');}catch(e){}
+  var today=new Date().toLocaleDateString('en-CA');
+  // Only add if different from last entry or different date
+  if(!history.length||history[0].bf!==val||history[0].date!==today){
+    history.unshift({bf:val,date:today,source:'manual',description:''});
+    try{localStorage.setItem('tracktion_bf_history',JSON.stringify(history));}catch(e){}
+    renderBFHistory();
+  }
 }
 
 // ─── TOAST ────────────────────────────────────────────────
