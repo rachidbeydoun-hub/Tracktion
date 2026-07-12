@@ -47,7 +47,7 @@ body{min-height:100vh;background:#f4f5f8;color:#1a1a2e;display:flex;flex-directi
 .set-icon{font-size:18px;flex-shrink:0;width:24px;text-align:center;}
 .set-row-text{flex:1;min-width:0;}
 .set-row-lbl{font-size:15px;font-weight:600;color:#1a1a2e;}
-.set-row-sub{font-size:12px;color:#1a1a2e;opacity:0.5;margin-top:2px;font-weight:500;}
+.set-row-sub{font-size:12px;color:#1a1a2e;margin-top:2px;font-weight:500;}
 .set-arr{color:#1a1a2e;opacity:0.22;font-size:18px;font-weight:600;flex-shrink:0;}
 
 /* TOGGLE */
@@ -153,10 +153,7 @@ body{min-height:100vh;background:#f4f5f8;color:#1a1a2e;display:flex;flex-directi
             <div class="set-row-sub"><span class="soon-badge">COMING SOON</span></div>
           </div>
         </div>
-        <div class="theme-row">
-          <button class="theme-btn theme-btn-light on" id="theme-light" onclick="setTheme('light')">☀️ LIGHT</button>
-          <button class="theme-btn theme-btn-dark" id="theme-dark" onclick="setTheme('dark')">🌙 DARK</button>
-        </div>
+        <span class="soon-badge">COMING SOON</span>
       </div>
       <!-- Auto-save -->
       <div class="set-row">
@@ -360,7 +357,7 @@ body{min-height:100vh;background:#f4f5f8;color:#1a1a2e;display:flex;flex-directi
         </div>
         <span style="font-size:13px;font-weight:700;color:#1a1a2e;">Rachid Beydoun</span>
       </div>
-      <div class="set-row tappable">
+      <div class="set-row tappable" onclick="window.location.href='mailto:rachidbeydoun@gmail.com?subject=Tracktion%20Feedback'">
         <div class="set-row-left">
           <span class="set-icon">💬</span>
           <div class="set-row-text"><div class="set-row-lbl">Send Feedback</div></div>
