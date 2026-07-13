@@ -122,14 +122,14 @@ body{min-height:100vh;background:#f4f5f8;color:#1a1a2e;display:flex;flex-directi
 
   <!-- ═══ 1. PREFERENCES ═══ -->
   <div class="set-sec">
-    <button class="set-sec-hdr open" id="hdr-prefs" onclick="toggleSec('prefs')">
+    <button class="set-sec-hdr" id="hdr-prefs" onclick="toggleSec('prefs')">
       <div class="set-sec-hdr-left">
         <span class="set-sec-icon">⚙️</span>
         <span class="set-sec-title">PREFERENCES</span>
       </div>
-      <span class="set-chev open" id="chev-prefs">▼</span>
+      <span class="set-chev" id="chev-prefs">▼</span>
     </button>
-    <div class="set-sec-body open" id="body-prefs">
+    <div class="set-sec-body" id="body-prefs">
       <!-- Units — reflected in profile.html display -->
       <div class="set-row">
         <div class="set-row-left">
@@ -171,14 +171,14 @@ body{min-height:100vh;background:#f4f5f8;color:#1a1a2e;display:flex;flex-directi
 
   <!-- ═══ 2. AI & DATA ═══ -->
   <div class="set-sec">
-    <button class="set-sec-hdr open" id="hdr-ai" onclick="toggleSec('ai')">
+    <button class="set-sec-hdr" id="hdr-ai" onclick="toggleSec('ai')">
       <div class="set-sec-hdr-left">
         <span class="set-sec-icon">🤖</span>
         <span class="set-sec-title">AI & DATA</span>
       </div>
-      <span class="set-chev open" id="chev-ai">▼</span>
+      <span class="set-chev" id="chev-ai">▼</span>
     </button>
-    <div class="set-sec-body open" id="body-ai">
+    <div class="set-sec-body" id="body-ai">
       <!-- API Key -->
       <div class="set-row" style="flex-direction:column;align-items:flex-start;gap:10px;padding:14px 16px;">
         <div class="set-row-left" style="gap:12px;">
@@ -520,6 +520,7 @@ function setTheme(t){
 function applyThemeButtons(t){
   var lb=document.getElementById('theme-light');
   var db=document.getElementById('theme-dark');
+  if(!lb||!db)return;
   // Light btn — always dark text so readable in both themes
   lb.className='theme-btn theme-btn-light'+(t==='light'?' on':'');
   lb.style.background=t==='light'?'#f0f0f3':'white';
@@ -572,6 +573,7 @@ function validateApiKey(){
   .then(function(d){
     if(d.content&&d.content[0]){
       el.textContent='✅ Valid — AI features active';el.style.color='#34c97a';
+      document.getElementById('set-api-key').value='';
       showToast('✅ API key saved');
     } else if(d.error){
       el.textContent='❌ '+(d.error.message||'Invalid key');el.style.color='#ff2244';

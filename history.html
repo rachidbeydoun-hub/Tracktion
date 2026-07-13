@@ -157,7 +157,8 @@ function showList(){
 }
 
 function showDetail(key){
-  const history=JSON.parse(localStorage.getItem('tracktion_history')||'{}');
+  var history={};
+  try{history=JSON.parse(localStorage.getItem('tracktion_history')||'{}');}catch(e){history={};}
   const d=history[key];if(!d)return;
   document.getElementById('list-view').style.display='none';
   const detail=document.getElementById('detail-view');
@@ -201,7 +202,8 @@ function showDetail(key){
 }
 
 function renderHistory(){
-  const history=JSON.parse(localStorage.getItem('tracktion_history')||'{}');
+  var history={};
+  try{history=JSON.parse(localStorage.getItem('tracktion_history')||'{}');}catch(e){history={};}
   const keys=Object.keys(history).sort().reverse();
   const list=document.getElementById('history-list');
 
