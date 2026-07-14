@@ -32,11 +32,11 @@ body{min-height:100vh;background:#f4f5f8;color:#1a1a2e;display:flex;flex-directi
 .set-sec-hdr.open{border-radius:14px 14px 0 0;border-bottom:0.5px solid rgba(0,0,0,0.06);}
 .set-sec-hdr-left{display:flex;align-items:center;gap:10px;}
 .set-sec-icon{font-size:18px;width:24px;text-align:center;flex-shrink:0;}
-.set-sec-title{font-size:13px;font-weight:800;color:#1a1a2e;letter-spacing:0.3px;}
+.set-sec-title{font-size:13px;font-weight:600;color:#1a1a2e;letter-spacing:0.3px;}
 .set-chev{font-size:12px;color:#1a1a2e;opacity:0.3;transition:transform 0.25s ease;flex-shrink:0;}
 .set-chev.open{transform:rotate(180deg);}
 .set-sec-body{background:white;border:0.5px solid rgba(0,0,0,0.06);border-top:none;border-radius:0 0 14px 14px;overflow:hidden;max-height:0;transition:max-height 0.3s ease;box-shadow:0 1px 4px rgba(0,0,0,0.04);}
-.set-sec-body.open{max-height:600px;}
+.set-sec-body.open{max-height:700px;}
 
 /* ROWS */
 .set-row{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:0.5px solid rgba(0,0,0,0.05);min-height:52px;}
@@ -44,7 +44,6 @@ body{min-height:100vh;background:#f4f5f8;color:#1a1a2e;display:flex;flex-directi
 .set-row.tappable{cursor:pointer;}
 .set-row.tappable:active{background:rgba(0,0,0,0.02);}
 .set-row-left{display:flex;align-items:center;gap:12px;flex:1;min-width:0;}
-.set-icon{font-size:18px;flex-shrink:0;width:24px;text-align:center;}
 .set-row-text{flex:1;min-width:0;}
 .set-row-lbl{font-size:15px;font-weight:600;color:#1a1a2e;}
 .set-row-sub{font-size:12px;color:#1a1a2e;margin-top:2px;font-weight:500;}
@@ -58,11 +57,10 @@ body{min-height:100vh;background:#f4f5f8;color:#1a1a2e;display:flex;flex-directi
 
 /* UNIT PILLS */
 .set-pill-row{display:flex;gap:5px;}
-.set-pill{font-size:11px;font-weight:800;padding:7px 12px;border-radius:8px;border:0.5px solid rgba(0,0,0,0.12);background:white;color:#1a1a2e;cursor:pointer;font-family:monospace;letter-spacing:0.5px;opacity:0.4;}
-.set-pill.on{background:#0066ff;border-color:#0066ff;color:white;opacity:1;}
+.set-pill{font-size:11px;font-weight:800;padding:7px 12px;border-radius:8px;border:0.5px solid rgba(0,0,0,0.12);background:white;color:#1a1a2e;cursor:pointer;font-family:monospace;letter-spacing:0.5px;}
+.set-pill.on{background:#0066ff;border-color:#0066ff;color:white;}
 
-/* THEME BUTTONS — both always visible in both themes */
-.theme-row{display:flex;gap:6px;}
+/* THEME BUTTONS */
 .theme-btn{flex:1;padding:9px 8px;border-radius:10px;border:1.5px solid rgba(0,0,0,0.1);font-size:11px;font-weight:800;cursor:pointer;font-family:monospace;letter-spacing:0.5px;text-align:center;transition:all 0.15s;}
 .theme-btn-light{background:white;color:#1a1a2e;}
 .theme-btn-light.on{background:#f0f0f3;border-color:#1a1a2e;}
@@ -82,7 +80,7 @@ body{min-height:100vh;background:#f4f5f8;color:#1a1a2e;display:flex;flex-directi
 
 /* DANGER */
 .set-row-lbl.danger{color:#ff2244;}
-.set-row-sub.danger{color:#ff2244;opacity:0.6;}
+.set-row-sub.danger{color:#ff2244;}
 
 /* CONFIRM BARS */
 .confirm-bar{display:none;background:rgba(255,34,68,0.04);border-top:0.5px solid rgba(255,34,68,0.12);padding:12px 16px;}
@@ -124,16 +122,15 @@ body{min-height:100vh;background:#f4f5f8;color:#1a1a2e;display:flex;flex-directi
   <div class="set-sec">
     <button class="set-sec-hdr" id="hdr-prefs" onclick="toggleSec('prefs')">
       <div class="set-sec-hdr-left">
-        <span class="set-sec-icon">⚙️</span>
+        <span class="set-sec-icon" style="color:#0066ff;">⚙</span>
         <span class="set-sec-title">PREFERENCES</span>
       </div>
       <span class="set-chev" id="chev-prefs">▼</span>
     </button>
     <div class="set-sec-body" id="body-prefs">
-      <!-- Units — reflected in profile.html display -->
+      <!-- Units -->
       <div class="set-row">
         <div class="set-row-left">
-          <span class="set-icon">📏</span>
           <div class="set-row-text">
             <div class="set-row-lbl">Units</div>
             <div class="set-row-sub">Reflected in Profile & Log</div>
@@ -147,18 +144,15 @@ body{min-height:100vh;background:#f4f5f8;color:#1a1a2e;display:flex;flex-directi
       <!-- Theme -->
       <div class="set-row">
         <div class="set-row-left">
-          <span class="set-icon">🎨</span>
           <div class="set-row-text">
             <div class="set-row-lbl">Theme</div>
             <div class="set-row-sub"><span class="soon-badge">COMING SOON</span></div>
           </div>
         </div>
-        <span class="soon-badge">COMING SOON</span>
       </div>
       <!-- Auto-save -->
       <div class="set-row">
         <div class="set-row-left">
-          <span class="set-icon">🕛</span>
           <div class="set-row-text">
             <div class="set-row-lbl">Auto-save at midnight</div>
             <div class="set-row-sub">Saves today's log to History</div>
@@ -173,7 +167,7 @@ body{min-height:100vh;background:#f4f5f8;color:#1a1a2e;display:flex;flex-directi
   <div class="set-sec">
     <button class="set-sec-hdr" id="hdr-ai" onclick="toggleSec('ai')">
       <div class="set-sec-hdr-left">
-        <span class="set-sec-icon">🤖</span>
+        <span class="set-sec-icon" style="color:#ffb300;">✦</span>
         <span class="set-sec-title">AI & DATA</span>
       </div>
       <span class="set-chev" id="chev-ai">▼</span>
@@ -181,8 +175,7 @@ body{min-height:100vh;background:#f4f5f8;color:#1a1a2e;display:flex;flex-directi
     <div class="set-sec-body" id="body-ai">
       <!-- API Key -->
       <div class="set-row" style="flex-direction:column;align-items:flex-start;gap:10px;padding:14px 16px;">
-        <div class="set-row-left" style="gap:12px;">
-          <span class="set-icon">🔐</span>
+        <div class="set-row-left">
           <div class="set-row-text">
             <div class="set-row-lbl">Anthropic API Key</div>
             <div class="set-row-sub">Powers photo analysis, Body Scan AI & Coach — stored locally only</div>
@@ -197,7 +190,6 @@ body{min-height:100vh;background:#f4f5f8;color:#1a1a2e;display:flex;flex-directi
       <!-- Coaching tips toggle -->
       <div class="set-row">
         <div class="set-row-left">
-          <span class="set-icon">💡</span>
           <div class="set-row-text">
             <div class="set-row-lbl">Daily Coaching Tip</div>
             <div class="set-row-sub">AI tip on Today screen · max 5 refreshes/day</div>
@@ -208,7 +200,6 @@ body{min-height:100vh;background:#f4f5f8;color:#1a1a2e;display:flex;flex-directi
       <!-- Model info -->
       <div class="set-row">
         <div class="set-row-left">
-          <span class="set-icon">⚡</span>
           <div class="set-row-text">
             <div class="set-row-lbl">AI Model</div>
             <div class="set-row-sub">claude-sonnet-4-6 · Standard quality</div>
@@ -230,7 +221,6 @@ body{min-height:100vh;background:#f4f5f8;color:#1a1a2e;display:flex;flex-directi
     <div class="set-sec-body" id="body-notif">
       <div class="set-row">
         <div class="set-row-left">
-          <span class="set-icon">⏰</span>
           <div class="set-row-text">
             <div class="set-row-lbl">Daily Logging Reminder</div>
             <div class="set-row-sub" style="margin-top:4px;"><span class="cs-badge">COMING SOON</span></div>
@@ -239,7 +229,6 @@ body{min-height:100vh;background:#f4f5f8;color:#1a1a2e;display:flex;flex-directi
       </div>
       <div class="set-row">
         <div class="set-row-left">
-          <span class="set-icon">🎯</span>
           <div class="set-row-text">
             <div class="set-row-lbl">Goal Progress Alerts</div>
             <div class="set-row-sub" style="margin-top:4px;"><span class="cs-badge">COMING SOON</span></div>
@@ -253,7 +242,7 @@ body{min-height:100vh;background:#f4f5f8;color:#1a1a2e;display:flex;flex-directi
   <div class="set-sec">
     <button class="set-sec-hdr" id="hdr-health" onclick="toggleSec('health')">
       <div class="set-sec-hdr-left">
-        <span class="set-sec-icon">❤️</span>
+        <span class="set-sec-icon" style="color:#1a9e5c;">❤</span>
         <span class="set-sec-title">HEALTH & SYNC</span>
       </div>
       <span class="set-chev" id="chev-health">▼</span>
@@ -261,7 +250,6 @@ body{min-height:100vh;background:#f4f5f8;color:#1a1a2e;display:flex;flex-directi
     <div class="set-sec-body" id="body-health">
       <div class="set-row">
         <div class="set-row-left">
-          <span class="set-icon">🤖</span>
           <div class="set-row-text">
             <div class="set-row-lbl">Health Connect (Android)</div>
             <div class="set-row-sub" style="margin-top:4px;"><span class="cs-badge">COMING SOON</span></div>
@@ -270,7 +258,6 @@ body{min-height:100vh;background:#f4f5f8;color:#1a1a2e;display:flex;flex-directi
       </div>
       <div class="set-row">
         <div class="set-row-left">
-          <span class="set-icon">🍎</span>
           <div class="set-row-text">
             <div class="set-row-lbl">Apple Health (iOS)</div>
             <div class="set-row-sub" style="margin-top:4px;"><span class="cs-badge">COMING SOON</span></div>
@@ -279,7 +266,6 @@ body{min-height:100vh;background:#f4f5f8;color:#1a1a2e;display:flex;flex-directi
       </div>
       <div class="set-row">
         <div class="set-row-left">
-          <span class="set-icon">⚖️</span>
           <div class="set-row-text">
             <div class="set-row-lbl">Smart Scale Sync</div>
             <div class="set-row-sub" style="margin-top:4px;"><span class="cs-badge">COMING SOON</span></div>
@@ -293,7 +279,7 @@ body{min-height:100vh;background:#f4f5f8;color:#1a1a2e;display:flex;flex-directi
   <div class="set-sec">
     <button class="set-sec-hdr" id="hdr-privacy" onclick="toggleSec('privacy')">
       <div class="set-sec-hdr-left">
-        <span class="set-sec-icon">🔒</span>
+        <span class="set-sec-icon" style="color:#ff2244;">🔒</span>
         <span class="set-sec-title">PRIVACY & DATA</span>
       </div>
       <span class="set-chev" id="chev-privacy">▼</span>
@@ -301,7 +287,6 @@ body{min-height:100vh;background:#f4f5f8;color:#1a1a2e;display:flex;flex-directi
     <div class="set-sec-body" id="body-privacy">
       <div class="set-row">
         <div class="set-row-left">
-          <span class="set-icon">💾</span>
           <div class="set-row-text">
             <div class="set-row-lbl">Export My Data</div>
             <div class="set-row-sub" style="margin-top:4px;"><span class="cs-badge">COMING SOON</span></div>
@@ -310,7 +295,6 @@ body{min-height:100vh;background:#f4f5f8;color:#1a1a2e;display:flex;flex-directi
       </div>
       <div class="set-row tappable" onclick="showConfirm('confirm-cleardata')">
         <div class="set-row-left">
-          <span class="set-icon">🗑</span>
           <div class="set-row-text">
             <div class="set-row-lbl danger">Clear All Data</div>
             <div class="set-row-sub">Resets app · keeps API key & settings</div>
@@ -323,10 +307,15 @@ body{min-height:100vh;background:#f4f5f8;color:#1a1a2e;display:flex;flex-directi
         <button class="confirm-no" onclick="hideConfirm('confirm-cleardata')">Cancel</button>
         <button class="confirm-yes" onclick="clearAllData()">Clear</button>
       </div>
-      <div class="set-row tappable">
+      <div class="set-row tappable" onclick="goTo('privacy.html')">
         <div class="set-row-left">
-          <span class="set-icon">📄</span>
           <div class="set-row-text"><div class="set-row-lbl">Privacy Policy</div></div>
+        </div>
+        <span class="set-arr">›</span>
+      </div>
+      <div class="set-row tappable" onclick="goTo('terms.html')">
+        <div class="set-row-left">
+          <div class="set-row-text"><div class="set-row-lbl">Terms & Conditions</div></div>
         </div>
         <span class="set-arr">›</span>
       </div>
@@ -337,7 +326,7 @@ body{min-height:100vh;background:#f4f5f8;color:#1a1a2e;display:flex;flex-directi
   <div class="set-sec">
     <button class="set-sec-hdr" id="hdr-about" onclick="toggleSec('about')">
       <div class="set-sec-hdr-left">
-        <span class="set-sec-icon">ℹ️</span>
+        <span class="set-sec-icon" style="color:#0066ff;">ℹ</span>
         <span class="set-sec-title">ABOUT</span>
       </div>
       <span class="set-chev" id="chev-about">▼</span>
@@ -345,29 +334,28 @@ body{min-height:100vh;background:#f4f5f8;color:#1a1a2e;display:flex;flex-directi
     <div class="set-sec-body" id="body-about">
       <div class="set-row">
         <div class="set-row-left">
-          <span class="set-icon">🏷</span>
           <div class="set-row-text"><div class="set-row-lbl">Version</div></div>
         </div>
-        <span style="font-family:monospace;font-size:13px;font-weight:700;color:#1a1a2e;">1.0.0 · Jun 2026</span>
+        <span style="font-family:monospace;font-size:13px;font-weight:700;color:#1a1a2e;">1.0.0 · Jul 2026</span>
       </div>
       <div class="set-row">
         <div class="set-row-left">
-          <span class="set-icon">👤</span>
           <div class="set-row-text"><div class="set-row-lbl">Built by</div></div>
         </div>
         <span style="font-size:13px;font-weight:700;color:#1a1a2e;">Rachid Beydoun</span>
       </div>
-      <div class="set-row tappable" onclick="window.location.href='mailto:rachidbeydoun@gmail.com?subject=Tracktion%20Feedback'">
+      <div class="set-row">
         <div class="set-row-left">
-          <span class="set-icon">💬</span>
-          <div class="set-row-text"><div class="set-row-lbl">Send Feedback</div></div>
+          <div class="set-row-text">
+            <div class="set-row-lbl">Send Feedback</div>
+            <div class="set-row-sub" style="margin-top:4px;"><span class="soon-badge">COMING SOON</span></div>
+          </div>
         </div>
-        <span class="set-arr">›</span>
       </div>
     </div>
   </div>
 
-  <!-- ═══ 7. ACCOUNT — always last ═══ -->
+  <!-- ═══ 7. ACCOUNT ═══ -->
   <div class="set-sec">
     <button class="set-sec-hdr" id="hdr-account" onclick="toggleSec('account')">
       <div class="set-sec-hdr-left">
@@ -377,7 +365,6 @@ body{min-height:100vh;background:#f4f5f8;color:#1a1a2e;display:flex;flex-directi
       <span class="set-chev" id="chev-account">▼</span>
     </button>
     <div class="set-sec-body" id="body-account">
-      <!-- Identity display -->
       <div class="set-row">
         <div class="set-row-left" style="gap:12px;">
           <div style="width:40px;height:40px;border-radius:50%;background:rgba(0,102,255,0.1);display:flex;align-items:center;justify-content:center;font-family:monospace;font-size:14px;font-weight:900;color:#0066ff;flex-shrink:0;" id="acct-avatar">RB</div>
@@ -389,14 +376,12 @@ body{min-height:100vh;background:#f4f5f8;color:#1a1a2e;display:flex;flex-directi
       </div>
       <div class="set-row tappable" onclick="goTo('profile.html')">
         <div class="set-row-left">
-          <span class="set-icon">✏️</span>
           <div class="set-row-text"><div class="set-row-lbl">Edit Profile</div></div>
         </div>
         <span class="set-arr">›</span>
       </div>
       <div class="set-row tappable" onclick="showConfirm('confirm-logout')">
         <div class="set-row-left">
-          <span class="set-icon">🚪</span>
           <div class="set-row-text"><div class="set-row-lbl">Log Out</div></div>
         </div>
         <span class="set-arr">›</span>
@@ -409,7 +394,6 @@ body{min-height:100vh;background:#f4f5f8;color:#1a1a2e;display:flex;flex-directi
       <div style="height:0.5px;background:rgba(255,34,68,0.12);margin:0 16px;"></div>
       <div class="set-row tappable" onclick="showConfirm('confirm-delete')">
         <div class="set-row-left">
-          <span class="set-icon">🗑</span>
           <div class="set-row-text">
             <div class="set-row-lbl danger">Delete Account</div>
             <div class="set-row-sub danger">Permanently removes all your data</div>
@@ -427,7 +411,7 @@ body{min-height:100vh;background:#f4f5f8;color:#1a1a2e;display:flex;flex-directi
 
   <div style="height:16px;"></div>
 
-</div><!-- /page -->
+</div>
 
 <!-- BOTTOM NAV -->
 <div class="bnav">
@@ -443,7 +427,6 @@ body{min-height:100vh;background:#f4f5f8;color:#1a1a2e;display:flex;flex-directi
 <script>
 var sSet={units:'metric',autosave:true,tips:true,theme:'light'};
 
-// ─── INIT ─────────────────────────────────────────────────
 (function init(){
   var s={};
   try{s=JSON.parse(localStorage.getItem('tracktion_settings')||'{}');}catch(e){}
@@ -452,7 +435,6 @@ var sSet={units:'metric',autosave:true,tips:true,theme:'light'};
   if(s.tips===false)sSet.tips=false;
   if(s.theme)sSet.theme=s.theme;
 
-  // Units — also sync from tracktion_units if settings doesn't have it
   var directUnit='';
   try{directUnit=localStorage.getItem('tracktion_units')||'';}catch(e){}
   if(directUnit&&!s.units)sSet.units=directUnit;
@@ -460,19 +442,15 @@ var sSet={units:'metric',autosave:true,tips:true,theme:'light'};
   document.getElementById('pill-metric').classList.toggle('on',sSet.units==='metric');
   document.getElementById('pill-imperial').classList.toggle('on',sSet.units==='imperial');
 
-  // Theme buttons always readable
   applyThemeButtons(sSet.theme);
 
-  // Toggles
   document.getElementById('tog-autosave').classList.toggle('on',sSet.autosave);
   document.getElementById('tog-tips').classList.toggle('on',sSet.tips);
 
-  // API key
   var k='';
   try{k=localStorage.getItem('tracktion_apikey')||'';}catch(e){}
   if(k)document.getElementById('set-api-key').value=k;
 
-  // Account — read from profile first, fallback to user
   var user={};
   try{user=JSON.parse(localStorage.getItem('tracktion_user')||'{}');}catch(e){}
   var profile={};
@@ -481,13 +459,11 @@ var sSet={units:'metric',autosave:true,tips:true,theme:'light'};
   var email=user.email||'—';
   document.getElementById('acct-name').textContent=name;
   document.getElementById('acct-email').textContent=email;
-  // Avatar initials
   var parts=name.split(' ').filter(Boolean);
   var initials=parts.length>=2?(parts[0][0]+parts[parts.length-1][0]).toUpperCase():name.substring(0,2).toUpperCase();
   document.getElementById('acct-avatar').textContent=initials==='—'?'?':initials;
 })();
 
-// ─── COLLAPSIBLE ──────────────────────────────────────────
 function toggleSec(id){
   var hdr=document.getElementById('hdr-'+id);
   var body=document.getElementById('body-'+id);
@@ -498,52 +474,44 @@ function toggleSec(id){
   chev.classList.toggle('open',!isOpen);
 }
 
-// ─── UNITS ────────────────────────────────────────────────
-// Units change → writes tracktion_settings + tracktion_units
-// profile.html reads tracktion_units on load and converts displayed values
 function setUnits(u){
   sSet.units=u;
   document.getElementById('pill-metric').classList.toggle('on',u==='metric');
   document.getElementById('pill-imperial').classList.toggle('on',u==='imperial');
   saveSettings();
   try{localStorage.setItem('tracktion_units',u);}catch(e){}
-  showToast(u==='metric'?'📏 Units: KG · CM — reflected in Profile':'📏 Units: LBS · IN — reflected in Profile');
+  showToast(u==='metric'?'Units: KG · CM':'Units: LBS · IN');
 }
 
-// ─── THEME ────────────────────────────────────────────────
 function setTheme(t){
   sSet.theme=t;
   applyThemeButtons(t);
   saveSettings();
-  showToast(t==='dark'?'🌙 Dark mode — coming soon':'☀️ Light mode');
+  showToast(t==='dark'?'Dark mode — coming soon':'Light mode');
 }
 function applyThemeButtons(t){
   var lb=document.getElementById('theme-light');
   var db=document.getElementById('theme-dark');
   if(!lb||!db)return;
-  // Light btn — always dark text so readable in both themes
   lb.className='theme-btn theme-btn-light'+(t==='light'?' on':'');
   lb.style.background=t==='light'?'#f0f0f3':'white';
   lb.style.borderColor=t==='light'?'#1a1a2e':'rgba(0,0,0,0.12)';
   lb.style.color='#1a1a2e';
-  // Dark btn — white text only when active, dark text otherwise
   db.className='theme-btn theme-btn-dark'+(t==='dark'?' on':'');
   db.style.background=t==='dark'?'#1a1a2e':'white';
   db.style.borderColor=t==='dark'?'#1a1a2e':'rgba(0,0,0,0.12)';
   db.style.color=t==='dark'?'white':'#1a1a2e';
 }
 
-// ─── TOGGLES ──────────────────────────────────────────────
 function togglePref(key){
   sSet[key]=!sSet[key];
   var tog=document.getElementById('tog-'+key);
   if(tog)tog.classList.toggle('on',sSet[key]);
   saveSettings();
-  if(key==='tips')showToast(sSet.tips?'💡 Coaching tips on':'💡 Coaching tips off');
-  if(key==='autosave')showToast(sSet.autosave?'🕛 Auto-save on':'🕛 Auto-save off');
+  if(key==='tips')showToast(sSet.tips?'Coaching tips on':'Coaching tips off');
+  if(key==='autosave')showToast(sSet.autosave?'Auto-save on':'Auto-save off');
 }
 
-// ─── SAVE SETTINGS → all pages read tracktion_settings ────
 function saveSettings(){
   try{
     localStorage.setItem('tracktion_settings',JSON.stringify({
@@ -552,7 +520,6 @@ function saveSettings(){
   }catch(e){}
 }
 
-// ─── API KEY ──────────────────────────────────────────────
 function validateApiKey(){
   var key=document.getElementById('set-api-key').value.trim();
   if(!key){showToast('Paste your API key first');return;}
@@ -584,7 +551,6 @@ function validateApiKey(){
   });
 }
 
-// ─── CONFIRM BARS ─────────────────────────────────────────
 function showConfirm(id){
   document.querySelectorAll('.confirm-bar.show').forEach(function(el){
     if(el.id!==id)el.classList.remove('show');
@@ -593,7 +559,6 @@ function showConfirm(id){
 }
 function hideConfirm(id){document.getElementById(id).classList.remove('show');}
 
-// ─── ACCOUNT ACTIONS ──────────────────────────────────────
 function doLogout(){
   try{
     localStorage.removeItem('tracktion_user');
@@ -618,11 +583,10 @@ function clearAllData(){
   if(apiKey)try{localStorage.setItem('tracktion_apikey',apiKey);}catch(e){}
   try{localStorage.setItem('tracktion_settings',JSON.stringify(settings));}catch(e){}
   hideConfirm('confirm-cleardata');
-  showToast('✅ Data cleared');
+  showToast('Data cleared');
   setTimeout(function(){goTo('welcome.html');},1200);
 }
 
-// ─── HELPERS ──────────────────────────────────────────────
 function goTo(u){
   document.body.style.opacity='0';
   document.body.style.transition='opacity 0.15s ease';
