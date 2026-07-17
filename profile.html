@@ -130,9 +130,11 @@ body.editing .prof-val input{pointer-events:auto;border-bottom:1.5px solid #0066
 .lock-icon{font-size:11px;color:#1a1a2e;margin-left:4px;opacity:0.3;}
 body.editing .edit-mode-only{display:block;}
 body.editing .lock-icon{display:none;}
-body.editing .prof-val input,body.editing .act-sel,body.editing .day-num{pointer-events:auto;}
+body.editing .prof-val input,body.editing .act-sel{pointer-events:auto;}
 body:not(.editing) .act-sel{pointer-events:none;}
-body:not(.editing) .day-num{pointer-events:none;}
+/* Lock essential info fields by default — unlock only in edit mode */
+.prof-locked{pointer-events:none;user-select:none;}
+body.editing .prof-locked{pointer-events:auto;user-select:auto;}
 
 /* AGGRESSIVE CUT WARNING */
 .cut-warning{display:none;margin:0 12px 8px;padding:10px 12px;background:rgba(255,179,0,0.08);border-left:3px solid #ffb300;border-radius:0 10px 10px 0;}
@@ -318,20 +320,20 @@ body:not(.editing) .day-num{pointer-events:none;}
   <div class="card">
     <div class="prof-row">
       <span class="prof-lbl">Full name</span>
-      <input id="pr-name" type="text" placeholder="Your name" style="background:transparent;border:none;outline:none;font-family:monospace;font-size:14px;font-weight:800;color:#1a1a2e;text-align:right;width:180px;" autocomplete="name">
+      <input id="pr-name" type="text" placeholder="Your name" class="prof-locked" style="background:transparent;border:none;outline:none;font-family:monospace;font-size:14px;font-weight:800;color:#1a1a2e;text-align:right;width:180px;" autocomplete="name">
     </div>
     <div class="prof-row">
       <span class="prof-lbl">Date of birth</span>
       <div style="display:flex;gap:4px;align-items:center;">
-        <select id="pr-dob-d" onchange="prCalc()" style="background:transparent;border:none;outline:none;font-family:monospace;font-size:14px;font-weight:800;color:#1a1a2e;cursor:pointer;-webkit-appearance:none;max-width:36px;">
+        <select id="pr-dob-d" onchange="prCalc()" class="prof-locked" style="background:transparent;border:none;outline:none;font-family:monospace;font-size:14px;font-weight:800;color:#1a1a2e;cursor:pointer;-webkit-appearance:none;max-width:36px;">
           <option value="">DD</option>
           <option value="01">1</option><option value="02">2</option><option value="03">3</option><option value="04">4</option><option value="05">5</option><option value="06">6</option><option value="07">7</option><option value="08">8</option><option value="09">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option><option value="26">26</option><option value="27">27</option><option value="28">28</option><option value="29">29</option><option value="30">30</option><option value="31">31</option>
         </select>
-        <select id="pr-dob-m" onchange="prCalc()" style="background:transparent;border:none;outline:none;font-family:monospace;font-size:14px;font-weight:800;color:#1a1a2e;cursor:pointer;-webkit-appearance:none;max-width:68px;">
+        <select id="pr-dob-m" onchange="prCalc()" class="prof-locked" style="background:transparent;border:none;outline:none;font-family:monospace;font-size:14px;font-weight:800;color:#1a1a2e;cursor:pointer;-webkit-appearance:none;max-width:68px;">
           <option value="">MMM</option>
           <option value="01">Jan</option><option value="02">Feb</option><option value="03">Mar</option><option value="04">Apr</option><option value="05">May</option><option value="06">Jun</option><option value="07">Jul</option><option value="08">Aug</option><option value="09">Sep</option><option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option>
         </select>
-        <select id="pr-dob-y" onchange="prCalc()" style="background:transparent;border:none;outline:none;font-family:monospace;font-size:14px;font-weight:800;color:#1a1a2e;cursor:pointer;-webkit-appearance:none;max-width:56px;">
+        <select id="pr-dob-y" onchange="prCalc()" class="prof-locked" style="background:transparent;border:none;outline:none;font-family:monospace;font-size:14px;font-weight:800;color:#1a1a2e;cursor:pointer;-webkit-appearance:none;max-width:56px;">
           <option value="">YYYY</option>
         </select>
       </div>
@@ -346,14 +348,14 @@ body:not(.editing) .day-num{pointer-events:none;}
     <div class="prof-row">
       <span class="prof-lbl">Height</span>
       <div style="display:flex;align-items:center;gap:4px;">
-        <input id="pr-height" type="text" inputmode="numeric" placeholder="170" oninput="prCalc()" style="background:transparent;border:none;outline:none;font-size:16px;font-weight:700;color:#1a1a2e;text-align:right;width:60px;font-family:inherit;">
+        <input id="pr-height" type="text" inputmode="numeric" placeholder="170" oninput="prCalc()" class="prof-locked" style="background:transparent;border:none;outline:none;font-size:16px;font-weight:700;color:#1a1a2e;text-align:right;width:60px;font-family:inherit;">
         <span style="font-size:12px;font-weight:600;color:#1a1a2e;">cm</span>
       </div>
     </div>
     <div class="prof-row">
       <span class="prof-lbl">Weight</span>
       <div style="display:flex;align-items:center;gap:4px;">
-        <input id="pr-weight" type="text" inputmode="decimal" placeholder="74.5" oninput="prCalc();updateHeroPills()" style="background:transparent;border:none;outline:none;font-size:16px;font-weight:700;color:#1a1a2e;text-align:right;width:60px;font-family:inherit;">
+        <input id="pr-weight" type="text" inputmode="decimal" placeholder="74.5" oninput="prCalc();updateHeroPills()" class="prof-locked" style="background:transparent;border:none;outline:none;font-size:16px;font-weight:700;color:#1a1a2e;text-align:right;width:60px;font-family:inherit;">
         <span style="font-size:12px;font-weight:600;color:#1a1a2e;">kg</span>
       </div>
     </div>
@@ -361,7 +363,7 @@ body:not(.editing) .day-num{pointer-events:none;}
       <div style="display:flex;width:100%;align-items:center;justify-content:space-between;padding:13px 0 8px;">
         <span class="prof-lbl">Body fat %</span>
         <div style="display:flex;align-items:center;gap:4px;">
-          <input id="pr-bf" type="text" inputmode="decimal" placeholder="—" oninput="updateHeroPills();updateBFHelper()" style="background:transparent;border:none;outline:none;font-size:16px;font-weight:700;color:#1a1a2e;text-align:right;width:60px;font-family:inherit;">
+          <input id="pr-bf" type="text" inputmode="decimal" placeholder="—" oninput="updateHeroPills();updateBFHelper()" class="prof-locked" style="background:transparent;border:none;outline:none;font-size:16px;font-weight:700;color:#1a1a2e;text-align:right;width:60px;font-family:inherit;">
           <span id="pr-bf-unit" style="font-size:12px;font-weight:600;color:#1a1a2e;"></span>
         </div>
       </div>
@@ -754,7 +756,6 @@ function prSetGender(g){
 // ─── TRAINING DAYS — individual toggle ────────────────────
 var selectedDays=[];
 function prToggleDay(n){
-  if(!isEditing)return;
   var idx=selectedDays.indexOf(n);
   if(idx>-1){selectedDays.splice(idx,1);}
   else{selectedDays.push(n);}
@@ -764,6 +765,13 @@ function prToggleDay(n){
   }
   pState.trainDays=selectedDays.length;
   prCalc();
+  // Save immediately — no need to tap EDIT/SAVE for training schedule
+  var savedProfile={};
+  try{savedProfile=JSON.parse(localStorage.getItem('tracktion_profile')||'{}');}catch(e){}
+  savedProfile.selectedDays=selectedDays;
+  savedProfile.trainDays=selectedDays.length;
+  try{localStorage.setItem('tracktion_profile',JSON.stringify(savedProfile));}catch(e){}
+  showToast('Training schedule saved');
 }
 
 function renderDays(days){
@@ -978,6 +986,17 @@ function updateHeroPills(){
   document.getElementById('hero-height').textContent=h;
   var bfEl=document.getElementById('hero-bf');
   var bfUnit=document.getElementById('hero-bf-unit');
+  // If profile BF empty, check most recent bscan or bf_history
+  if(!bf){
+    var bscanObj=null;
+    try{bscanObj=JSON.parse(localStorage.getItem('tracktion_bscan')||'null');}catch(e){}
+    if(bscanObj&&bscanObj.bf)bf=bscanObj.bf;
+  }
+  if(!bf){
+    var bfHistArr=[];
+    try{bfHistArr=JSON.parse(localStorage.getItem('tracktion_bf_history')||'[]');}catch(e){}
+    if(bfHistArr.length)bf=bfHistArr[0].bf;
+  }
   if(bfEl)bfEl.textContent=bf?bf:'—';
   if(bfUnit)bfUnit.textContent=bf?'%':'';
   updateBFHelper();

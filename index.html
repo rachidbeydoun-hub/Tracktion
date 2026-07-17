@@ -345,7 +345,25 @@ function init(){
   // Clean any stuck Thinking... messages from previous sessions
   coachHistory=coachHistory.filter(function(m){return m.text!=='Thinking...';});
   try{localStorage.setItem('tracktion_coach_history',JSON.stringify(coachHistory));}catch(e){}
-  day=localStorage.getItem('tracktion_day')||'train';
+  // Auto-detect day from training schedule — override wins if manually set today
+  var todayStr=todayKey();
+  var dayOverride=null;
+  try{dayOverride=localStorage.getItem('tracktion_day_override_'+todayStr);}catch(e){}
+  if(dayOverride){
+    day=dayOverride;
+  } else {
+    var schedProfile={};
+    try{schedProfile=JSON.parse(localStorage.getItem('tracktion_profile')||'{}');}catch(e){}
+    var schedDays=schedProfile.selectedDays;
+    if(schedDays&&schedDays.length){
+      var jsDay=new Date().getDay(); // 0=Sun,1=Mon,...6=Sat
+      var profileDay=jsDay===0?7:jsDay; // map to 1=Mon...7=Sun
+      day=schedDays.indexOf(profileDay)>-1?'train':'rest';
+    } else {
+      day=localStorage.getItem('tracktion_day')||'train';
+    }
+  }
+  try{localStorage.setItem('tracktion_day',day);}catch(e){}
   try{
     const s=JSON.parse(localStorage.getItem('tracktion_targets')||'null');
     if(s&&s.trainKcal){
@@ -384,6 +402,8 @@ function init(){
 function setDay(d){
   day=d;
   try{localStorage.setItem('tracktion_day',d);}catch(e){}
+  // Save as today's override so schedule doesn't overwrite manual choice on refresh
+  try{localStorage.setItem('tracktion_day_override_'+todayKey(),d);}catch(e){}
   document.getElementById('btn-train').className='dbtn'+(d==='train'?' on':'');
   document.getElementById('btn-rest').className='dbtn'+(d==='rest'?' on':'');
   render();
