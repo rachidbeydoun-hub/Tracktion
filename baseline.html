@@ -349,7 +349,7 @@ function bsFinish(){
   try{
     var user=JSON.parse(localStorage.getItem('tracktion_user')||'{}');
     APP.profile={name:user.name||'',email:user.email||'',gender:APP.bsGender,dob:dob,height:h,weight:w,activity:document.getElementById('bs-act').value,steps:document.getElementById('bs-steps').value,job:document.getElementById('bs-job').value,goal:document.getElementById('bs-goal').value,units:APP.settings.units};
-    var tgt={train:APP.targets.train,rest:APP.targets.rest,trainKcal:APP.targets.train.kcal,trainProt:APP.targets.train.prot,trainCarb:APP.targets.train.carbs,trainFat:APP.targets.train.fat,restKcal:APP.targets.rest.kcal,restProt:APP.targets.rest.prot,restCarb:APP.targets.rest.carbs,restFat:APP.targets.rest.fat};
+    var tgt={train:APP.targets.train,rest:APP.targets.rest,trainKcal:APP.targets.train.kcal,trainProt:APP.targets.train.prot,trainCarb:APP.targets.train.carbs,trainFat:APP.targets.train.fat,restKcal:APP.targets.rest.kcal,restProt:APP.targets.rest.prot,restCarb:APP.targets.rest.carbs,restFat:APP.targets.rest.fat,isCustom:APP.bsOverride};
     localStorage.setItem('tracktion_profile',JSON.stringify(APP.profile));
     localStorage.setItem('tracktion_targets',JSON.stringify(tgt));
     localStorage.setItem('tracktion_units',APP.settings.units);var _s2={};try{_s2=JSON.parse(localStorage.getItem('tracktion_settings')||'{}');}catch(_e){}; _s2.units=APP.settings.units;try{localStorage.setItem('tracktion_settings',JSON.stringify(_s2));}catch(_e){}

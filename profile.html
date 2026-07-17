@@ -318,20 +318,20 @@ body:not(.editing) .day-num{pointer-events:none;}
   <div class="card">
     <div class="prof-row">
       <span class="prof-lbl">Full name</span>
-      <input id="pr-name" type="text" placeholder="Your name" style="background:transparent;border:none;outline:none;font-family:monospace;font-size:14px;font-weight:800;color:#0066ff;text-align:right;width:180px;" autocomplete="name">
+      <input id="pr-name" type="text" placeholder="Your name" style="background:transparent;border:none;outline:none;font-family:monospace;font-size:14px;font-weight:800;color:#1a1a2e;text-align:right;width:180px;" autocomplete="name">
     </div>
     <div class="prof-row">
       <span class="prof-lbl">Date of birth</span>
       <div style="display:flex;gap:4px;align-items:center;">
-        <select id="pr-dob-d" onchange="prCalc()" style="background:transparent;border:none;outline:none;font-family:monospace;font-size:14px;font-weight:800;color:#0066ff;cursor:pointer;-webkit-appearance:none;max-width:36px;">
+        <select id="pr-dob-d" onchange="prCalc()" style="background:transparent;border:none;outline:none;font-family:monospace;font-size:14px;font-weight:800;color:#1a1a2e;cursor:pointer;-webkit-appearance:none;max-width:36px;">
           <option value="">DD</option>
           <option value="01">1</option><option value="02">2</option><option value="03">3</option><option value="04">4</option><option value="05">5</option><option value="06">6</option><option value="07">7</option><option value="08">8</option><option value="09">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option><option value="26">26</option><option value="27">27</option><option value="28">28</option><option value="29">29</option><option value="30">30</option><option value="31">31</option>
         </select>
-        <select id="pr-dob-m" onchange="prCalc()" style="background:transparent;border:none;outline:none;font-family:monospace;font-size:14px;font-weight:800;color:#0066ff;cursor:pointer;-webkit-appearance:none;max-width:68px;">
+        <select id="pr-dob-m" onchange="prCalc()" style="background:transparent;border:none;outline:none;font-family:monospace;font-size:14px;font-weight:800;color:#1a1a2e;cursor:pointer;-webkit-appearance:none;max-width:68px;">
           <option value="">MMM</option>
           <option value="01">Jan</option><option value="02">Feb</option><option value="03">Mar</option><option value="04">Apr</option><option value="05">May</option><option value="06">Jun</option><option value="07">Jul</option><option value="08">Aug</option><option value="09">Sep</option><option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option>
         </select>
-        <select id="pr-dob-y" onchange="prCalc()" style="background:transparent;border:none;outline:none;font-family:monospace;font-size:14px;font-weight:800;color:#0066ff;cursor:pointer;-webkit-appearance:none;max-width:56px;">
+        <select id="pr-dob-y" onchange="prCalc()" style="background:transparent;border:none;outline:none;font-family:monospace;font-size:14px;font-weight:800;color:#1a1a2e;cursor:pointer;-webkit-appearance:none;max-width:56px;">
           <option value="">YYYY</option>
         </select>
       </div>
@@ -391,8 +391,8 @@ body:not(.editing) .day-num{pointer-events:none;}
         <div class="act-lbl">Daily Steps</div>
         <select class="act-sel" id="pr-steps" onchange="prCalc()">
           <option value="">Select</option>
-          <option value="0">Under 5k</option>
-          <option value="0.025">5k–8k</option>
+          <option value="0">Under 3k</option>
+          <option value="0.025">3k–6k</option>
           <option value="0.05">6k–10k</option>
           <option value="0.075">10k–13k</option>
           <option value="0.1">13k+</option>
