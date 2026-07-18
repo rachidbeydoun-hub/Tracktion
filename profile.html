@@ -512,10 +512,10 @@ body.editing .prof-locked{pointer-events:auto;user-select:auto;}
   <div class="sec-body" id="body-weight">
     <div class="card" style="padding:0;overflow:hidden;">
       <div class="weight-log-row">
-        <input class="weight-log-inp prof-locked" type="text" inputmode="decimal" id="weight-inp" placeholder="72.0">
+        <input class="weight-log-inp" type="text" inputmode="decimal" id="weight-inp" placeholder="72.0">
         <span class="weight-log-unit">kg</span>
         <button id="weight-date-toggle" onclick="toggleWeightDate()" style="font-size:11px;font-weight:600;color:#0066ff;background:none;border:none;padding:0 4px;cursor:pointer;white-space:nowrap;flex-shrink:0;">▾ date & time (optional)</button>
-        <button class="weight-log-btn prof-locked" onclick="logWeight()">Log</button>
+        <button class="weight-log-btn" onclick="logWeight()">Log</button>
       </div>
       <div class="weight-date-row" id="weight-date-row">
         <input class="weight-date-inp" type="datetime-local" id="weight-date-inp">
@@ -529,7 +529,6 @@ body.editing .prof-locked{pointer-events:auto;user-select:auto;}
         <canvas id="weight-chart" height="80"></canvas>
       </div>
     </div>
-    <div style="font-size:10px;color:#1a1a2e;opacity:0.45;padding:5px 14px 10px;line-height:1.5;">💡 Best logged in the morning, before eating — keeps measurements consistent</div>
   </div>
 
   <div style="height:20px;"></div>
@@ -839,7 +838,17 @@ function logWeight(){
   if(!val||val<20||val>500){showToast('Enter a valid weight');return;}
   var dateInp=document.getElementById('weight-date-inp');
   var useCustomDate=dateInp&&dateInp.value&&document.getElementById('weight-date-row').classList.contains('show');
-  var now=useCustomDate?new Date(dateInp.value):new Date();
+  var now;
+  if(useCustomDate){
+    // Parse manually — iOS Safari strict about ISO format
+    var raw=dateInp.value; // "2026-07-18T16:56"
+    var dp=raw.split('T')[0].split('-');
+    var tp=(raw.split('T')[1]||'00:00').split(':');
+    now=new Date(parseInt(dp[0]),parseInt(dp[1])-1,parseInt(dp[2]),parseInt(tp[0]),parseInt(tp[1]),0);
+  } else {
+    now=new Date();
+  }
+  if(isNaN(now.getTime())){now=new Date();}
   var entry={
     weight:val,
     date:now.toISOString().split('T')[0],
@@ -849,13 +858,20 @@ function logWeight(){
   try{localStorage.setItem('tracktion_weight_history',JSON.stringify(weightHistory));}catch(e){}
   document.getElementById('pr-weight').value=val;
   document.getElementById('weight-inp').value='';
-  // Reset datetime picker
   if(dateInp)dateInp.value='';
   document.getElementById('weight-date-row').classList.remove('show');
   document.getElementById('weight-date-toggle').textContent='▾ date & time (optional)';
   renderWeightHistory();
   updateHeroPills();
   showToast('Weight logged — '+val+'kg');
+}
+
+function deleteWeightEntry(i){
+  weightHistory.splice(i,1);
+  try{localStorage.setItem('tracktion_weight_history',JSON.stringify(weightHistory));}catch(e){}
+  renderWeightHistory();
+  updateHeroPills();
+  showToast('Entry deleted');
 }
 
 function renderWeightHistory(){
@@ -894,6 +910,7 @@ function renderWeightHistory(){
       +'<span class="weight-entry-val" style="font-weight:'+(isBold?'700':'400')+';">'+e.weight+' kg</span>'
       +'<span class="weight-entry-date">'+e.date+' · '+e.time+'</span>'
       +delta
+      +'<button onclick="deleteWeightEntry('+i+')" style="background:none;border:none;color:#ff2244;font-size:14px;cursor:pointer;padding:0 0 0 6px;line-height:1;flex-shrink:0;">×</button>'
       +'</div>';
   }).join('');
   // Draw chart
@@ -1381,17 +1398,28 @@ function renderBFHistory(){
   list.innerHTML=history.map(function(entry,idx){
     var isAI=entry.source==='ai';
     var hasDesc=isAI&&entry.description;
-    return '<div class="bf-entry"'+(hasDesc?' onclick="toggleBFDesc(this)"':'')+' id="bf-entry-'+idx+'">'
-      +'<div class="bf-entry-top">'
+    return '<div class="bf-entry" id="bf-entry-'+idx+'">'
+      +'<div class="bf-entry-top"'+(hasDesc?' onclick="toggleBFDesc(this.parentNode)"':'')+' style="cursor:'+(hasDesc?'pointer':'default')+';">'
       +'<span class="bf-entry-val">'+entry.bf+(entry.bf&&!entry.bf.includes('%')?'%':'')+'</span>'
       +'<div class="bf-entry-meta">'
       +'<span class="bf-entry-date">'+entry.date+'</span>'
       +'<span class="bf-badge '+(isAI?'ai':'manual')+'">'+(isAI?'AI scan':'Manual')+'</span>'
       +(hasDesc?'<span class="bf-chev">▾</span>':'')
+      +'<button onclick="deleteBFEntry('+idx+')" style="background:none;border:none;color:#ff2244;font-size:14px;cursor:pointer;padding:0 0 0 6px;line-height:1;flex-shrink:0;">×</button>'
       +'</div></div>'
       +(hasDesc?'<div class="bf-desc">'+entry.description+'</div>':'')
       +'</div>';
   }).join('');
+}
+
+function deleteBFEntry(i){
+  var history=[];
+  try{history=JSON.parse(localStorage.getItem('tracktion_bf_history')||'[]');}catch(e){}
+  history.splice(i,1);
+  try{localStorage.setItem('tracktion_bf_history',JSON.stringify(history));}catch(e){}
+  renderBFHistory();
+  updateHeroPills();
+  showToast('Entry deleted');
 }
 
 function toggleBFDesc(entry){
