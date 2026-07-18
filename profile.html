@@ -150,11 +150,11 @@ body.editing .prof-locked{pointer-events:auto;user-select:auto;}
 .day-num.on{background:rgba(0,102,255,0.08);border-color:#0066ff;color:#0066ff;font-weight:800;}
 
 /* WEIGHT LOG */
-.weight-log-row{display:flex;gap:8px;align-items:center;padding:12px 14px;border-bottom:0.5px solid rgba(0,0,0,0.06);}
-.weight-log-inp{flex:1;border:1.5px solid rgba(0,0,0,0.1);border-radius:10px;padding:9px 12px;font-size:18px;font-weight:700;color:#1a1a2e;font-family:inherit;text-align:center;background:white;}
+.weight-log-row{display:flex;gap:8px;align-items:center;padding:10px 14px;border-bottom:0.5px solid rgba(0,0,0,0.06);}
+.weight-log-inp{width:72px;border:1.5px solid rgba(0,0,0,0.1);border-radius:10px;padding:7px 10px;font-size:15px;font-weight:700;color:#1a1a2e;font-family:inherit;text-align:center;background:white;flex-shrink:0;}
 .weight-log-inp:focus{outline:none;border-color:#0066ff;}
 .weight-log-unit{font-size:13px;font-weight:700;color:#1a1a2e;flex-shrink:0;}
-.weight-log-btn{padding:9px 18px;background:#0066ff;color:white;border:none;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;}
+.weight-log-btn{padding:8px 16px;background:#0066ff;color:white;border:none;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;margin-left:auto;}
 .weight-log-btn:active{background:#0044cc;}
 .weight-delta-row{padding:4px 14px 10px;display:flex;align-items:center;gap:8px;}
 .weight-delta{font-size:12px;font-weight:700;}
@@ -272,7 +272,7 @@ body.editing .prof-locked{pointer-events:auto;user-select:auto;}
 /* PRIVACY NOTE */
 .bscan-privacy{margin:10px 16px 0;padding:9px 12px;background:rgba(26,158,92,0.06);border-radius:10px;font-size:11px;font-weight:600;color:#1a1a2e;line-height:1.5;}
 /* COLLAPSIBLE SECTIONS */
-.sec-hdr-btn{display:flex;align-items:center;justify-content:space-between;width:100%;background:none;border:none;padding:12px 12px 5px;cursor:pointer;text-align:left;}
+.sec-hdr-btn{display:flex;align-items:center;justify-content:space-between;width:100%;background:none;border:none;outline:none;padding:12px 12px 5px;cursor:pointer;text-align:left;-webkit-tap-highlight-color:transparent;}
 .sec-hdr-lbl{font-size:10px;font-weight:800;color:#1a1a2e;letter-spacing:1.2px;text-transform:uppercase;}
 .sec-chev{font-size:11px;color:#1a1a2e;opacity:0.35;transition:transform 0.2s;}
 .sec-chev.open{transform:rotate(180deg);}
@@ -514,8 +514,10 @@ body.editing .prof-locked{pointer-events:auto;user-select:auto;}
       <div class="weight-log-row">
         <input class="weight-log-inp" type="text" inputmode="decimal" id="weight-inp" placeholder="72.0">
         <span class="weight-log-unit">kg</span>
-        <button class="weight-date-toggle" id="weight-date-toggle" onclick="toggleWeightDate()" style="padding:0;margin:0 6px;font-size:11px;border:none;background:none;color:#0066ff;font-weight:600;cursor:pointer;white-space:nowrap;">▾ date & time (optional)</button>
         <button class="weight-log-btn" onclick="logWeight()">Log</button>
+      </div>
+      <div style="padding:4px 14px 6px;">
+        <button id="weight-date-toggle" onclick="toggleWeightDate()" style="font-size:11px;font-weight:600;color:#0066ff;background:none;border:none;padding:0;cursor:pointer;">▾ date & time (optional)</button>
       </div>
       <div class="weight-date-row" id="weight-date-row">
         <input class="weight-date-inp" type="datetime-local" id="weight-date-inp">
@@ -710,11 +712,14 @@ var pState={
       if(parts[1])document.getElementById('pr-dob-m').value=parts[1];
       if(parts[2])document.getElementById('pr-dob-d').value=parts[2];
     }
-    // Gender
-    if(profile.gender)prSetGender(profile.gender);
-    // Body stats — baseline always converts to cm/kg before saving
     if(profile.height)document.getElementById('pr-height').value=profile.height;
-    if(profile.weight)document.getElementById('pr-weight').value=profile.weight;
+    // Weight — use profile value OR latest from weight history
+    var wVal=profile.weight||'';
+    if(!wVal||isNaN(parseFloat(wVal))){
+      var wHist=[];try{wHist=JSON.parse(localStorage.getItem('tracktion_weight_history')||'[]');}catch(e){}
+      if(wHist.length)wVal=wHist[0].weight;
+    }
+    if(wVal)document.getElementById('pr-weight').value=wVal;
     if(profile.bf)document.getElementById('pr-bf').value=profile.bf;
     // Activity & goal
     if(profile.activity)document.getElementById('pr-activity').value=profile.activity;
@@ -725,11 +730,12 @@ var pState={
     if(profile.selectedDays){
       renderDays(profile.selectedDays);
     } else if(profile.trainDays){
-      // Legacy: convert count to M-T-W-T-F sequence
       var legacyDays=[];
       for(var j=1;j<=Math.min(profile.trainDays,7);j++)legacyDays.push(j);
       renderDays(legacyDays);
     }
+    // Gender LAST — after all fields set so prCalc() inside fires with full data
+    prSetGender(profile.gender||'male');
   } else if(user&&user.name){
     // No profile yet — pre-fill name from signup
     document.getElementById('pr-name').value=user.name;
@@ -741,11 +747,8 @@ var pState={
     document.getElementById('custom-badge').classList.add('show');
   }
 
-  // Load bscan data
-  if(bscanData){
-    if(bscanData.bf)document.getElementById('bscan-bf-display').textContent=bscanData.bf;
-    if(bscanData.date)document.getElementById('bscan-last-scan').textContent=bscanData.date;
-  }
+  // Load bscan data — compact card updated below
+  // (bscan-bf-display and bscan-last-scan removed with old card design)
 
   // Update compact bscan card info
   var bscanInitObj=null;
