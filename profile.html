@@ -836,31 +836,20 @@ try{weightHistory=JSON.parse(localStorage.getItem('tracktion_weight_history')||'
 function logWeight(){
   var val=parseFloat(document.getElementById('weight-inp').value);
   if(!val||val<20||val>500){showToast('Enter a valid weight');return;}
-  var dateInp=document.getElementById('weight-date-inp');
-  var useCustomDate=dateInp&&dateInp.value&&document.getElementById('weight-date-row').classList.contains('show');
-  var now;
-  if(useCustomDate){
-    // Parse manually — iOS Safari strict about ISO format
-    var raw=dateInp.value; // "2026-07-18T16:56"
-    var dp=raw.split('T')[0].split('-');
-    var tp=(raw.split('T')[1]||'00:00').split(':');
-    now=new Date(parseInt(dp[0]),parseInt(dp[1])-1,parseInt(dp[2]),parseInt(tp[0]),parseInt(tp[1]),0);
-  } else {
-    now=new Date();
-  }
-  if(isNaN(now.getTime())){now=new Date();}
+  var now=new Date();
   var entry={
     weight:val,
     date:now.toISOString().split('T')[0],
     time:now.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})
   };
-  weightHistory.unshift(entry);
-  try{localStorage.setItem('tracktion_weight_history',JSON.stringify(weightHistory));}catch(e){}
+  // Always read fresh from localStorage — avoids stale in-memory state
+  var hist=[];
+  try{hist=JSON.parse(localStorage.getItem('tracktion_weight_history')||'[]');}catch(e){}
+  hist.unshift(entry);
+  weightHistory=hist;
+  try{localStorage.setItem('tracktion_weight_history',JSON.stringify(hist));}catch(e){}
   document.getElementById('pr-weight').value=val;
   document.getElementById('weight-inp').value='';
-  if(dateInp)dateInp.value='';
-  document.getElementById('weight-date-row').classList.remove('show');
-  document.getElementById('weight-date-toggle').textContent='▾ date & time (optional)';
   renderWeightHistory();
   updateHeroPills();
   showToast('Weight logged — '+val+'kg');
@@ -879,6 +868,7 @@ function renderWeightHistory(){
   var empty=document.getElementById('weight-empty');
   var chartWrap=document.getElementById('weight-chart-wrap');
   var deltaRow=document.getElementById('weight-delta-row');
+  if(!list||!empty||!chartWrap||!deltaRow)return;
   if(!weightHistory.length){
     list.innerHTML='';
     empty.style.display='block';
@@ -949,7 +939,6 @@ function drawWeightChart(){
 
 // Load weight history on init
 renderWeightHistory();
-if(weightHistory.length)document.getElementById('weight-inp').value=weightHistory[0].weight;
 function prCalc(){
   var dob=getDob(),h=parseFloat(document.getElementById('pr-height').value)||null;
   var w=parseFloat(document.getElementById('pr-weight').value)||null;
@@ -1130,10 +1119,11 @@ function saveProfile(){
 
 // ─── HISTORY ──────────────────────────────────────────────
 function renderHistory(){
+  var el=document.getElementById('pr-history-card');
+  if(!el)return; // element removed in redesign
+  var empty=document.getElementById('pr-history-empty');
   var hist=[];
   try{hist=JSON.parse(localStorage.getItem('tracktion_measurement_history')||'[]');}catch(e){}
-  var el=document.getElementById('pr-history-card');
-  var empty=document.getElementById('pr-history-empty');
   if(!hist.length){if(empty)empty.style.display='block';return;}
   if(empty)empty.style.display='none';
   var rows=hist.slice(0,5).map(function(h){
@@ -1448,6 +1438,7 @@ function logManualBF(){
 // ─── TOAST ────────────────────────────────────────────────
 // ─── HERO STAT INLINE EDIT ────────────────────────────────
 function heroEditStat(type){
+  if(!isEditing){showToast('Tap EDIT to update your stats');return;}
   var valEl=document.getElementById('hero-'+type);
   var inp=document.getElementById('hero-'+type+'-inp');
   if(!valEl||!inp)return;
