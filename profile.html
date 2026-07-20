@@ -25,8 +25,12 @@ body{min-height:100vh;background:#f4f5f8;display:flex;flex-direction:column;alig
 .wm-track{font-family:monospace;font-size:30px;font-weight:900;color:#0066ff;letter-spacing:-1px;}
 .wm-ti{font-family:monospace;font-size:30px;font-weight:900;color:#ff2244;letter-spacing:-1px;}
 .wm-n{font-family:monospace;font-size:30px;font-weight:900;color:#ffb300;letter-spacing:-1px;}
-.save-btn{font-family:monospace;font-size:10px;font-weight:900;letter-spacing:1px;color:#0066ff;background:rgba(0,102,255,0.08);border:0.5px solid rgba(0,102,255,0.3);border-radius:8px;padding:7px 14px;cursor:pointer;border-style:solid;}
-.save-btn:active{opacity:0.75;}
+/* SAVE BAR — appears when changes detected */
+.save-bar{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);width:calc(100% - 32px);max-width:398px;z-index:200;display:none;animation:slideUp 0.2s ease;}
+@keyframes slideUp{from{opacity:0;transform:translateX(-50%) translateY(12px);}to{opacity:1;transform:translateX(-50%) translateY(0);}}
+.save-bar.show{display:block;}
+.save-bar-btn{width:100%;padding:14px;background:#1a9e5c;color:white;border:none;border-radius:14px;font-family:monospace;font-size:13px;font-weight:900;letter-spacing:1px;cursor:pointer;box-shadow:0 4px 16px rgba(26,158,92,0.35);}
+.save-bar-btn:active{background:#157a47;}
 
 /* CARDS */
 .card{background:white;border-radius:16px;margin:8px 12px;border:0.5px solid rgba(0,0,0,0.06);box-shadow:0 1px 4px rgba(0,0,0,0.04);}
@@ -78,7 +82,8 @@ body{min-height:100vh;background:#f4f5f8;display:flex;flex-direction:column;alig
 .prof-lbl{font-size:14px;font-weight:500;color:#1a1a2e;}
 .prof-val{font-size:14px;font-weight:700;color:#1a1a2e;}
 .prof-val input{font-size:14px;font-weight:700;color:#1a1a2e;border:none;outline:none;background:transparent;font-family:inherit;text-align:right;pointer-events:none;}
-body.editing .prof-val input{pointer-events:auto;border-bottom:1.5px solid #0066ff;}
+/* All fields always editable — no edit mode needed */
+.act-sel{cursor:pointer;}
 .prof-unit{font-size:13px;font-weight:600;color:#1a1a2e;margin-left:2px;}
 
 /* BF HELPER */
@@ -128,13 +133,13 @@ body.editing .prof-val input{pointer-events:auto;border-bottom:1.5px solid #0066
 /* EDIT MODE */
 .edit-mode-only{display:none;}
 .lock-icon{font-size:11px;color:#1a1a2e;margin-left:4px;opacity:0.3;}
-body.editing .edit-mode-only{display:block;}
-body.editing .lock-icon{display:none;}
-body.editing .prof-val input,body.editing .act-sel{pointer-events:auto;}
-body:not(.editing) .act-sel{pointer-events:none;}
+
+
+
+
 /* Lock essential info fields by default — unlock only in edit mode */
-.prof-locked{pointer-events:none;user-select:none;}
-body.editing .prof-locked{pointer-events:auto;user-select:auto;}
+
+
 
 /* AGGRESSIVE CUT WARNING */
 .cut-warning{display:none;margin:0 12px 8px;padding:10px 12px;background:rgba(255,179,0,0.08);border-left:3px solid #ffb300;border-radius:0 10px 10px 0;}
@@ -294,7 +299,6 @@ body.editing .prof-locked{pointer-events:auto;user-select:auto;}
     <div class="wordmark">
       <span class="wm-track">TRACK</span><span class="wm-ti">TI</span><span class="wm-n">ON</span>
     </div>
-    <button class="save-btn" id="edit-save-btn" onclick="toggleEditMode()">✎ EDIT</button>
   </div>
 
   <!-- RINGS HERO -->
@@ -358,20 +362,20 @@ body.editing .prof-locked{pointer-events:auto;user-select:auto;}
   <div class="card">
     <div class="prof-row">
       <span class="prof-lbl">Full name</span>
-      <input id="pr-name" type="text" placeholder="Your name" class="prof-locked" style="background:transparent;border:none;outline:none;font-family:monospace;font-size:14px;font-weight:800;color:#1a1a2e;text-align:right;width:180px;" autocomplete="name">
+      <input id="pr-name" type="text" placeholder="Your name" style="background:transparent;border:none;outline:none;font-family:monospace;font-size:14px;font-weight:800;color:#1a1a2e;text-align:right;width:180px;" autocomplete="name">
     </div>
     <div class="prof-row">
       <span class="prof-lbl">Date of birth</span>
       <div style="display:flex;gap:4px;align-items:center;">
-        <select id="pr-dob-d" onchange="prCalc()" class="prof-locked" style="background:transparent;border:none;outline:none;font-family:monospace;font-size:14px;font-weight:800;color:#1a1a2e;cursor:pointer;-webkit-appearance:none;max-width:36px;">
+        <select id="pr-dob-d" onchange="prCalc()" style="background:transparent;border:none;outline:none;font-family:monospace;font-size:14px;font-weight:800;color:#1a1a2e;cursor:pointer;-webkit-appearance:none;max-width:36px;">
           <option value="">DD</option>
           <option value="01">1</option><option value="02">2</option><option value="03">3</option><option value="04">4</option><option value="05">5</option><option value="06">6</option><option value="07">7</option><option value="08">8</option><option value="09">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option><option value="26">26</option><option value="27">27</option><option value="28">28</option><option value="29">29</option><option value="30">30</option><option value="31">31</option>
         </select>
-        <select id="pr-dob-m" onchange="prCalc()" class="prof-locked" style="background:transparent;border:none;outline:none;font-family:monospace;font-size:14px;font-weight:800;color:#1a1a2e;cursor:pointer;-webkit-appearance:none;max-width:68px;">
+        <select id="pr-dob-m" onchange="prCalc()" style="background:transparent;border:none;outline:none;font-family:monospace;font-size:14px;font-weight:800;color:#1a1a2e;cursor:pointer;-webkit-appearance:none;max-width:68px;">
           <option value="">MMM</option>
           <option value="01">Jan</option><option value="02">Feb</option><option value="03">Mar</option><option value="04">Apr</option><option value="05">May</option><option value="06">Jun</option><option value="07">Jul</option><option value="08">Aug</option><option value="09">Sep</option><option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option>
         </select>
-        <select id="pr-dob-y" onchange="prCalc()" class="prof-locked" style="background:transparent;border:none;outline:none;font-family:monospace;font-size:14px;font-weight:800;color:#1a1a2e;cursor:pointer;-webkit-appearance:none;max-width:56px;">
+        <select id="pr-dob-y" onchange="prCalc()" style="background:transparent;border:none;outline:none;font-family:monospace;font-size:14px;font-weight:800;color:#1a1a2e;cursor:pointer;-webkit-appearance:none;max-width:56px;">
           <option value="">YYYY</option>
         </select>
       </div>
@@ -386,7 +390,7 @@ body.editing .prof-locked{pointer-events:auto;user-select:auto;}
     <div class="prof-row">
       <span class="prof-lbl">Height</span>
       <div style="display:flex;align-items:center;gap:4px;">
-        <input id="pr-height" type="text" inputmode="numeric" placeholder="170" oninput="prCalc()" class="prof-locked" style="background:transparent;border:none;outline:none;font-size:16px;font-weight:700;color:#1a1a2e;text-align:right;width:60px;font-family:inherit;">
+        <input id="pr-height" type="text" inputmode="numeric" placeholder="170" oninput="prCalc()" style="background:transparent;border:none;outline:none;font-size:16px;font-weight:700;color:#1a1a2e;text-align:right;width:60px;font-family:inherit;">
         <span style="font-size:12px;font-weight:600;color:#1a1a2e;">cm</span>
       </div>
     </div>
@@ -504,27 +508,18 @@ body.editing .prof-locked{pointer-events:auto;user-select:auto;}
     </div>
   </div>
 
-  <!-- WEIGHT TRACKING — collapsible -->
+  <!-- WEIGHT TRACKING — read only, log via hero stat -->
   <button class="sec-hdr-btn" onclick="toggleSecCollapse('weight')">
     <span class="sec-hdr-lbl">Weight Tracking</span>
     <span class="sec-chev open" id="chev-weight">▼</span>
   </button>
   <div class="sec-body" id="body-weight">
     <div class="card" style="padding:0;overflow:hidden;">
-      <div class="weight-log-row">
-        <input class="weight-log-inp" type="text" inputmode="decimal" id="weight-inp" placeholder="72.0">
-        <span class="weight-log-unit">kg</span>
-        <button id="weight-date-toggle" onclick="toggleWeightDate()" style="font-size:11px;font-weight:600;color:#0066ff;background:none;border:none;padding:0 4px;cursor:pointer;white-space:nowrap;flex-shrink:0;">▾ date & time (optional)</button>
-        <button class="weight-log-btn" onclick="logWeight()">Log</button>
-      </div>
-      <div class="weight-date-row" id="weight-date-row">
-        <input class="weight-date-inp" type="datetime-local" id="weight-date-inp">
-      </div>
       <div class="weight-delta-row" id="weight-delta-row" style="display:none;">
         <span class="weight-delta" id="weight-delta-txt"></span>
       </div>
       <div class="weight-history-list" id="weight-history-list"></div>
-      <div class="weight-empty" id="weight-empty">No weigh-ins yet — log your first weight above</div>
+      <div class="weight-empty" id="weight-empty">No weigh-ins yet — tap your weight above to log</div>
       <div class="weight-chart-wrap" id="weight-chart-wrap" style="display:none;">
         <canvas id="weight-chart" height="80"></canvas>
       </div>
@@ -534,6 +529,11 @@ body.editing .prof-locked{pointer-events:auto;user-select:auto;}
   <div style="height:20px;"></div>
 
 </div><!-- /page -->
+
+<!-- SAVE BAR — appears when changes detected -->
+<div class="save-bar" id="save-bar">
+  <button class="save-bar-btn" onclick="saveChanges()">✓ SAVE CHANGES</button>
+</div>
 
 <!-- BOTTOM NAV -->
 <div class="bnav">
@@ -761,27 +761,65 @@ var pState={
   updateBFHelper();
   renderHistory();
   renderBFHistory();
+
+  // Capture initial state — used to detect unsaved changes
+  savedState=captureState();
+
+  // Event delegation — any field change shows save bar
+  document.querySelector('.page').addEventListener('input',checkForChanges);
+  document.querySelector('.page').addEventListener('change',checkForChanges);
 })();
 
 // ─── EDIT MODE ────────────────────────────────────────────
-var isEditing=false;
-function toggleEditMode(){
-  isEditing=!isEditing;
-  var btn=document.getElementById('edit-save-btn');
-  if(isEditing){
-    document.body.classList.add('editing');
-    btn.textContent='✓ SAVE';
-    btn.style.background='rgba(26,158,92,0.1)';
-    btn.style.borderColor='rgba(26,158,92,0.4)';
-    btn.style.color='#1a9e5c';
-  } else {
-    saveProfile();
-    document.body.classList.remove('editing');
-    btn.textContent='✎ EDIT';
-    btn.style.background='';
-    btn.style.borderColor='';
-    btn.style.color='';
-  }
+// ─── CHANGE DETECTION & SAVE BAR ─────────────────────────
+var savedState={};
+function captureState(){
+  return {
+    name:(document.getElementById('pr-name').value||'').trim(),
+    height:document.getElementById('pr-height').value||'',
+    activity:document.getElementById('pr-activity').value||'',
+    steps:document.getElementById('pr-steps').value||'',
+    job:document.getElementById('pr-job').value||'',
+    goal:document.getElementById('pr-goal').value||'',
+    gender:pState.gender||'',
+    dob:getDob()||''
+  };
+}
+function checkForChanges(){
+  var cur=captureState();
+  var changed=JSON.stringify(cur)!==JSON.stringify(savedState);
+  var bar=document.getElementById('save-bar');
+  if(bar)bar.classList.toggle('show',changed);
+}
+function saveChanges(){
+  var p={
+    name:(document.getElementById('pr-name').value||'').trim(),
+    dob:getDob(),
+    gender:pState.gender,
+    height:document.getElementById('pr-height').value,
+    weight:document.getElementById('pr-weight').value,
+    bf:document.getElementById('pr-bf').value,
+    activity:document.getElementById('pr-activity').value,
+    steps:document.getElementById('pr-steps').value,
+    job:document.getElementById('pr-job').value,
+    goal:document.getElementById('pr-goal').value,
+    trainDays:selectedDays.length,
+    selectedDays:selectedDays
+  };
+  try{localStorage.setItem('tracktion_profile',JSON.stringify(p));}catch(e){}
+  // Sync user name
+  try{
+    var u=JSON.parse(localStorage.getItem('tracktion_user')||'{}');
+    if(p.name)u.name=p.name;
+    localStorage.setItem('tracktion_user',JSON.stringify(u));
+  }catch(e){}
+  // Recalculate macros and save targets
+  prCalc();
+  savedState=captureState();
+  var bar=document.getElementById('save-bar');
+  if(bar)bar.classList.remove('show');
+  updateHeroPills();
+  showToast('✅ Profile saved — macros updated');
 }
 
 // ─── GENDER ───────────────────────────────────────────────
@@ -797,9 +835,8 @@ function prSetGender(g){
   fb.style.color=g==='f'?'#ff2244':'#1a1a2e';
   fb.style.opacity='1';
   prCalc();
+  checkForChanges();
 }
-
-// ─── TRAINING DAYS — individual toggle ────────────────────
 var selectedDays=[];
 function prToggleDay(n){
   var idx=selectedDays.indexOf(n);
@@ -832,28 +869,6 @@ function renderDays(days){
 // ─── WEIGHT LOG ───────────────────────────────────────────
 var weightHistory=[];
 try{weightHistory=JSON.parse(localStorage.getItem('tracktion_weight_history')||'[]');}catch(e){}
-
-function logWeight(){
-  var val=parseFloat(document.getElementById('weight-inp').value);
-  if(!val||val<20||val>500){showToast('Enter a valid weight');return;}
-  var now=new Date();
-  var entry={
-    weight:val,
-    date:now.toISOString().split('T')[0],
-    time:now.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})
-  };
-  // Always read fresh from localStorage — avoids stale in-memory state
-  var hist=[];
-  try{hist=JSON.parse(localStorage.getItem('tracktion_weight_history')||'[]');}catch(e){}
-  hist.unshift(entry);
-  weightHistory=hist;
-  try{localStorage.setItem('tracktion_weight_history',JSON.stringify(hist));}catch(e){}
-  document.getElementById('pr-weight').value=val;
-  document.getElementById('weight-inp').value='';
-  renderWeightHistory();
-  updateHeroPills();
-  showToast('Weight logged — '+val+'kg');
-}
 
 function deleteWeightEntry(i){
   weightHistory.splice(i,1);
@@ -1067,54 +1082,6 @@ function updateBFHelper(){
   var unit=document.getElementById('pr-bf-unit');
   if(helper)helper.style.display=bf?'none':'flex';
   if(unit)unit.textContent=bf?'%':'';
-}
-
-// ─── SAVE PROFILE ─────────────────────────────────────────
-function saveProfile(){
-  var p={
-    name:document.getElementById('pr-name').value.trim(),
-    dob:getDob(),
-    gender:pState.gender,
-    height:document.getElementById('pr-height').value,
-    weight:document.getElementById('pr-weight').value,
-    bf:document.getElementById('pr-bf').value,
-    activity:document.getElementById('pr-activity').value,
-    steps:document.getElementById('pr-steps').value,
-    job:document.getElementById('pr-job').value,
-    goal:document.getElementById('pr-goal').value,
-    trainDays:selectedDays.length,
-    selectedDays:selectedDays
-  };
-  try{localStorage.setItem('tracktion_profile',JSON.stringify(p));}catch(e){}
-  // Log manual BF to history if value present
-  if(p.bf)logManualBF();
-  // Also keep tracktion_user name in sync
-  try{
-    var u=JSON.parse(localStorage.getItem('tracktion_user')||'{}');
-    if(p.name)u.name=p.name;
-    localStorage.setItem('tracktion_user',JSON.stringify(u));
-  }catch(e){}
-  // Save calculated targets if not custom
-  if(!pState.isCustom&&pState.calcResult){
-    var r=pState.calcResult;
-    var tgt={
-      trainKcal:r.train.kcal,trainProt:r.train.prot,trainCarb:r.train.carb,trainFat:r.train.fat,
-      restKcal:r.rest.kcal,restProt:r.rest.prot,restCarb:r.rest.carb,restFat:r.rest.fat,
-      isCustom:false
-    };
-    try{localStorage.setItem('tracktion_targets',JSON.stringify(tgt));}catch(e){}
-  }
-  // Save measurement history
-  if(p.weight){
-    var hist=[];
-    try{hist=JSON.parse(localStorage.getItem('tracktion_measurement_history')||'[]');}catch(e){}
-    hist.unshift({date:new Date().toLocaleDateString('en-CA'),weight:p.weight,bf:p.bf||null});
-    if(hist.length>30)hist=hist.slice(0,30);
-    try{localStorage.setItem('tracktion_measurement_history',JSON.stringify(hist));}catch(e){}
-    renderHistory();
-  }
-  updateHeroPills();
-  showToast('✅ Profile saved');
 }
 
 // ─── HISTORY ──────────────────────────────────────────────
@@ -1438,7 +1405,6 @@ function logManualBF(){
 // ─── TOAST ────────────────────────────────────────────────
 // ─── HERO STAT INLINE EDIT ────────────────────────────────
 function heroEditStat(type){
-  if(!isEditing){showToast('Tap EDIT to update your stats');return;}
   var valEl=document.getElementById('hero-'+type);
   var inp=document.getElementById('hero-'+type+'-inp');
   if(!valEl||!inp)return;
@@ -1463,16 +1429,27 @@ function heroSaveStat(type){
   if(type==='weight'){
     if(val<20||val>500){showToast('Invalid weight');return;}
     var now=new Date();
-    var entry={weight:val,date:now.toISOString().split('T')[0],time:now.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})};
-    weightHistory.unshift(entry);
-    try{localStorage.setItem('tracktion_weight_history',JSON.stringify(weightHistory));}catch(e){}
+    var yw=now.getFullYear();var mow=String(now.getMonth()+1).padStart(2,'0');var dyw=String(now.getDate()).padStart(2,'0');
+    var entry={weight:val,date:yw+'-'+mow+'-'+dyw,time:now.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})};
+    // Always read fresh from localStorage
+    var wh=[];try{wh=JSON.parse(localStorage.getItem('tracktion_weight_history')||'[]');}catch(e){}
+    wh.unshift(entry);
+    weightHistory=wh;
+    try{localStorage.setItem('tracktion_weight_history',JSON.stringify(wh));}catch(e){}
     document.getElementById('pr-weight').value=val;
+    // Update profile weight and recalculate macros — targets update automatically
+    var prof={};try{prof=JSON.parse(localStorage.getItem('tracktion_profile')||'{}');}catch(e){}
+    prof.weight=val;
+    try{localStorage.setItem('tracktion_profile',JSON.stringify(prof));}catch(e){}
+    prCalc(); // recalculate and save targets
     renderWeightHistory();
     updateHeroPills();
-    showToast('Weight logged — '+val+'kg');
+    showToast('Weight logged — macros updated ✅');
   } else if(type==='bf'){
     if(val<1||val>60){showToast('Invalid body fat %');return;}
-    var today=new Date().toLocaleDateString('en-CA');
+    var nowbf=new Date();
+    var ybf=nowbf.getFullYear();var mobf=String(nowbf.getMonth()+1).padStart(2,'0');var dbf=String(nowbf.getDate()).padStart(2,'0');
+    var today=ybf+'-'+mobf+'-'+dbf;
     var bfHistory=[];
     try{bfHistory=JSON.parse(localStorage.getItem('tracktion_bf_history')||'[]');}catch(e){}
     bfHistory.unshift({bf:val+'%',date:today,source:'manual',description:''});
@@ -1498,20 +1475,6 @@ function toggleSecCollapse(id){
 }
 
 // ─── WEIGHT DATETIME TOGGLE ───────────────────────────────
-function toggleWeightDate(){
-  var row=document.getElementById('weight-date-row');
-  var btn=document.getElementById('weight-date-toggle');
-  var isOpen=row.classList.contains('show');
-  row.classList.toggle('show');
-  btn.textContent=isOpen?'▾ date & time (optional)':'▴ date & time (optional)';
-  if(!isOpen){
-    // Pre-fill with current datetime
-    var now=new Date();
-    var local=new Date(now.getTime()-now.getTimezoneOffset()*60000).toISOString().slice(0,16);
-    document.getElementById('weight-date-inp').value=local;
-  }
-}
-
 function showToast(msg){
   var ex=document.querySelector('.toast');if(ex)ex.remove();
   var t=document.createElement('div');t.className='toast';t.textContent=msg;
