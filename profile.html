@@ -764,6 +764,7 @@ var pState={
 
   // Capture initial state — used to detect unsaved changes
   savedState=captureState();
+  profileReady=true;
 
   // Event delegation — any field change shows save bar
   document.querySelector('.page').addEventListener('input',checkForChanges);
@@ -773,6 +774,7 @@ var pState={
 // ─── EDIT MODE ────────────────────────────────────────────
 // ─── CHANGE DETECTION & SAVE BAR ─────────────────────────
 var savedState={};
+var profileReady=false;
 function captureState(){
   return {
     name:(document.getElementById('pr-name').value||'').trim(),
@@ -786,6 +788,7 @@ function captureState(){
   };
 }
 function checkForChanges(){
+  if(!profileReady)return;
   var cur=captureState();
   var changed=JSON.stringify(cur)!==JSON.stringify(savedState);
   var bar=document.getElementById('save-bar');
