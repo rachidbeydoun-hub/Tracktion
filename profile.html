@@ -31,6 +31,8 @@ body{min-height:100vh;background:#f4f5f8;display:flex;flex-direction:column;alig
 .save-bar.show{display:block;}
 .save-bar-btn{width:100%;padding:14px;background:#1a9e5c;color:white;border:none;border-radius:14px;font-family:monospace;font-size:13px;font-weight:900;letter-spacing:1px;cursor:pointer;box-shadow:0 4px 16px rgba(26,158,92,0.35);}
 .save-bar-btn:active{background:#157a47;}
+.discard-bar-btn{padding:14px 18px;background:rgba(255,34,68,0.1);color:#ff2244;border:none;border-radius:14px;font-family:monospace;font-size:13px;font-weight:900;letter-spacing:1px;cursor:pointer;white-space:nowrap;flex-shrink:0;}
+.discard-bar-btn:active{background:rgba(255,34,68,0.2);}
 
 /* CARDS */
 .card{background:white;border-radius:16px;margin:8px 12px;border:0.5px solid rgba(0,0,0,0.06);box-shadow:0 1px 4px rgba(0,0,0,0.04);}
@@ -82,8 +84,23 @@ body{min-height:100vh;background:#f4f5f8;display:flex;flex-direction:column;alig
 .prof-lbl{font-size:14px;font-weight:500;color:#1a1a2e;}
 .prof-val{font-size:14px;font-weight:700;color:#1a1a2e;}
 .prof-val input{font-size:14px;font-weight:700;color:#1a1a2e;border:none;outline:none;background:transparent;font-family:inherit;text-align:right;pointer-events:none;}
-/* All fields always editable — no edit mode needed */
-.act-sel{cursor:pointer;}
+/* CUSTOM PILLS — replaces native selects */
+.cpill-group{display:flex;flex-wrap:wrap;gap:6px;padding:4px 0 8px;}
+.cpill{padding:8px 13px;border-radius:10px;border:0.5px solid rgba(0,0,0,0.12);background:white;color:#1a1a2e;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:all 0.15s;-webkit-tap-highlight-color:transparent;}
+.cpill:active{opacity:0.8;}
+.cpill.on{background:#0066ff;border-color:#0066ff;color:white;}
+.cpill-lbl{font-size:10px;font-weight:800;color:#1a1a2e;letter-spacing:0.8px;text-transform:uppercase;padding-top:12px;display:block;}
+
+/* DOB INPUTS */
+.dob-wrap{display:flex;align-items:center;gap:6px;}
+.dob-inp{background:transparent;border:none;border-bottom:1.5px solid rgba(0,0,0,0.1);outline:none;font-family:monospace;font-size:14px;font-weight:800;color:#1a1a2e;text-align:center;-moz-appearance:textfield;}
+.dob-inp::-webkit-outer-spin-button,.dob-inp::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+.dob-inp:focus{border-bottom-color:#0066ff;}
+.dob-sep{font-size:14px;font-weight:700;color:#1a1a2e;opacity:0.3;}
+
+/* ACTIVITY SECTION */
+.act-section{padding:12px 0 4px;}
+.act-section:first-child{padding-top:4px;}
 .prof-unit{font-size:13px;font-weight:600;color:#1a1a2e;margin-left:2px;}
 
 /* BF HELPER */
@@ -366,18 +383,12 @@ body{min-height:100vh;background:#f4f5f8;display:flex;flex-direction:column;alig
     </div>
     <div class="prof-row">
       <span class="prof-lbl">Date of birth</span>
-      <div style="display:flex;gap:4px;align-items:center;">
-        <select id="pr-dob-d" onchange="prCalc()" style="background:transparent;border:none;outline:none;font-family:monospace;font-size:14px;font-weight:800;color:#1a1a2e;cursor:pointer;-webkit-appearance:none;max-width:36px;">
-          <option value="">DD</option>
-          <option value="01">1</option><option value="02">2</option><option value="03">3</option><option value="04">4</option><option value="05">5</option><option value="06">6</option><option value="07">7</option><option value="08">8</option><option value="09">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option><option value="26">26</option><option value="27">27</option><option value="28">28</option><option value="29">29</option><option value="30">30</option><option value="31">31</option>
-        </select>
-        <select id="pr-dob-m" onchange="prCalc()" style="background:transparent;border:none;outline:none;font-family:monospace;font-size:14px;font-weight:800;color:#1a1a2e;cursor:pointer;-webkit-appearance:none;max-width:68px;">
-          <option value="">MMM</option>
-          <option value="01">Jan</option><option value="02">Feb</option><option value="03">Mar</option><option value="04">Apr</option><option value="05">May</option><option value="06">Jun</option><option value="07">Jul</option><option value="08">Aug</option><option value="09">Sep</option><option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option>
-        </select>
-        <select id="pr-dob-y" onchange="prCalc()" style="background:transparent;border:none;outline:none;font-family:monospace;font-size:14px;font-weight:800;color:#1a1a2e;cursor:pointer;-webkit-appearance:none;max-width:56px;">
-          <option value="">YYYY</option>
-        </select>
+      <div class="dob-wrap">
+        <input id="pr-dob-d" class="dob-inp" type="number" min="1" max="31" placeholder="DD" style="width:36px;" oninput="prCalc()">
+        <span class="dob-sep">/</span>
+        <input id="pr-dob-m" class="dob-inp" type="number" min="1" max="12" placeholder="MM" style="width:36px;" oninput="prCalc()">
+        <span class="dob-sep">/</span>
+        <input id="pr-dob-y" class="dob-inp" type="number" min="1940" max="2010" placeholder="YYYY" style="width:52px;" oninput="prCalc()">
       </div>
     </div>
     <div class="prof-row">
@@ -390,7 +401,7 @@ body{min-height:100vh;background:#f4f5f8;display:flex;flex-direction:column;alig
     <div class="prof-row">
       <span class="prof-lbl">Height</span>
       <div style="display:flex;align-items:center;gap:4px;">
-        <input id="pr-height" type="text" inputmode="numeric" placeholder="170" oninput="prCalc()" style="background:transparent;border:none;outline:none;font-size:16px;font-weight:700;color:#1a1a2e;text-align:right;width:60px;font-family:inherit;">
+        <input id="pr-height" type="number" inputmode="numeric" min="100" max="250" placeholder="170" oninput="prCalc()" style="background:transparent;border:none;outline:none;font-size:16px;font-weight:700;color:#1a1a2e;text-align:right;width:60px;font-family:inherit;">
         <span style="font-size:12px;font-weight:600;color:#1a1a2e;">cm</span>
       </div>
     </div>
@@ -400,55 +411,64 @@ body{min-height:100vh;background:#f4f5f8;display:flex;flex-direction:column;alig
     <input id="pr-bf" type="hidden">
   </div>
 
-  <!-- ACTIVITY & GOAL -->
+  <!-- ACTIVITY & GOAL — custom pill groups -->
   <span class="sec-lbl">Activity & Goal</span>
-  <div class="card">
-    <div class="act-grid">
-      <div class="act-cell">
-        <div class="act-lbl">Activity</div>
-        <select class="act-sel" id="pr-activity" onchange="prCalc()">
-          <option value="">Select</option>
-          <option value="1.2">Sedentary</option>
-          <option value="1.375">Light 1–2×/wk</option>
-          <option value="1.55">Moderate 3–4×</option>
-          <option value="1.725">Very active</option>
-          <option value="1.9">Athlete</option>
-        </select>
+  <div class="card" style="padding:4px 16px 12px;">
+
+    <div class="act-section">
+      <span class="cpill-lbl">Activity Level</span>
+      <div class="cpill-group" id="cpg-activity">
+        <button class="cpill" data-val="1.2" onclick="setPill('pr-activity',this)">Sedentary</button>
+        <button class="cpill" data-val="1.375" onclick="setPill('pr-activity',this)">Light 1–2×</button>
+        <button class="cpill" data-val="1.55" onclick="setPill('pr-activity',this)">Moderate 3–4×</button>
+        <button class="cpill" data-val="1.725" onclick="setPill('pr-activity',this)">Very active</button>
+        <button class="cpill" data-val="1.9" onclick="setPill('pr-activity',this)">Athlete</button>
       </div>
-      <div class="act-cell">
-        <div class="act-lbl">Daily Steps</div>
-        <select class="act-sel" id="pr-steps" onchange="prCalc()">
-          <option value="">Select</option>
-          <option value="0">Under 3k</option>
-          <option value="0.025">3k–6k</option>
-          <option value="0.05">6k–10k</option>
-          <option value="0.075">10k–13k</option>
-          <option value="0.1">13k+</option>
-        </select>
-      </div>
-      <div class="act-cell">
-        <div class="act-lbl">Job Type</div>
-        <select class="act-sel" id="pr-job" onchange="prCalc()">
-          <option value="">Select</option>
-          <option value="0">Desk job</option>
-          <option value="0.05">Light manual</option>
-          <option value="0.1">Manual work</option>
-          <option value="0.15">Heavy labour</option>
-        </select>
-      </div>
-      <div class="act-cell">
-        <div class="act-lbl">Primary Goal</div>
-        <select class="act-sel" id="pr-goal" onchange="prCalc()">
-          <option value="">Select</option>
-          <option value="-0.20">Aggressive cut</option>
-          <option value="-0.12">Moderate cut</option>
-          <option value="-0.05">Slight cut</option>
-          <option value="0">Maintain</option>
-          <option value="0.08">Lean muscle</option>
-          <option value="0.15">Build muscle</option>
-        </select>
-      </div>
+      <input type="hidden" id="pr-activity">
     </div>
+
+    <div style="height:0.5px;background:rgba(0,0,0,0.06);"></div>
+
+    <div class="act-section">
+      <span class="cpill-lbl">Daily Steps</span>
+      <div class="cpill-group" id="cpg-steps">
+        <button class="cpill" data-val="0" onclick="setPill('pr-steps',this)">Under 3k</button>
+        <button class="cpill" data-val="0.025" onclick="setPill('pr-steps',this)">3k–6k</button>
+        <button class="cpill" data-val="0.05" onclick="setPill('pr-steps',this)">6k–10k</button>
+        <button class="cpill" data-val="0.075" onclick="setPill('pr-steps',this)">10k–13k</button>
+        <button class="cpill" data-val="0.1" onclick="setPill('pr-steps',this)">13k+</button>
+      </div>
+      <input type="hidden" id="pr-steps">
+    </div>
+
+    <div style="height:0.5px;background:rgba(0,0,0,0.06);"></div>
+
+    <div class="act-section">
+      <span class="cpill-lbl">Job Type</span>
+      <div class="cpill-group" id="cpg-job">
+        <button class="cpill" data-val="0" onclick="setPill('pr-job',this)">Desk job</button>
+        <button class="cpill" data-val="0.05" onclick="setPill('pr-job',this)">Light manual</button>
+        <button class="cpill" data-val="0.1" onclick="setPill('pr-job',this)">Manual work</button>
+        <button class="cpill" data-val="0.15" onclick="setPill('pr-job',this)">Heavy labour</button>
+      </div>
+      <input type="hidden" id="pr-job">
+    </div>
+
+    <div style="height:0.5px;background:rgba(0,0,0,0.06);"></div>
+
+    <div class="act-section">
+      <span class="cpill-lbl">Primary Goal</span>
+      <div class="cpill-group" id="cpg-goal">
+        <button class="cpill" data-val="-0.20" onclick="setPill('pr-goal',this)">Aggressive cut</button>
+        <button class="cpill" data-val="-0.12" onclick="setPill('pr-goal',this)">Moderate cut</button>
+        <button class="cpill" data-val="-0.05" onclick="setPill('pr-goal',this)">Slight cut</button>
+        <button class="cpill" data-val="0" onclick="setPill('pr-goal',this)">Maintain</button>
+        <button class="cpill" data-val="0.08" onclick="setPill('pr-goal',this)">Lean muscle</button>
+        <button class="cpill" data-val="0.15" onclick="setPill('pr-goal',this)">Build muscle</button>
+      </div>
+      <input type="hidden" id="pr-goal">
+    </div>
+
   </div>
 
   <!-- YOUR TARGETS -->
@@ -532,7 +552,10 @@ body{min-height:100vh;background:#f4f5f8;display:flex;flex-direction:column;alig
 
 <!-- SAVE BAR — appears when changes detected -->
 <div class="save-bar" id="save-bar">
-  <button class="save-bar-btn" onclick="saveChanges()">✓ SAVE CHANGES</button>
+  <div style="display:flex;gap:10px;">
+    <button class="discard-bar-btn" onclick="discardChanges()">✕ DISCARD</button>
+    <button class="save-bar-btn" onclick="saveChanges()" style="flex:1;">✓ SAVE CHANGES</button>
+  </div>
 </div>
 
 <!-- BOTTOM NAV -->
@@ -682,14 +705,6 @@ var pState={
 
 // ─── INIT ─────────────────────────────────────────────────
 (function init(){
-  // Populate year dropdown
-  var ysel=document.getElementById('pr-dob-y');
-  var curY=new Date().getFullYear();
-  for(var y=curY-10;y>=curY-100;y--){
-    var opt=document.createElement('option');
-    opt.value=y;opt.textContent=y;ysel.appendChild(opt);
-  }
-
   // Load from localStorage — tracktion_profile is source of truth (written by baseline.html)
   var user=null,profile=null,targets=null,bscanData=null;
   try{user=JSON.parse(localStorage.getItem('tracktion_user')||'null');}catch(e){}
@@ -702,12 +717,12 @@ var pState={
     // Name
     var nameVal=profile.name||(user&&user.name)||'';
     if(nameVal)document.getElementById('pr-name').value=nameVal;
-    // DOB
+    // DOB — stored YYYY-MM-DD, inputs are plain numbers
     if(profile.dob){
       var parts=profile.dob.split('-');
-      if(parts[0])document.getElementById('pr-dob-y').value=parts[0];
-      if(parts[1])document.getElementById('pr-dob-m').value=parts[1];
-      if(parts[2])document.getElementById('pr-dob-d').value=parts[2];
+      if(parts[0])document.getElementById('pr-dob-y').value=parseInt(parts[0]);
+      if(parts[1])document.getElementById('pr-dob-m').value=parseInt(parts[1]);
+      if(parts[2])document.getElementById('pr-dob-d').value=parseInt(parts[2]);
     }
     if(profile.height)document.getElementById('pr-height').value=profile.height;
     // Weight — use profile value OR latest from weight history
@@ -719,10 +734,10 @@ var pState={
     if(wVal)document.getElementById('pr-weight').value=wVal;
     if(profile.bf)document.getElementById('pr-bf').value=profile.bf;
     // Activity & goal
-    if(profile.activity)document.getElementById('pr-activity').value=profile.activity;
-    if(profile.steps)document.getElementById('pr-steps').value=profile.steps;
-    if(profile.job)document.getElementById('pr-job').value=profile.job;
-    if(profile.goal)document.getElementById('pr-goal').value=profile.goal;
+    if(profile.activity)setPillByValue('pr-activity',profile.activity);
+    if(profile.steps!==undefined&&profile.steps!=='')setPillByValue('pr-steps',profile.steps);
+    if(profile.job!==undefined&&profile.job!=='')setPillByValue('pr-job',profile.job);
+    if(profile.goal)setPillByValue('pr-goal',profile.goal);
     // Training days — load as array of selected days
     if(profile.selectedDays){
       renderDays(profile.selectedDays);
@@ -772,7 +787,28 @@ var pState={
 })();
 
 // ─── EDIT MODE ────────────────────────────────────────────
-// ─── CHANGE DETECTION & SAVE BAR ─────────────────────────
+// ─── CUSTOM PILL SELECTORS ────────────────────────────────
+function setPill(field, btn){
+  document.getElementById(field).value=btn.dataset.val;
+  btn.parentNode.querySelectorAll('.cpill').forEach(function(b){
+    b.classList.toggle('on',b===btn);
+  });
+  prCalc();
+  checkForChanges();
+}
+function setPillByValue(field, val){
+  var hidden=document.getElementById(field);
+  if(hidden)hidden.value=val;
+  var grp=document.getElementById('cpg-'+field.replace('pr-',''));
+  if(!grp)return;
+  var matched=false;
+  grp.querySelectorAll('.cpill').forEach(function(b){
+    var match=parseFloat(b.dataset.val)===parseFloat(val);
+    b.classList.toggle('on',match);
+    if(match)matched=true;
+  });
+  return matched;
+}
 var savedState={};
 var profileReady=false;
 function captureState(){
@@ -795,6 +831,9 @@ function checkForChanges(){
   if(bar)bar.classList.toggle('show',changed);
 }
 function saveChanges(){
+  // Validate height
+  var h=parseFloat(document.getElementById('pr-height').value);
+  if(h&&(h<100||h>250)){showToast('Height must be between 100–250 cm');return;}
   var p={
     name:(document.getElementById('pr-name').value||'').trim(),
     dob:getDob(),
@@ -823,6 +862,36 @@ function saveChanges(){
   if(bar)bar.classList.remove('show');
   updateHeroPills();
   showToast('✅ Profile saved — macros updated');
+}
+
+function discardChanges(){
+  // Reload profile from localStorage — reverts all unsaved changes
+  var profile={};
+  try{profile=JSON.parse(localStorage.getItem('tracktion_profile')||'{}');}catch(e){}
+  if(profile.name)document.getElementById('pr-name').value=profile.name;
+  if(profile.height)document.getElementById('pr-height').value=profile.height;
+  if(profile.activity)setPillByValue('pr-activity',profile.activity);
+  if(profile.steps!==undefined&&profile.steps!=='')setPillByValue('pr-steps',profile.steps);
+  if(profile.job!==undefined&&profile.job!=='')setPillByValue('pr-job',profile.job);
+  if(profile.goal)setPillByValue('pr-goal',profile.goal);
+  // DOB
+  if(profile.dob){
+    var dp2=profile.dob.split('-');
+    if(dp2.length===3){
+      document.getElementById('pr-dob-y').value=parseInt(dp2[0]);
+      document.getElementById('pr-dob-m').value=parseInt(dp2[1]);
+      document.getElementById('pr-dob-d').value=parseInt(dp2[2]);
+    }
+  }
+  profileReady=false;
+  prSetGender(profile.gender||'male');
+  profileReady=true;
+  savedState=captureState();
+  var bar=document.getElementById('save-bar');
+  if(bar)bar.classList.remove('show');
+  prCalc();
+  updateHeroPills();
+  showToast('Changes discarded');
 }
 
 // ─── GENDER ───────────────────────────────────────────────
@@ -991,8 +1060,11 @@ function prCalc(){
 }
 
 function getDob(){
-  var d=document.getElementById('pr-dob-d').value,m=document.getElementById('pr-dob-m').value,y=document.getElementById('pr-dob-y').value;
-  return(d&&m&&y)?y+'-'+m+'-'+d:null;
+  var d=document.getElementById('pr-dob-d').value;
+  var m=document.getElementById('pr-dob-m').value;
+  var y=document.getElementById('pr-dob-y').value;
+  if(!d||!m||!y)return null;
+  return y+'-'+String(m).padStart(2,'0')+'-'+String(d).padStart(2,'0');
 }
 
 // ─── TARGETS DISPLAY ──────────────────────────────────────
@@ -1056,8 +1128,9 @@ function updateHeroPills(){
   var name=document.getElementById('pr-name').value.trim()||'—';
   var w=document.getElementById('pr-weight').value||'—';
   var bf=document.getElementById('pr-bf').value;
-  var goalSel=document.getElementById('pr-goal');
-  var goalTxt=goalSel.options[goalSel.selectedIndex]?goalSel.options[goalSel.selectedIndex].text:'';
+  // Get goal text from active pill button
+  var goalBtn=document.querySelector('#cpg-goal .cpill.on');
+  var goalTxt=goalBtn?goalBtn.textContent:'';
   document.getElementById('hero-name').textContent=name;
   document.getElementById('hero-sub').textContent=goalTxt||(pState.trainDays+'×/week');
   document.getElementById('hero-weight').textContent=w;
@@ -1152,7 +1225,8 @@ function switchOvTab(t){
 
 function updateOvCalcNote(){
   var el=document.getElementById('ov-calc-txt');
-  if(!pState.calcResult){el.textContent='fill in profile fields';return;}
+  if(!el)return;
+  if(!pState.calcResult){el.textContent='Fill in profile fields';return;}
   var r=pState.ovTab==='train'?pState.calcResult.train:pState.calcResult.rest;
   el.textContent=r.kcal+' kcal · P'+r.prot+' · C'+r.carb+' · F'+r.fat;
 }
@@ -1255,7 +1329,8 @@ function runBscanAI(){
   var h=document.getElementById('pr-height').value;
   var bf=document.getElementById('pr-bf').value;
   var goal=document.getElementById('pr-goal');
-  var goalTxt=goal.options[goal.selectedIndex]?goal.options[goal.selectedIndex].text:'';
+  var goalBtn=document.querySelector('#cpg-goal .cpill.on');
+  var goalTxt=goalBtn?goalBtn.textContent:'';
 
   var context='';
   if(w)context+='Weight: '+w+'kg. ';
