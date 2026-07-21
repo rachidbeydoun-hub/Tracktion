@@ -703,6 +703,10 @@ var pState={
   bscanResult:null
 };
 
+// ─── STATE ────────────────────────────────────────────────
+var savedState={};
+var profileReady=false;
+
 // ─── INIT ─────────────────────────────────────────────────
 (function init(){
   // Load from localStorage — tracktion_profile is source of truth (written by baseline.html)
@@ -786,7 +790,6 @@ var pState={
   document.querySelector('.page').addEventListener('change',checkForChanges);
 })();
 
-// ─── EDIT MODE ────────────────────────────────────────────
 // ─── CUSTOM PILL SELECTORS ────────────────────────────────
 function setPill(field, btn){
   document.getElementById(field).value=btn.dataset.val;
@@ -809,8 +812,7 @@ function setPillByValue(field, val){
   });
   return matched;
 }
-var savedState={};
-var profileReady=false;
+// ─── CHANGE DETECTION & SAVE BAR ─────────────────────────
 function captureState(){
   return {
     name:(document.getElementById('pr-name').value||'').trim(),
@@ -1051,6 +1053,14 @@ function prCalc(){
     train:{kcal:trainKcal,prot:prot,carb:trainCarb,fat:fat},
     rest:{kcal:restKcal,prot:prot,carb:restCarb,fat:fat}
   };
+  // Auto-save targets to localStorage (unless user has custom overrides)
+  if(!pState.isCustom){
+    try{localStorage.setItem('tracktion_targets',JSON.stringify({
+      trainKcal:trainKcal,trainProt:prot,trainCarb:trainCarb,trainFat:fat,
+      restKcal:restKcal,restProt:prot,restCarb:restCarb,restFat:fat,
+      isCustom:false
+    }));}catch(e){}
+  }
   // Show aggressive cut warning
   var cutWarn=document.getElementById('cut-warning');
   if(cutWarn){cutWarn.classList.toggle('show',goal<=-0.20);}
