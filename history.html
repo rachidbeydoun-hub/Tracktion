@@ -29,10 +29,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 /* WEEK SUMMARY */
 .week-card{background:white;border-radius:16px;margin:8px 12px;padding:14px 16px;border:0.5px solid rgba(0,0,0,0.06);box-shadow:0 1px 4px rgba(0,0,0,0.04);}
-.week-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
-.week-title{font-size:11px;font-weight:800;color:#1a1a2e;letter-spacing:0.5px;text-transform:uppercase;}
-.week-legend{display:flex;align-items:center;gap:8px;flex-shrink:0;}
-.week-legend-item{display:flex;align-items:center;gap:3px;font-size:9px;font-weight:800;color:#1a1a2e;}
+.week-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:6px;}
+.week-title{font-size:10px;font-weight:800;color:#1a1a2e;letter-spacing:0.3px;text-transform:uppercase;white-space:nowrap;}
+.week-legend{display:flex;align-items:center;gap:6px;flex-shrink:0;white-space:nowrap;}
+.week-legend-item{display:flex;align-items:center;gap:2px;font-size:8px;font-weight:800;color:#1a1a2e;white-space:nowrap;}
 
 /* WEEK BARS — fixed flex approach */
 .week-bars{display:flex;gap:6px;height:56px;align-items:stretch;}
@@ -126,8 +126,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <div class="week-header">
         <span class="week-title">THIS WEEK — CALORIES</span>
         <div class="week-legend">
-          <div class="week-legend-item"><span style="color:#0066ff;font-size:10px;">■</span> On track</div>
-          <div class="week-legend-item"><span style="color:#ff2244;font-size:10px;">■</span> Over</div>
+          <div class="week-legend-item"><span style="color:#0066ff;font-size:9px;">■</span> On track</div>
+          <div class="week-legend-item"><span style="color:#ff2244;font-size:9px;">■</span> Over</div>
         </div>
       </div>
       <div class="week-bars" id="week-bars"></div>
@@ -173,13 +173,13 @@ function normalizeTag(tag){
   return'Snack';
 }
 
-// Smart status — no false praise for very low calorie days
+// Smart status — checkmark only for a genuine on-target day (90-105%), not an under-logged one
 function getDayStatus(kcal, target){
   if(!target||target===0)return{text:'No target set',color:'#1a1a2e'};
   var pct=Math.round(kcal/target*100);
   var diff=kcal-target;
-  if(kcal>target) return{text:'⚠ +'+diff+' over target',color:'#ff2244'};
-  if(pct>=80)     return{text:'✅ '+pct+'% of target',color:'#34c97a'};
+  if(pct>105)     return{text:'⚠ +'+diff+' over target',color:'#ff2244'};
+  if(pct>=90)     return{text:'✅ '+pct+'% of target',color:'#34c97a'};
   if(pct>=50)     return{text:'⚠ '+pct+'% of target — low',color:'#ffb300'};
   return          {text:'⚠ '+pct+'% of target — very low',color:'#ff2244'};
 }
@@ -187,8 +187,8 @@ function getDayStatus(kcal, target){
 function getBarColor(kcal, target){
   if(!target)return'#0066ff';
   var pct=kcal/target*100;
-  if(kcal>target)return'#ff2244';
-  if(pct>=80)return'#0066ff';
+  if(pct>105)return'#ff2244';
+  if(pct>=90)return'#0066ff';
   if(pct>=50)return'#ffb300';
   return'#ff2244';
 }
