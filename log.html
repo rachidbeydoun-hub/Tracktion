@@ -25,7 +25,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .kcal-badge{font-family:monospace;font-size:12px;font-weight:700;color:#0066ff;background:#f0f5ff;padding:5px 11px;border-radius:20px;}
 
 /* MEAL TAG */
-.tag-wrap{padding:8px 12px 0;}
+.tag-wrap{padding:8px 12px 0;position:sticky;top:62px;z-index:40;background:#f4f5f8;}
 .tag-inner{background:white;border-radius:14px;padding:10px 12px;border:0.5px solid rgba(0,0,0,0.06);box-shadow:0 1px 4px rgba(0,0,0,0.04);}
 .tag-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;}
 .tag-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:#1a1a2e;}
@@ -186,8 +186,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .log-name-inp{flex:1;border:1px solid rgba(0,0,0,0.1);border-radius:8px;padding:7px 9px;font-size:12px;font-weight:700;font-family:inherit;color:#1a1a2e;}
 .log-name-inp:focus{outline:none;border-color:#0066ff;}
 .save-meal-row{padding:0 14px 12px;}
-.save-meal-btn{width:100%;padding:10px;background:#fff;color:#0066ff;border:1.5px solid #0066ff;border-radius:9px;font-size:12px;font-weight:800;font-family:inherit;letter-spacing:0.3px;cursor:pointer;}
-.save-meal-btn.saved{background:#0066ff;color:#fff;border-color:#0066ff;}
+.log-star-btn{width:36px;height:36px;border:none;background:transparent;border-radius:50%;font-size:19px;color:#1a1a2e;opacity:0.3;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.15s;}
+.log-star-btn:active{background:rgba(0,0,0,0.05);}
+.log-star-btn.saved{color:#ffb300;opacity:1;}
 
 .tip-bar{margin:0 12px 8px;padding:9px 12px;background:#fffbf0;border-radius:11px;border-left:3px solid #ffb300;font-size:11px;font-weight:500;color:#1a1a2e;line-height:1.5;display:none;}
 .tip-bar.show{display:block;}
@@ -220,7 +221,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .food-item:last-child{border-bottom:none;}
 .food-item:active{background:rgba(0,0,0,0.02);}
 .fi-left{flex:1;min-width:0;}
-.fi-name{font-size:13px;font-weight:700;color:#1a1a2e;margin-bottom:2px;}
+.fi-name{font-size:13px;font-weight:600;color:#1a1a2e;margin-bottom:2px;}
 .fi-portion{font-size:11px;font-weight:600;color:#1a1a2e;}
 .fi-nums{display:flex;gap:8px;margin-top:3px;flex-wrap:wrap;}
 .fi-num{font-family:monospace;font-size:11px;font-weight:700;}
@@ -283,10 +284,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .saved-empty-title{font-size:14px;font-weight:700;color:#1a1a2e;margin-bottom:6px;}
 .saved-empty-sub{font-size:12px;font-weight:500;color:#1a1a2e;opacity:0.5;line-height:1.5;}
 .saved-cat{background:white;border-radius:14px;border:0.5px solid rgba(0,0,0,0.06);margin-bottom:8px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.04);}
-.saved-cat-hdr{padding:10px 14px;display:flex;align-items:center;gap:8px;border-bottom:0.5px solid rgba(0,0,0,0.05);}
+.saved-cat-hdr{padding:10px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.saved-cat-hdr.expanded{border-bottom:0.5px solid rgba(0,0,0,0.05);}
 .saved-cat-ico{font-size:16px;}
 .saved-cat-title{font-size:11px;font-weight:800;color:#1a1a2e;letter-spacing:0.4px;text-transform:uppercase;flex:1;}
 .saved-cat-count{font-size:10px;font-weight:700;color:#1a1a2e;opacity:0.35;}
+.saved-cat-body{display:none;}
+.saved-cat-body.open{display:block;}
+.fi-del{width:26px;height:26px;background:transparent;color:#ff2244;opacity:0.4;border:none;border-radius:50%;font-size:13px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.15s;}
+.fi-del:active{opacity:1;background:rgba(255,34,68,0.08);}
 
 /* QUICK */
 .quick-box{background:white;border-radius:14px;padding:14px;margin-bottom:8px;border:0.5px solid rgba(0,0,0,0.06);box-shadow:0 1px 4px rgba(0,0,0,0.04);}
@@ -483,9 +489,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
         <div class="log-name-row">
           <span class="log-name-lbl">Log as</span>
           <input class="log-name-inp" id="log-name-inp" value="">
-        </div>
-        <div class="save-meal-row">
-          <button class="save-meal-btn" id="save-meal-btn" onclick="saveAsMeal('')">🍽 SAVE FULL PLATE AS MEAL</button>
+          <button class="log-star-btn" id="save-meal-btn" onclick="saveAsMeal('')" title="Save to My Foods" aria-label="Save to My Foods">☆</button>
         </div>
       </div>
 
@@ -528,9 +532,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
         <div class="log-name-row">
           <span class="log-name-lbl">Log as</span>
           <input class="log-name-inp" id="search-log-name-inp" value="">
-        </div>
-        <div class="save-meal-row">
-          <button class="save-meal-btn" id="search-save-meal-btn" onclick="saveAsMeal('search-')">🍽 SAVE FULL PLATE AS MEAL</button>
+          <button class="log-star-btn" id="search-save-meal-btn" onclick="saveAsMeal('search-')" title="Save to My Foods" aria-label="Save to My Foods">☆</button>
         </div>
       </div>
       <div id="pyramid-state">
@@ -947,7 +949,7 @@ async function analyzePhoto(){
 
 function showResults(result){
   var smb=document.getElementById('save-meal-btn');
-  if(smb){smb.textContent='🍽 SAVE FULL PLATE AS MEAL';smb.classList.remove('saved');smb.disabled=false;}
+  if(smb){smb.textContent='☆';smb.classList.remove('saved');smb.disabled=false;}
   // Confidence bar
   var pill=document.getElementById('conf-pill');
   var cls=result.confidence==='High'?'high':result.confidence==='Medium'?'med':'low';
@@ -1121,8 +1123,8 @@ function saveAsMeal(pfx){
     lib.unshift(f);
     try{localStorage.setItem('tracktion_food_library',JSON.stringify(lib));}catch(e){}
   }
-  if(btn){btn.textContent='✅ SAVED AS MEAL';btn.classList.add('saved');btn.disabled=true;}
-  showToast(exists?'Already saved as a meal':'🍽 Saved whole plate to My Meals');
+  if(btn){btn.textContent='★';btn.classList.add('saved');btn.disabled=true;}
+  showToast(exists?'Already saved to My Foods':'⭐ Saved to My Foods');
 }
 
 function toggleWarnNote(i,pfx){
@@ -1427,7 +1429,7 @@ async function analyzeSearch(){
     searchAiItems=result.items.map(function(item,i){return Object.assign({},item,{idx:i});});
     searchPendingFood={name:result.items.map(function(i){return i.name;}).join(' + '),kcal:result.total.kcal,prot:result.total.prot,carbs:result.total.carbs,fat:result.total.fat};
     var ssmb=document.getElementById('search-save-meal-btn');
-    if(ssmb){ssmb.textContent='🍽 SAVE FULL PLATE AS MEAL';ssmb.classList.remove('saved');ssmb.disabled=false;}
+    if(ssmb){ssmb.textContent='☆';ssmb.classList.remove('saved');ssmb.disabled=false;}
     // Show results
     var pill=document.getElementById('search-conf-pill');
     var cls=result.confidence==='High'?'high':result.confidence==='Medium'?'med':'low';
@@ -1465,7 +1467,7 @@ function renderSaved(){
   var seen={};
   var recent=loggedFoods.slice(-15).reverse().filter(function(f){if(seen[f.name])return false;seen[f.name]=true;return true;}).slice(0,5);
   recentWrap.innerHTML=recent.length?'<span class="sec-lbl" style="margin-top:4px;">🕐 Recently logged</span>'
-    +'<div class="saved-cat">'+recent.map(function(f){return savedRow(f);}).join('')+'</div>':'';
+    +'<div class="saved-cat">'+recent.map(function(f){return savedRow(f,false);}).join('')+'</div>':'';
   if(!lib.length){emptyEl.style.display='block';
     ['protein','carbs','salads','fibers','fats','snack','meal','top','drink'].forEach(function(k){var el=document.getElementById('saved-'+k);if(el)el.innerHTML='';});
     return;}
@@ -1473,14 +1475,45 @@ function renderSaved(){
   SAVED_CATS.forEach(function(cat){
     var el=document.getElementById('saved-'+cat.key);if(!el)return;
     var items=lib.filter(function(f){return f.cat===cat.key;}).slice(0,10);
-    el.innerHTML=items.length?'<span class="sec-lbl">'+cat.ico+' '+cat.lbl+'</span>'
-      +'<div class="saved-cat">'+items.map(function(f){return savedRow(f);}).join('')+'</div>':'';
+    el.innerHTML=items.length?catBlock(cat,items):'';
   });
 }
 
-function savedRow(f){
+function catBlock(cat,items){
+  return '<div class="saved-cat">'
+    +'<div class="saved-cat-hdr" onclick="toggleSavedCat(\''+cat.key+'\')" id="hdr-'+cat.key+'">'
+    +'<span class="saved-cat-ico">'+cat.ico+'</span>'
+    +'<span class="saved-cat-title">'+cat.lbl+'</span>'
+    +'<span class="saved-cat-count">'+items.length+'</span>'
+    +'<span class="photo-chev" id="chev-'+cat.key+'">▾</span>'
+    +'</div>'
+    +'<div class="saved-cat-body" id="body-'+cat.key+'">'+items.map(function(f){return savedRow(f,true);}).join('')+'</div>'
+    +'</div>';
+}
+
+function toggleSavedCat(key){
+  var body=document.getElementById('body-'+key);
+  var chev=document.getElementById('chev-'+key);
+  var hdr=document.getElementById('hdr-'+key);
+  if(!body)return;
+  var open=body.classList.contains('open');
+  body.classList.toggle('open',!open);
+  if(chev)chev.classList.toggle('open',!open);
+  if(hdr)hdr.classList.toggle('expanded',!open);
+}
+
+function deleteSavedFood(key){
+  var lib=[];try{lib=JSON.parse(localStorage.getItem('tracktion_food_library')||'[]');}catch(e){}
+  lib=lib.filter(function(x){return encodeURIComponent(x.savedAt||x.name)!==key;});
+  try{localStorage.setItem('tracktion_food_library',JSON.stringify(lib));}catch(e){}
+  renderSaved();
+  showToast('Removed from My Foods');
+}
+
+function savedRow(f,showDelete){
   var safe=JSON.parse(JSON.stringify(f));
   var enc=encodeURIComponent(JSON.stringify(safe));
+  var delKey=encodeURIComponent(f.savedAt||f.name);
   return '<div class="food-item">'
     +'<div class="fi-left">'
     +'<div class="fi-name">'+f.name+'</div>'
@@ -1491,7 +1524,8 @@ function savedRow(f){
     +'<span class="fi-num" style="color:#2d8fff;">C '+(f.carbs||0)+'g</span>'
     +'<span class="fi-num" style="color:#f5a623;">F '+(f.fat||0)+'g</span>'
     +'</div></div>'
-    +'<button class="fi-add" onclick="safeAddFood(decodeURIComponent(\''+enc+'\'),this)" aria-label="Add">+</button>'
+    +(showDelete?'<button class="fi-del" onclick="event.stopPropagation();deleteSavedFood(\''+delKey+'\')" aria-label="Delete">🗑</button>':'')
+    +'<button class="fi-add" onclick="event.stopPropagation();safeAddFood(decodeURIComponent(\''+enc+'\'),this)" aria-label="Add">+</button>'
     +'</div>';
 }
 
