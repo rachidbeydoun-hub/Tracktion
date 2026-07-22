@@ -185,6 +185,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .log-name-lbl{font-size:11px;font-weight:600;color:#1a1a2e;white-space:nowrap;}
 .log-name-inp{flex:1;border:1px solid rgba(0,0,0,0.1);border-radius:8px;padding:7px 9px;font-size:12px;font-weight:700;font-family:inherit;color:#1a1a2e;}
 .log-name-inp:focus{outline:none;border-color:#0066ff;}
+.save-meal-row{padding:0 14px 12px;}
+.save-meal-btn{width:100%;padding:10px;background:#fff;color:#0066ff;border:1.5px solid #0066ff;border-radius:9px;font-size:12px;font-weight:800;font-family:inherit;letter-spacing:0.3px;cursor:pointer;}
+.save-meal-btn.saved{background:#0066ff;color:#fff;border-color:#0066ff;}
 
 .tip-bar{margin:0 12px 8px;padding:9px 12px;background:#fffbf0;border-radius:11px;border-left:3px solid #ffb300;font-size:11px;font-weight:500;color:#1a1a2e;line-height:1.5;display:none;}
 .tip-bar.show{display:block;}
@@ -481,6 +484,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
           <span class="log-name-lbl">Log as</span>
           <input class="log-name-inp" id="log-name-inp" value="">
         </div>
+        <div class="save-meal-row">
+          <button class="save-meal-btn" id="save-meal-btn" onclick="saveAsMeal('')">🍽 SAVE FULL PLATE AS MEAL</button>
+        </div>
       </div>
 
       <div class="tip-bar" id="tip-bar"></div>
@@ -522,6 +528,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
         <div class="log-name-row">
           <span class="log-name-lbl">Log as</span>
           <input class="log-name-inp" id="search-log-name-inp" value="">
+        </div>
+        <div class="save-meal-row">
+          <button class="save-meal-btn" id="search-save-meal-btn" onclick="saveAsMeal('search-')">🍽 SAVE FULL PLATE AS MEAL</button>
         </div>
       </div>
       <div id="pyramid-state">
@@ -937,6 +946,8 @@ async function analyzePhoto(){
 }
 
 function showResults(result){
+  var smb=document.getElementById('save-meal-btn');
+  if(smb){smb.textContent='🍽 SAVE FULL PLATE AS MEAL';smb.classList.remove('saved');smb.disabled=false;}
   // Confidence bar
   var pill=document.getElementById('conf-pill');
   var cls=result.confidence==='High'?'high':result.confidence==='Medium'?'med':'low';
@@ -1086,6 +1097,32 @@ function saveStarItem(i,pfx){
   if(drawer)drawer.classList.remove('show');
   var sb=document.getElementById(pfx+'ri-star-'+i);if(sb){sb.textContent='★';sb.classList.add('saved');}
   showToast(exists?'Already saved':'⭐ Saved to '+getCatLabel(catKey));
+}
+
+function saveAsMeal(pfx){
+  pfx=pfx||'';
+  var items=pfx?searchAiItems:aiItems;
+  var pending=pfx?searchPendingFood:pendingFood;
+  var btn=document.getElementById(pfx+'save-meal-btn');
+  if(!items||!items.length||!pending){showToast('Analyze a meal first');return;}
+  var nameInp=document.getElementById(pfx?'search-log-name-inp':'log-name-inp');
+  var mealName=(nameInp&&nameInp.value)||pending.name||'My Meal';
+  var lib=[];try{lib=JSON.parse(localStorage.getItem('tracktion_food_library')||'[]');}catch(e){}
+  var exists=lib.some(function(x){return x.name===mealName&&x.cat==='meal';});
+  if(!exists){
+    var f={
+      name:mealName,
+      portion:items.length+' item'+(items.length>1?'s':''),
+      kcal:pending.kcal,prot:pending.prot,carbs:pending.carbs,fat:pending.fat,
+      cat:'meal',
+      components:items.map(function(it){return it.name;}),
+      savedAt:new Date().toISOString()
+    };
+    lib.unshift(f);
+    try{localStorage.setItem('tracktion_food_library',JSON.stringify(lib));}catch(e){}
+  }
+  if(btn){btn.textContent='✅ SAVED AS MEAL';btn.classList.add('saved');btn.disabled=true;}
+  showToast(exists?'Already saved as a meal':'🍽 Saved whole plate to My Meals');
 }
 
 function toggleWarnNote(i,pfx){
@@ -1389,6 +1426,8 @@ async function analyzeSearch(){
     var result=JSON.parse(raw);
     searchAiItems=result.items.map(function(item,i){return Object.assign({},item,{idx:i});});
     searchPendingFood={name:result.items.map(function(i){return i.name;}).join(' + '),kcal:result.total.kcal,prot:result.total.prot,carbs:result.total.carbs,fat:result.total.fat};
+    var ssmb=document.getElementById('search-save-meal-btn');
+    if(ssmb){ssmb.textContent='🍽 SAVE FULL PLATE AS MEAL';ssmb.classList.remove('saved');ssmb.disabled=false;}
     // Show results
     var pill=document.getElementById('search-conf-pill');
     var cls=result.confidence==='High'?'high':result.confidence==='Medium'?'med':'low';
