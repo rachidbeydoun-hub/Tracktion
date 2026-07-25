@@ -292,6 +292,7 @@ a[href]{transition:opacity 0.1s ease;}
 
 <script>
 const MEAL_COLORS={Breakfast:'#2d8fff',Lunch:'#34c97a',Dinner:'#ff2244',Snack:'#ffb300'};
+const MEAL_ICONS={Breakfast:'☀️',Lunch:'🍽️',Dinner:'🌆',Snack:'🌙'};
 
 // 4 FIXED RINGS — locked colors, locked identity
 // outer=red=kcal, r2=green=prot, r3=blue=carbs, inner=gold=fat
@@ -763,7 +764,6 @@ function renderLog(){
   const favNames=new Set(favMeals.map(function(f){return f.name;}));
   list.innerHTML=loggedFoods.map(function(m,i){
     const tag=normalizeTag(m.mealTag);
-    const color=MEAL_COLORS[tag]||'#0066ff';
     const isFav=favNames.has(m.name);
     const isOpen=expandedIdx===i;
     const isEditing=editingIdx===i;
@@ -796,11 +796,10 @@ function renderLog(){
         +'</div>';
     }
     return '<div class="meal" onclick="toggleMealExpand('+i+')">'
-      +'<div class="meal-accent" style="background:'+color+';"></div>'
       +'<div class="meal-main">'
       +'<div class="meal-left">'
-      +'<div class="meal-line1"><span class="meal-name">'+escapeHtml(m.name||'')+'</span><span class="meal-kcal-lbl">'+(m.kcal||0)+' kcal</span></div>'
-      +'<div class="meal-line2"><span class="meal-tag-lbl">'+tag+' \u00b7 '+(m.time||'')+'</span><div class="meal-dot"></div>'
+      +'<div class="meal-line1"><span style="font-size:14px;">'+(MEAL_ICONS[tag]||'🌙')+'</span><span class="meal-name">'+escapeHtml(m.name||'')+'</span><span class="meal-kcal-lbl">'+(m.kcal||0)+' kcal</span></div>'
+      +'<div class="meal-line2" style="padding-left:20px;"><span class="meal-tag-lbl">'+tag+' \u00b7 '+(m.time||'')+'</span><div class="meal-dot"></div>'
       +'<span style="font-size:11px;"><span style="color:#34c97a;font-weight:700;">P'+(m.prot||0)+'</span> \u00b7 <span style="color:#2d8fff;font-weight:700;">C'+(m.carbs||0)+'</span> \u00b7 <span style="color:#f5a623;font-weight:700;">F'+(m.fat||0)+'</span></span>'
       +'</div></div>'
       +'<div class="meal-actions">'

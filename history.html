@@ -31,12 +31,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .week-card{background:white;border-radius:16px;margin:8px 12px;padding:14px 16px;border:0.5px solid rgba(0,0,0,0.06);box-shadow:0 1px 4px rgba(0,0,0,0.04);}
 .week-title{font-size:10px;font-weight:800;color:#1a1a2e;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:10px;display:block;}
 .stat-row{display:flex;gap:8px;}
-.stat-tile{flex:1;background:#f4f5f8;border-radius:10px;padding:10px;text-align:center;border:1px solid transparent;}
+.stat-tile{flex:1;background:rgba(0,102,255,0.06);border-radius:10px;padding:10px;text-align:center;border:1px solid rgba(0,102,255,0.12);}
 .stat-tile.tappable{cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent;transition:transform 0.1s;}
 .stat-tile.tappable:active{transform:scale(0.97);}
 .stat-val{font-family:monospace;font-size:16px;font-weight:700;color:#0066ff;display:block;}
-.stat-lbl{font-size:9px;font-weight:800;color:#1a1a2e;opacity:0.5;display:block;margin-top:2px;letter-spacing:0.3px;}
-.stat-hint{font-size:9px;color:#1a1a2e;opacity:0.35;text-align:center;margin-top:8px;}
+.stat-lbl{font-size:9px;font-weight:800;color:#1a1a2e;opacity:0.65;display:block;margin-top:2px;letter-spacing:0.3px;}
+.stat-hint{font-size:9px;color:#1a1a2e;opacity:0.5;text-align:center;margin-top:8px;}
 
 /* DENSE HISTORY LIST */
 .hist-list-card{background:white;border-radius:16px;margin:8px 12px;border:0.5px solid rgba(0,0,0,0.06);box-shadow:0 1px 4px rgba(0,0,0,0.04);overflow:hidden;}
@@ -44,11 +44,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .hist-row:last-child{border-bottom:none;}
 .hist-row:active{background:#f8f9fb;}
 .hist-date{font-size:13px;font-weight:600;color:#1a1a2e;}
-.hist-sub{font-size:10px;color:#1a1a2e;opacity:0.45;margin-top:1px;}
+.hist-sub{font-size:10px;color:#1a1a2e;opacity:0.6;margin-top:1px;}
 .hist-val-wrap{text-align:right;flex-shrink:0;padding-left:10px;}
 .hist-val{font-family:monospace;font-size:15px;font-weight:700;}
 .hist-val-unit{font-size:10px;font-weight:600;opacity:0.6;}
-.hist-val-sub{font-size:10px;color:#1a1a2e;opacity:0.5;margin-top:1px;}
+.hist-val-sub{font-size:10px;color:#1a1a2e;opacity:0.6;margin-top:1px;}
 
 /* DAY DETAIL VIEW */
 .detail-view{display:none;}
@@ -151,6 +151,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 <script>
 var MEAL_COLORS={Breakfast:'#2d8fff',Lunch:'#34c97a',Dinner:'#ff2244',Snack:'#ffb300'};
+var MEAL_ICONS={Breakfast:'☀️',Lunch:'🍽️',Dinner:'🌆',Snack:'🌙'};
 
 var MACRO_DEFS={
   kcal:{label:'Avg calories',short:'kcal',unit:'',color:'#ff0000'},
@@ -229,12 +230,10 @@ function showDetail(key){
     '<span style="font-size:10px;font-weight:800;color:#1a1a2e;letter-spacing:1px;text-transform:uppercase;margin:4px 12px 8px;display:block;">'+d.foods.length+' meals logged</span>'+
     d.foods.map(function(m){
       var tag=normalizeTag(m.mealTag);
-      var color=MEAL_COLORS[tag]||'#ffb300';
       return'<div class="meal">'+
-        '<div class="meal-accent" style="background:'+color+';"></div>'+
         '<div class="meal-left">'+
-          '<div class="meal-line1"><span class="meal-name">'+m.name+'</span><span class="meal-kcal-lbl">'+m.kcal+' kcal</span></div>'+
-          '<div class="meal-line2">'+
+          '<div class="meal-line1"><span style="font-size:14px;">'+(MEAL_ICONS[tag]||'🌙')+'</span><span class="meal-name">'+m.name+'</span><span class="meal-kcal-lbl">'+m.kcal+' kcal</span></div>'+
+          '<div class="meal-line2" style="padding-left:20px;">'+
             '<span class="meal-tag-lbl">'+tag+' · '+(m.time||'')+'</span>'+
             '<div class="meal-dot"></div>'+
             '<span style="font-size:11px;">'+
