@@ -291,7 +291,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .saved-cat-count{font-size:10px;font-weight:700;color:#1a1a2e;opacity:0.35;}
 .saved-cat-body{display:none;}
 .saved-cat-body.open{display:block;}
-.fi-del{width:26px;height:26px;background:transparent;color:#ff2244;opacity:0.4;border:none;border-radius:50%;font-size:13px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.15s;}
+.fi-del{width:26px;height:26px;background:transparent;color:#e02020;opacity:0.85;border:none;border-radius:50%;font-size:13px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.15s;}
 .fi-del:active{opacity:1;background:rgba(255,34,68,0.08);}
 
 /* QUICK */
@@ -1465,7 +1465,7 @@ function renderSaved(){
   var emptyEl=document.getElementById('saved-empty');
   var recentWrap=document.getElementById('saved-recent');
   var seen={};
-  var recent=loggedFoods.slice(-15).reverse().filter(function(f){if(seen[f.name])return false;seen[f.name]=true;return true;}).slice(0,5);
+  var recent=loggedFoods.slice(-15).reverse().filter(function(f){if(seen[f.name])return false;seen[f.name]=true;return true;}).slice(0,2);
   recentWrap.innerHTML=recent.length?'<span class="sec-lbl" style="margin-top:4px;">🕐 Recently logged</span>'
     +'<div class="saved-cat">'+recent.map(function(f){return savedRow(f,false);}).join('')+'</div>':'';
   if(!lib.length){emptyEl.style.display='block';
