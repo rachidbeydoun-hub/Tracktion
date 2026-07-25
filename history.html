@@ -35,8 +35,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .stat-tile.tappable{cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent;transition:transform 0.1s;}
 .stat-tile.tappable:active{transform:scale(0.97);}
 .stat-val{font-family:monospace;font-size:16px;font-weight:700;color:#0066ff;display:block;}
-.stat-lbl{font-size:9px;font-weight:800;color:#1a1a2e;opacity:0.65;display:block;margin-top:2px;letter-spacing:0.3px;}
-.stat-hint{font-size:9px;color:#1a1a2e;opacity:0.5;text-align:center;margin-top:8px;}
+.stat-lbl{font-size:9px;font-weight:800;color:#1a1a2e;opacity:0.8;display:block;margin-top:2px;letter-spacing:0.3px;}
+.stat-hint{font-size:9px;color:#1a1a2e;opacity:0.75;text-align:center;margin-top:8px;}
 
 /* DENSE HISTORY LIST */
 .hist-list-card{background:white;border-radius:16px;margin:8px 12px;border:0.5px solid rgba(0,0,0,0.06);box-shadow:0 1px 4px rgba(0,0,0,0.04);overflow:hidden;}
@@ -44,11 +44,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .hist-row:last-child{border-bottom:none;}
 .hist-row:active{background:#f8f9fb;}
 .hist-date{font-size:13px;font-weight:600;color:#1a1a2e;}
-.hist-sub{font-size:10px;color:#1a1a2e;opacity:0.6;margin-top:1px;}
+.hist-sub{font-size:10px;color:#1a1a2e;opacity:0.8;margin-top:1px;}
 .hist-val-wrap{text-align:right;flex-shrink:0;padding-left:10px;}
 .hist-val{font-family:monospace;font-size:15px;font-weight:700;}
-.hist-val-unit{font-size:10px;font-weight:600;opacity:0.6;}
-.hist-val-sub{font-size:10px;color:#1a1a2e;opacity:0.6;margin-top:1px;}
+.hist-val-unit{font-size:10px;font-weight:600;opacity:0.8;}
+.hist-val-sub{font-size:10px;color:#1a1a2e;opacity:0.8;margin-top:1px;}
+.outlier-badge{font-size:9px;font-weight:800;color:#a35c00;background:rgba(255,179,0,0.22);padding:2px 6px;border-radius:6px;display:inline-block;margin-top:2px;}
 
 /* DAY DETAIL VIEW */
 .detail-view{display:none;}
@@ -327,6 +328,11 @@ function renderHistory(){
       primaryVal=d.totals[selectedMacro]||0;primaryUnit='g '+def.short;
       subVal=d.totals.kcal+' kcal';
     }
+    var isOutlier=target&&(pct>110||pct<90);
+    var arrow=pct>110?'▲':'▼';
+    var subHtml=isOutlier
+      ?'<span class="outlier-badge">'+arrow+' '+subVal+'</span>'
+      :'<div class="hist-val-sub">'+subVal+'</div>';
     return'<div class="hist-row" onclick="showDetail(\''+key+'\')">'+
       '<div>'+
         '<div class="hist-date">'+friendlyDate(key)+'</div>'+
@@ -334,7 +340,7 @@ function renderHistory(){
       '</div>'+
       '<div class="hist-val-wrap">'+
         '<div class="hist-val" style="color:'+def.color+';">'+primaryVal+' <span class="hist-val-unit">'+primaryUnit+'</span></div>'+
-        '<div class="hist-val-sub">'+subVal+'</div>'+
+        subHtml+
       '</div>'+
     '</div>';
   }).join('')+'</div>';
