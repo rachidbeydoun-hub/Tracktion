@@ -27,56 +27,43 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .card{background:white;border-radius:16px;margin:8px 12px;padding:16px;border:0.5px solid rgba(0,0,0,0.06);box-shadow:0 1px 4px rgba(0,0,0,0.04);}
 .page-title{font-size:10px;font-weight:800;color:#1a1a2e;letter-spacing:1.2px;text-transform:uppercase;margin:12px 12px 4px;display:block;}
 
-/* WEEK SUMMARY */
+/* WEEK STAT TILES */
 .week-card{background:white;border-radius:16px;margin:8px 12px;padding:14px 16px;border:0.5px solid rgba(0,0,0,0.06);box-shadow:0 1px 4px rgba(0,0,0,0.04);}
-.week-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:6px;}
-.week-title{font-size:10px;font-weight:800;color:#1a1a2e;letter-spacing:0.3px;text-transform:uppercase;white-space:nowrap;}
-.week-legend{display:flex;align-items:center;gap:6px;flex-shrink:0;white-space:nowrap;}
-.week-legend-item{display:flex;align-items:center;gap:2px;font-size:8px;font-weight:800;color:#1a1a2e;white-space:nowrap;}
+.week-title{font-size:10px;font-weight:800;color:#1a1a2e;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:10px;display:block;}
+.stat-row{display:flex;gap:8px;}
+.stat-tile{flex:1;background:#f4f5f8;border-radius:10px;padding:10px;text-align:center;border:1px solid transparent;}
+.stat-tile.tappable{cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent;transition:transform 0.1s;}
+.stat-tile.tappable:active{transform:scale(0.97);}
+.stat-val{font-family:monospace;font-size:16px;font-weight:700;color:#0066ff;display:block;}
+.stat-lbl{font-size:9px;font-weight:800;color:#1a1a2e;opacity:0.5;display:block;margin-top:2px;letter-spacing:0.3px;}
+.stat-hint{font-size:9px;color:#1a1a2e;opacity:0.35;text-align:center;margin-top:8px;}
 
-/* WEEK BARS — fixed flex approach */
-.week-bars{display:flex;gap:6px;height:56px;align-items:stretch;}
-.week-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;}
-.week-bar-track{
-  flex:1;
-  width:100%;
-  background:#f0f0f4;
-  border-radius:6px;
-  overflow:hidden;
-  display:flex;
-  flex-direction:column;
-  justify-content:flex-end;
-}
-.week-bar-fill{
-  width:100%;
-  border-radius:6px;
-  transition:height 0.4s ease;
-  min-height:0;
-}
-.week-bar-lbl{font-size:8px;font-weight:800;color:#1a1a2e;}
-.week-bar-kcal{font-size:7px;font-weight:800;color:#1a1a2e;}
+/* DENSE HISTORY LIST */
+.hist-list-card{background:white;border-radius:16px;margin:8px 12px;border:0.5px solid rgba(0,0,0,0.06);box-shadow:0 1px 4px rgba(0,0,0,0.04);overflow:hidden;}
+.hist-row{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:0.5px solid rgba(0,0,0,0.05);cursor:pointer;transition:background 0.1s;}
+.hist-row:last-child{border-bottom:none;}
+.hist-row:active{background:#f8f9fb;}
+.hist-date{font-size:13px;font-weight:600;color:#1a1a2e;}
+.hist-sub{font-size:10px;color:#1a1a2e;opacity:0.45;margin-top:1px;}
+.hist-val-wrap{text-align:right;flex-shrink:0;padding-left:10px;}
+.hist-val{font-family:monospace;font-size:15px;font-weight:700;}
+.hist-val-unit{font-size:10px;font-weight:600;opacity:0.6;}
+.hist-val-sub{font-size:10px;color:#1a1a2e;opacity:0.5;margin-top:1px;}
 
-/* DAY CARDS */
-.day-card{background:white;border-radius:16px;margin:0 12px 8px;padding:14px 16px;border:0.5px solid rgba(0,0,0,0.06);box-shadow:0 1px 4px rgba(0,0,0,0.04);cursor:pointer;transition:transform 0.1s;}
-.day-card:active{transform:scale(0.99);}
+/* DAY DETAIL VIEW */
+.detail-view{display:none;}
+.detail-view.open{display:block;}
+.back-btn{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:800;color:#0066ff;cursor:pointer;padding:10px 12px 4px;background:none;border:none;}
 .day-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
 .day-date{font-size:14px;font-weight:800;color:#1a1a2e;}
-.day-tag{font-size:10px;font-weight:800;padding:3px 10px;border-radius:10px;}
-.day-tag.train{background:#eef4ff;color:#0066ff;}
-.day-tag.rest{background:#f0fff5;color:#1a9e5c;}
+.day-tag{font-size:10px;font-weight:800;padding:3px 10px;border-radius:10px;background:#f0f5ff;color:#0066ff;}
 .day-macros{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-bottom:10px;}
 .day-macro{text-align:center;}
 .day-macro-val{font-family:monospace;font-size:16px;font-weight:700;display:block;}
 .day-macro-lbl{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:0.3px;display:block;margin-top:1px;}
-.day-bar{height:5px;border-radius:4px;background:#f0f0f0;overflow:hidden;margin-top:4px;}
-.day-bar-fill{height:100%;border-radius:4px;transition:width 0.4s ease;}
-.day-status{font-size:10px;font-weight:800;margin-top:5px;}
-.day-meals-count{font-size:10px;font-weight:700;color:#1a1a2e;margin-top:3px;}
-
-/* DETAIL VIEW */
-.detail-view{display:none;}
-.detail-view.open{display:block;}
-.back-btn{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:800;color:#0066ff;cursor:pointer;padding:10px 12px 4px;background:none;border:none;}
+.day-bar{height:5px;border-radius:4px;background:#eef0f5;overflow:hidden;margin-top:4px;}
+.day-bar-fill{height:100%;border-radius:4px;background:#0066ff;transition:width 0.4s ease;}
+.day-status{font-size:11px;font-weight:700;margin-top:6px;color:#1a1a2e;}
 
 /* MEAL CARD */
 .meal{background:white;border-radius:14px;margin:0 12px 8px;padding:13px 12px 13px 18px;border:0.5px solid rgba(0,0,0,0.06);box-shadow:0 1px 4px rgba(0,0,0,0.04);display:flex;align-items:center;position:relative;overflow:hidden;}
@@ -123,14 +110,22 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <div id="list-view">
     <span class="page-title">History</span>
     <div class="week-card" id="week-summary" style="display:none;">
-      <div class="week-header">
-        <span class="week-title">THIS WEEK — CALORIES</span>
-        <div class="week-legend">
-          <div class="week-legend-item"><span style="color:#0066ff;font-size:9px;">■</span> On track</div>
-          <div class="week-legend-item"><span style="color:#ff2244;font-size:9px;">■</span> Over</div>
+      <span class="week-title">This week</span>
+      <div class="stat-row">
+        <div class="stat-tile">
+          <span class="stat-val" id="stat-days" style="color:#0066ff;">0/7</span>
+          <span class="stat-lbl">Days logged</span>
+        </div>
+        <div class="stat-tile tappable" id="stat-macro-tile" onclick="cycleMacro()">
+          <span class="stat-val" id="stat-macro-val">—</span>
+          <span class="stat-lbl" id="stat-macro-lbl">Avg calories</span>
+        </div>
+        <div class="stat-tile">
+          <span class="stat-val" id="stat-target" style="color:#0066ff;">—</span>
+          <span class="stat-lbl">Avg target</span>
         </div>
       </div>
-      <div class="week-bars" id="week-bars"></div>
+      <div class="stat-hint">tap the middle tile to switch macro ⇄</div>
     </div>
     <div id="history-list"></div>
   </div>
@@ -157,6 +152,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <script>
 var MEAL_COLORS={Breakfast:'#2d8fff',Lunch:'#34c97a',Dinner:'#ff2244',Snack:'#ffb300'};
 
+var MACRO_DEFS={
+  kcal:{label:'Avg calories',short:'kcal',unit:'',color:'#ff0000'},
+  prot:{label:'Avg protein',short:'prot',unit:'g',color:'#34c97a'},
+  carbs:{label:'Avg carbs',short:'carbs',unit:'g',color:'#2d8fff'},
+  fat:{label:'Avg fat',short:'fat',unit:'g',color:'#f5a623'}
+};
+var MACRO_ORDER=['kcal','prot','carbs','fat'];
+var selectedMacro='kcal';
+try{selectedMacro=localStorage.getItem('tracktion_hist_macro')||'kcal';}catch(e){}
+if(MACRO_ORDER.indexOf(selectedMacro)===-1)selectedMacro='kcal';
+
+function cycleMacro(){
+  var idx=(MACRO_ORDER.indexOf(selectedMacro)+1)%MACRO_ORDER.length;
+  selectedMacro=MACRO_ORDER[idx];
+  try{localStorage.setItem('tracktion_hist_macro',selectedMacro);}catch(e){}
+  renderHistory();
+}
+
 function friendlyDate(key){
   var d=new Date(key+'T12:00:00');
   var days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
@@ -173,24 +186,15 @@ function normalizeTag(tag){
   return'Snack';
 }
 
-// Smart status — checkmark only for a genuine on-target day (90-105%), not an under-logged one
+// Status text only — icon carries the meaning, no color-coded judgment
 function getDayStatus(kcal, target){
-  if(!target||target===0)return{text:'No target set',color:'#1a1a2e'};
+  if(!target||target===0)return{text:'No target set'};
   var pct=Math.round(kcal/target*100);
   var diff=kcal-target;
-  if(pct>105)     return{text:'⚠ +'+diff+' over target',color:'#ff2244'};
-  if(pct>=90)     return{text:'✅ '+pct+'% of target',color:'#34c97a'};
-  if(pct>=50)     return{text:'⚠ '+pct+'% of target — low',color:'#ffb300'};
-  return          {text:'⚠ '+pct+'% of target — very low',color:'#ff2244'};
-}
-
-function getBarColor(kcal, target){
-  if(!target)return'#0066ff';
-  var pct=kcal/target*100;
-  if(pct>105)return'#ff2244';
-  if(pct>=90)return'#0066ff';
-  if(pct>=50)return'#ffb300';
-  return'#ff2244';
+  if(pct>105)     return{text:'⚠ +'+diff+' over target'};
+  if(pct>=90)     return{text:'✅ '+pct+'% of target'};
+  if(pct>=50)     return{text:'⚠ '+pct+'% of target — low'};
+  return          {text:'⚠ '+pct+'% of target — very low'};
 }
 
 function showList(){
@@ -207,12 +211,11 @@ function showDetail(key){
   detail.classList.add('open');
   var pct=Math.min(100,Math.round(d.totals.kcal/(d.target||2500)*100));
   var status=getDayStatus(d.totals.kcal,d.target);
-  var barColor=getBarColor(d.totals.kcal,d.target);
   document.getElementById('detail-content').innerHTML=
     '<div class="card" style="margin-top:0;">'+
       '<div class="day-header">'+
         '<span class="day-date">'+friendlyDate(key)+'</span>'+
-        '<span class="day-tag '+d.dayType+'">'+(d.dayType==='train'?'⚡ TRAINING':'🥗 REST')+'</span>'+
+        '<span class="day-tag">'+(d.dayType==='train'?'⚡ TRAINING':'🌙 REST')+'</span>'+
       '</div>'+
       '<div class="day-macros">'+
         '<div class="day-macro"><span class="day-macro-val" style="color:#ff0000;">'+d.totals.kcal+'</span><span class="day-macro-lbl" style="color:#ff0000;">kcal</span></div>'+
@@ -220,8 +223,8 @@ function showDetail(key){
         '<div class="day-macro"><span class="day-macro-val" style="color:#2d8fff;">'+d.totals.carbs+'g</span><span class="day-macro-lbl" style="color:#2d8fff;">carbs</span></div>'+
         '<div class="day-macro"><span class="day-macro-val" style="color:#f5a623;">'+d.totals.fat+'g</span><span class="day-macro-lbl" style="color:#f5a623;">fat</span></div>'+
       '</div>'+
-      '<div class="day-bar"><div class="day-bar-fill" style="width:'+pct+'%;background:'+barColor+';"></div></div>'+
-      '<div class="day-status" style="color:'+status.color+';">'+status.text+'</div>'+
+      '<div class="day-bar"><div class="day-bar-fill" style="width:'+pct+'%;"></div></div>'+
+      '<div class="day-status">'+status.text+'</div>'+
     '</div>'+
     '<span style="font-size:10px;font-weight:800;color:#1a1a2e;letter-spacing:1px;text-transform:uppercase;margin:4px 12px 8px;display:block;">'+d.foods.length+' meals logged</span>'+
     d.foods.map(function(m){
@@ -252,6 +255,7 @@ function renderHistory(){
   var list=document.getElementById('history-list');
 
   if(!keys.length){
+    document.getElementById('week-summary').style.display='none';
     list.innerHTML='<div class="empty-hist">'+
       '<span class="empty-hist-icon">📅</span>'+
       '<div class="empty-hist-title">No history yet</div>'+
@@ -260,13 +264,12 @@ function renderHistory(){
     return;
   }
 
-  // TRUE 7-day calendar — last 7 days from today, regardless of whether logged
-  var weekEl=document.getElementById('week-summary');
-  weekEl.style.display='block';
+  var def=MACRO_DEFS[selectedMacro];
+
+  // This week — last 7 calendar days
   var targets={};
   try{targets=JSON.parse(localStorage.getItem('tracktion_targets')||'{}');}catch(e){}
   var defaultTarget=targets.trainKcal||2500;
-  var maxKcal=defaultTarget;
 
   var last7=[];
   var today=new Date();
@@ -276,50 +279,66 @@ function renderHistory(){
     var y=d.getFullYear();
     var mo=String(d.getMonth()+1).padStart(2,'0');
     var dy=String(d.getDate()).padStart(2,'0');
-    var key=y+'-'+mo+'-'+dy;
-    last7.push(key);
-    if(history[key]&&history[key].totals.kcal>maxKcal)maxKcal=history[key].totals.kcal;
+    last7.push(y+'-'+mo+'-'+dy);
   }
 
-  document.getElementById('week-bars').innerHTML=last7.map(function(k){
-    var hasData=!!(history[k]&&history[k].totals);
-    var kcal=hasData?history[k].totals.kcal:0;
-    var target=hasData?(history[k].target||defaultTarget):defaultTarget;
-    var pct=hasData?Math.round(kcal/maxKcal*100):0;
-    var barColor=hasData?getBarColor(kcal,target):'#e0e0e0';
-    var dayName=new Date(k+'T12:00:00').toLocaleDateString('en-US',{weekday:'short'});
-    return'<div class="week-bar-wrap">'+
-      '<div class="week-bar-track">'+
-        '<div class="week-bar-fill" style="height:'+pct+'%;background:'+barColor+';"></div>'+
-      '</div>'+
-      '<span class="week-bar-lbl">'+dayName+'</span>'+
-      '<span class="week-bar-kcal">'+(hasData?kcal:'—')+'</span>'+
-    '</div>';
-  }).join('');
+  var daysWithData=last7.filter(function(k){return !!(history[k]&&history[k].totals);});
+  var weekEl=document.getElementById('week-summary');
+  weekEl.style.display='block';
+  document.getElementById('stat-days').textContent=daysWithData.length+'/7';
 
-  // Day cards — all logged days
-  list.innerHTML=keys.map(function(key){
+  var macroTile=document.getElementById('stat-macro-tile');
+  var macroValEl=document.getElementById('stat-macro-val');
+  var macroLblEl=document.getElementById('stat-macro-lbl');
+  macroLblEl.textContent=def.label;
+  macroLblEl.style.color=def.color;
+  macroValEl.style.color=def.color;
+  macroTile.style.background=def.color+'14';
+  macroTile.style.borderColor=def.color+'59';
+
+  if(daysWithData.length){
+    var sum=0;
+    daysWithData.forEach(function(k){sum+=(history[k].totals[selectedMacro]||0);});
+    var avg=Math.round(sum/daysWithData.length);
+    macroValEl.textContent=avg+(def.unit||' kcal');
+
+    var tsum=0,tcount=0;
+    daysWithData.forEach(function(k){
+      var t=history[k].target||defaultTarget;
+      if(t){tsum+=Math.round(history[k].totals.kcal/t*100);tcount++;}
+    });
+    document.getElementById('stat-target').textContent=tcount?Math.round(tsum/tcount)+'%':'—';
+  }else{
+    macroValEl.textContent='—';
+    document.getElementById('stat-target').textContent='—';
+  }
+
+  // Dense list — all logged days
+  list.innerHTML='<div class="hist-list-card">'+keys.map(function(key){
     var d=history[key];
     var target=d.target||defaultTarget;
-    var pct=Math.min(100,Math.round(d.totals.kcal/target*100));
-    var status=getDayStatus(d.totals.kcal,target);
-    var barColor=getBarColor(d.totals.kcal,target);
-    return'<div class="day-card" onclick="showDetail(\''+key+'\')">'+
-      '<div class="day-header">'+
-        '<span class="day-date">'+friendlyDate(key)+'</span>'+
-        '<span class="day-tag '+d.dayType+'">'+(d.dayType==='train'?'⚡ TRAINING':'🥗 REST')+'</span>'+
+    var pct=target?Math.round(d.totals.kcal/target*100):0;
+    var dayIcon=d.dayType==='train'?'⚡ Training':'🌙 Rest';
+    var mealWord=d.foods.length===1?'meal':'meals';
+    var primaryVal,primaryUnit,subVal;
+    if(selectedMacro==='kcal'){
+      primaryVal=d.totals.kcal;primaryUnit='kcal';
+      subVal=pct+'% of target';
+    }else{
+      primaryVal=d.totals[selectedMacro]||0;primaryUnit='g '+def.short;
+      subVal=d.totals.kcal+' kcal';
+    }
+    return'<div class="hist-row" onclick="showDetail(\''+key+'\')">'+
+      '<div>'+
+        '<div class="hist-date">'+friendlyDate(key)+'</div>'+
+        '<div class="hist-sub">'+dayIcon+' · '+d.foods.length+' '+mealWord+'</div>'+
       '</div>'+
-      '<div class="day-macros">'+
-        '<div class="day-macro"><span class="day-macro-val" style="color:#ff0000;">'+d.totals.kcal+'</span><span class="day-macro-lbl" style="color:#ff0000;">kcal</span></div>'+
-        '<div class="day-macro"><span class="day-macro-val" style="color:#34c97a;">'+d.totals.prot+'g</span><span class="day-macro-lbl" style="color:#34c97a;">prot</span></div>'+
-        '<div class="day-macro"><span class="day-macro-val" style="color:#2d8fff;">'+d.totals.carbs+'g</span><span class="day-macro-lbl" style="color:#2d8fff;">carbs</span></div>'+
-        '<div class="day-macro"><span class="day-macro-val" style="color:#f5a623;">'+d.totals.fat+'g</span><span class="day-macro-lbl" style="color:#f5a623;">fat</span></div>'+
+      '<div class="hist-val-wrap">'+
+        '<div class="hist-val" style="color:'+def.color+';">'+primaryVal+' <span class="hist-val-unit">'+primaryUnit+'</span></div>'+
+        '<div class="hist-val-sub">'+subVal+'</div>'+
       '</div>'+
-      '<div class="day-bar"><div class="day-bar-fill" style="width:'+pct+'%;background:'+barColor+';"></div></div>'+
-      '<div class="day-status" style="color:'+status.color+';">'+status.text+'</div>'+
-      '<div class="day-meals-count">'+d.foods.length+' meals · tap to see details →</div>'+
     '</div>';
-  }).join('');
+  }).join('')+'</div>';
 }
 
 renderHistory();
