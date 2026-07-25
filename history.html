@@ -189,14 +189,15 @@ function normalizeTag(tag){
 }
 
 // Status text only — icon carries the meaning, no color-coded judgment
+// 3-tier: checkmark 90-105 (nailed it) · neutral 80-90 and 105-120 (normal variance, no flag) · warning outside 80-120 (real outlier)
 function getDayStatus(kcal, target){
   if(!target||target===0)return{text:'No target set'};
   var pct=Math.round(kcal/target*100);
   var diff=kcal-target;
-  if(pct>105)     return{text:'⚠ +'+diff+' over target'};
-  if(pct>=90)     return{text:'✅ '+pct+'% of target'};
-  if(pct>=50)     return{text:'⚠ '+pct+'% of target — low'};
-  return          {text:'⚠ '+pct+'% of target — very low'};
+  if(pct>120)         return{text:'⚠ +'+diff+' over target'};
+  if(pct>=90&&pct<=105)return{text:'✅ '+pct+'% of target'};
+  if(pct>=80)          return{text:pct+'% of target'};
+  return                {text:'⚠ '+pct+'% of target — very low'};
 }
 
 function showList(){
@@ -328,7 +329,7 @@ function renderHistory(){
       primaryVal=d.totals[selectedMacro]||0;primaryUnit='g '+def.short;
       subVal=d.totals.kcal+' kcal';
     }
-    var isOutlier=target&&(pct>110||pct<90);
+    var isOutlier=target&&(pct>120||pct<80);
     var arrow=pct>110?'▲':'▼';
     var subHtml=isOutlier
       ?'<span class="outlier-badge">'+arrow+' '+subVal+'</span>'
