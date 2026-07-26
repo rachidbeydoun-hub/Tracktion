@@ -141,6 +141,28 @@ body{min-height:100vh;background:#f4f5f8;color:#1a1a2e;display:flex;flex-directi
           <button class="set-pill" id="pill-imperial" onclick="setUnits('imperial')">LBS · IN</button>
         </div>
       </div>
+      <!-- Meal Timing -->
+      <div class="set-row" style="flex-direction:column;align-items:stretch;gap:10px;">
+        <div class="set-row-text">
+          <div class="set-row-lbl">Meal timing</div>
+          <div class="set-row-sub">Drives auto-detected meal type in Log</div>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <div style="flex:1;">
+            <div style="font-size:9px;font-weight:800;color:#1a1a2e;opacity:0.7;margin-bottom:4px;text-transform:uppercase;">Breakfast until</div>
+            <input type="time" id="meal-time-bf" value="13:00" onchange="setMealTime('bf',this.value)" style="width:100%;border:1px solid rgba(0,0,0,0.1);border-radius:8px;padding:7px 6px;font-size:13px;font-weight:700;color:#1a1a2e;font-family:monospace;background:white;">
+          </div>
+          <div style="flex:1;">
+            <div style="font-size:9px;font-weight:800;color:#1a1a2e;opacity:0.7;margin-bottom:4px;text-transform:uppercase;">Lunch until</div>
+            <input type="time" id="meal-time-lu" value="16:00" onchange="setMealTime('lu',this.value)" style="width:100%;border:1px solid rgba(0,0,0,0.1);border-radius:8px;padding:7px 6px;font-size:13px;font-weight:700;color:#1a1a2e;font-family:monospace;background:white;">
+          </div>
+          <div style="flex:1;">
+            <div style="font-size:9px;font-weight:800;color:#1a1a2e;opacity:0.7;margin-bottom:4px;text-transform:uppercase;">Dinner until</div>
+            <input type="time" id="meal-time-di" value="22:00" onchange="setMealTime('di',this.value)" style="width:100%;border:1px solid rgba(0,0,0,0.1);border-radius:8px;padding:7px 6px;font-size:13px;font-weight:700;color:#1a1a2e;font-family:monospace;background:white;">
+          </div>
+        </div>
+        <div style="font-size:10px;color:#1a1a2e;opacity:0.6;">Anything after Dinner until is auto-tagged Snack.</div>
+      </div>
       <!-- Theme -->
       <div class="set-row" style="align-items:flex-start;">
         <div class="set-row-left">
@@ -429,7 +451,7 @@ body{min-height:100vh;background:#f4f5f8;color:#1a1a2e;display:flex;flex-directi
 </div>
 
 <script>
-var sSet={units:'metric',autosave:true,tips:true,theme:'light'};
+var sSet={units:'metric',autosave:true,tips:true,theme:'light',mealTimes:{bf:'13:00',lu:'16:00',di:'22:00'}};
 
 (function init(){
   var s={};
@@ -438,6 +460,14 @@ var sSet={units:'metric',autosave:true,tips:true,theme:'light'};
   if(s.autosave===false)sSet.autosave=false;
   if(s.tips===false)sSet.tips=false;
   if(s.theme)sSet.theme=s.theme;
+  if(s.mealTimes){
+    if(s.mealTimes.bf)sSet.mealTimes.bf=s.mealTimes.bf;
+    if(s.mealTimes.lu)sSet.mealTimes.lu=s.mealTimes.lu;
+    if(s.mealTimes.di)sSet.mealTimes.di=s.mealTimes.di;
+  }
+  document.getElementById('meal-time-bf').value=sSet.mealTimes.bf;
+  document.getElementById('meal-time-lu').value=sSet.mealTimes.lu;
+  document.getElementById('meal-time-di').value=sSet.mealTimes.di;
 
   var directUnit='';
   try{directUnit=localStorage.getItem('tracktion_units')||'';}catch(e){}
@@ -487,6 +517,13 @@ function setUnits(u){
   showToast(u==='metric'?'Units: KG · CM':'Units: LBS · IN');
 }
 
+function setMealTime(which,val){
+  if(!val)return;
+  sSet.mealTimes[which]=val;
+  saveSettings();
+  showToast('Meal timing updated');
+}
+
 function setTheme(t){
   sSet.theme=t;
   applyThemeButtons(t);
@@ -519,7 +556,7 @@ function togglePref(key){
 function saveSettings(){
   try{
     localStorage.setItem('tracktion_settings',JSON.stringify({
-      units:sSet.units,autosave:sSet.autosave,tips:sSet.tips,theme:sSet.theme
+      units:sSet.units,autosave:sSet.autosave,tips:sSet.tips,theme:sSet.theme,mealTimes:sSet.mealTimes
     }));
   }catch(e){}
 }

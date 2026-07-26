@@ -729,16 +729,36 @@ function updateBadge(){
   el.style.background=rem>0?'#f0f5ff':'#fff0f2';
 }
 
+function getMealTimes(){
+  var defaults={bf:'13:00',lu:'16:00',di:'22:00'};
+  var s={};try{s=JSON.parse(localStorage.getItem('tracktion_settings')||'{}');}catch(e){}
+  var mt=s.mealTimes||{};
+  return{
+    bf:parseTimeToHour(mt.bf)||parseTimeToHour(defaults.bf),
+    lu:parseTimeToHour(mt.lu)||parseTimeToHour(defaults.lu),
+    di:parseTimeToHour(mt.di)||parseTimeToHour(defaults.di)
+  };
+}
+function parseTimeToHour(hhmm){
+  if(!hhmm)return null;
+  var parts=hhmm.split(':');
+  var h=parseInt(parts[0]);var m=parseInt(parts[1])||0;
+  if(isNaN(h))return null;
+  return h+m/60;
+}
+
 function autoSuggestTag(){
-  var h=new Date().getHours();
-  var now=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+  var now=new Date();
+  var h=now.getHours()+now.getMinutes()/60;
+  var nowTxt=now.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+  var mt=getMealTimes();
   var tag,id;
-  if(h<11){tag='Breakfast';id='tag-bf';}
-  else if(h<17){tag='Lunch';id='tag-lu';}
-  else if(h<24){tag='Dinner';id='tag-di';}
+  if(h<mt.bf){tag='Breakfast';id='tag-bf';}
+  else if(h<mt.lu){tag='Lunch';id='tag-lu';}
+  else if(h<mt.di){tag='Dinner';id='tag-di';}
   else{tag='Snack';id='tag-sn';}
   currentTag=tag;
-  document.getElementById('tag-auto').textContent='auto-detected · '+now;
+  document.getElementById('tag-auto').textContent='auto-detected · '+nowTxt;
   document.querySelectorAll('.pill').forEach(function(p){p.classList.remove('on');});
   document.getElementById(id).classList.add('on');
 }

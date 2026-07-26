@@ -398,11 +398,20 @@ body{min-height:100vh;background:#f4f5f8;display:flex;flex-direction:column;alig
         <button id="pr-g-f" onclick="prSetGender('f')" style="padding:6px 14px;border-radius:8px;border:0.5px solid rgba(0,0,0,0.12);background:transparent;color:#1a1a2e;font-size:12px;font-weight:800;cursor:pointer;">Female</button>
       </div>
     </div>
-    <div class="prof-row">
+    <div class="prof-row" id="height-row-metric">
       <span class="prof-lbl">Height</span>
       <div style="display:flex;align-items:center;gap:4px;">
         <input id="pr-height" type="number" inputmode="numeric" min="100" max="250" placeholder="170" oninput="prCalc()" style="background:transparent;border:none;outline:none;font-size:16px;font-weight:700;color:#1a1a2e;text-align:right;width:60px;font-family:inherit;">
         <span style="font-size:12px;font-weight:600;color:#1a1a2e;">cm</span>
+      </div>
+    </div>
+    <div class="prof-row" id="height-row-imperial" style="display:none;">
+      <span class="prof-lbl">Height</span>
+      <div style="display:flex;align-items:center;gap:4px;">
+        <input id="pr-height-ft" type="number" inputmode="numeric" min="3" max="8" placeholder="5" oninput="syncHeightFromImperial()" style="background:transparent;border:none;outline:none;font-size:16px;font-weight:700;color:#1a1a2e;text-align:right;width:32px;font-family:inherit;">
+        <span style="font-size:12px;font-weight:600;color:#1a1a2e;">ft</span>
+        <input id="pr-height-in" type="number" inputmode="numeric" min="0" max="11" placeholder="7" oninput="syncHeightFromImperial()" style="background:transparent;border:none;outline:none;font-size:16px;font-weight:700;color:#1a1a2e;text-align:right;width:32px;font-family:inherit;">
+        <span style="font-size:12px;font-weight:600;color:#1a1a2e;">in</span>
       </div>
     </div>
     <!-- Weight and BF% removed from Essential Info — edit via hero stats or tracking sections below -->
@@ -691,6 +700,38 @@ body{min-height:100vh;background:#f4f5f8;display:flex;flex-direction:column;alig
 </style>
 
 <script>
+// ─── UNITS (display/input only — all storage stays metric kg/cm, never converted at rest) ───
+var profUnits='metric';
+try{profUnits=localStorage.getItem('tracktion_units')||'metric';}catch(e){}
+function kgToLb(kg){return Math.round(kg*2.20462*10)/10;}
+function lbToKg(lb){return Math.round(lb/2.20462*10)/10;}
+function cmToFtIn(cm){var totalIn=cm/2.54;var ft=Math.floor(totalIn/12);var inch=Math.round(totalIn%12);if(inch===12){ft++;inch=0;}return{ft:ft,inch:inch};}
+function ftInToCm(ft,inch){return Math.round(((ft*12)+(inch||0))*2.54);}
+
+function applyProfUnits(){
+  var isImp=profUnits==='imperial';
+  var mRow=document.getElementById('height-row-metric');
+  var iRow=document.getElementById('height-row-imperial');
+  if(mRow)mRow.style.display=isImp?'none':'flex';
+  if(iRow)iRow.style.display=isImp?'flex':'none';
+  var cm=parseFloat(document.getElementById('pr-height').value);
+  if(isImp&&cm){
+    var fi=cmToFtIn(cm);
+    document.getElementById('pr-height-ft').value=fi.ft;
+    document.getElementById('pr-height-in').value=fi.inch;
+  }
+  var wUnitEl=document.getElementById('hero-weight-unit');
+  if(wUnitEl)wUnitEl.textContent=isImp?'lbs':'kg';
+}
+
+function syncHeightFromImperial(){
+  var ft=parseFloat(document.getElementById('pr-height-ft').value)||0;
+  var inch=parseFloat(document.getElementById('pr-height-in').value)||0;
+  var cm=ftInToCm(ft,inch);
+  document.getElementById('pr-height').value=cm||'';
+  prCalc();
+}
+
 // ─── STATE ───────────────────────────────────────────────
 var pState={
   gender:'m',
@@ -775,6 +816,7 @@ var profileReady=false;
   }
 
   // Calc and render
+  applyProfUnits();
   prCalc();
   updateHeroPills();
   updateBFHelper();
@@ -835,7 +877,7 @@ function checkForChanges(){
 function saveChanges(){
   // Validate height
   var h=parseFloat(document.getElementById('pr-height').value);
-  if(h&&(h<100||h>250)){showToast('Height must be between 100–250 cm');return;}
+  if(h&&(h<100||h>250)){showToast(profUnits==='imperial'?'Height must be between 3\'3" and 8\'2"':'Height must be between 100–250 cm');return;}
   var p={
     name:(document.getElementById('pr-name').value||'').trim(),
     dob:getDob(),
@@ -891,6 +933,7 @@ function discardChanges(){
   savedState=captureState();
   var bar=document.getElementById('save-bar');
   if(bar)bar.classList.remove('show');
+  applyProfUnits();
   prCalc();
   updateHeroPills();
   showToast('Changes discarded');
@@ -969,24 +1012,29 @@ function renderWeightHistory(){
   chartWrap.style.display='block';
   // Delta since last entry
   if(weightHistory.length>=2){
-    var delta=(weightHistory[0].weight-weightHistory[1].weight).toFixed(1);
+    var rawDelta=weightHistory[0].weight-weightHistory[1].weight;
+    var dispDelta=profUnits==='imperial'?kgToLb(rawDelta):rawDelta;
+    var delta=dispDelta.toFixed(1);
     var deltaEl=document.getElementById('weight-delta-txt');
     var sign=delta>0?'+':'';
-    deltaEl.textContent=sign+delta+'kg since last weigh-in';
+    deltaEl.textContent=sign+delta+(profUnits==='imperial'?'lbs':'kg')+' since last weigh-in';
     deltaEl.style.color=delta<0?'#1a9e5c':delta>0?'#e03131':'#0066ff';
     deltaRow.style.display='flex';
   }
   // History list — last 10
+  var wUnit=profUnits==='imperial'?'lbs':'kg';
   list.innerHTML=weightHistory.slice(0,10).map(function(e,i){
     var delta='';
     if(i<weightHistory.length-1){
-      var d=(e.weight-weightHistory[i+1].weight).toFixed(1);
-      var col=d<0?'#1a9e5c':d>0?'#ff2244':'#0066ff';
-      delta='<span class="weight-entry-delta" style="color:'+col+';">'+(d>0?'+':'')+d+'kg</span>';
+      var rawD=e.weight-weightHistory[i+1].weight;
+      var dispD=(profUnits==='imperial'?kgToLb(rawD):rawD).toFixed(1);
+      var col=dispD<0?'#1a9e5c':dispD>0?'#ff2244':'#0066ff';
+      delta='<span class="weight-entry-delta" style="color:'+col+';">'+(dispD>0?'+':'')+dispD+wUnit+'</span>';
     }
     var isBold=i===0;
+    var dispVal=profUnits==='imperial'?kgToLb(e.weight):e.weight;
     return '<div class="weight-entry">'
-      +'<span class="weight-entry-val" style="font-weight:'+(isBold?'700':'400')+';">'+e.weight+' kg</span>'
+      +'<span class="weight-entry-val" style="font-weight:'+(isBold?'700':'400')+';">'+dispVal+' '+wUnit+'</span>'
       +'<span class="weight-entry-date">'+e.date+' · '+e.time+'</span>'
       +delta
       +'<button onclick="deleteWeightEntry('+i+')" style="background:none;border:none;color:#ff2244;font-size:14px;cursor:pointer;padding:0 0 0 6px;line-height:1;flex-shrink:0;">×</button>'
@@ -1136,7 +1184,8 @@ function setRing(id,circ,val,tgt){
 // ─── HERO PILLS ───────────────────────────────────────────
 function updateHeroPills(){
   var name=document.getElementById('pr-name').value.trim()||'—';
-  var w=document.getElementById('pr-weight').value||'—';
+  var wRaw=parseFloat(document.getElementById('pr-weight').value);
+  var w=isNaN(wRaw)?'—':(profUnits==='imperial'?kgToLb(wRaw):wRaw);
   var bf=document.getElementById('pr-bf').value;
   // Get goal text from active pill button
   var goalBtn=document.querySelector('#cpg-goal .cpill.on');
@@ -1515,19 +1564,20 @@ function heroSaveStat(type){
   valEl.classList.remove('hide');
   if(!val||isNaN(val))return;
   if(type==='weight'){
-    if(val<20||val>500){showToast('Invalid weight');return;}
+    var kgVal=profUnits==='imperial'?lbToKg(val):val;
+    if(kgVal<20||kgVal>500){showToast('Invalid weight');return;}
     var now=new Date();
     var yw=now.getFullYear();var mow=String(now.getMonth()+1).padStart(2,'0');var dyw=String(now.getDate()).padStart(2,'0');
-    var entry={weight:val,date:yw+'-'+mow+'-'+dyw,time:now.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})};
+    var entry={weight:kgVal,date:yw+'-'+mow+'-'+dyw,time:now.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})};
     // Always read fresh from localStorage
     var wh=[];try{wh=JSON.parse(localStorage.getItem('tracktion_weight_history')||'[]');}catch(e){}
     wh.unshift(entry);
     weightHistory=wh;
     try{localStorage.setItem('tracktion_weight_history',JSON.stringify(wh));}catch(e){}
-    document.getElementById('pr-weight').value=val;
+    document.getElementById('pr-weight').value=kgVal;
     // Update profile weight and recalculate macros — targets update automatically
     var prof={};try{prof=JSON.parse(localStorage.getItem('tracktion_profile')||'{}');}catch(e){}
-    prof.weight=val;
+    prof.weight=kgVal;
     try{localStorage.setItem('tracktion_profile',JSON.stringify(prof));}catch(e){}
     prCalc(); // recalculate and save targets
     renderWeightHistory();
