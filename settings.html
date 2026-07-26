@@ -142,12 +142,16 @@ body{min-height:100vh;background:#f4f5f8;color:#1a1a2e;display:flex;flex-directi
         </div>
       </div>
       <!-- Theme -->
-      <div class="set-row">
+      <div class="set-row" style="align-items:flex-start;">
         <div class="set-row-left">
           <div class="set-row-text">
             <div class="set-row-lbl">Theme</div>
             <div class="set-row-sub"><span class="soon-badge">COMING SOON</span></div>
           </div>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button class="theme-btn theme-btn-light on" id="theme-light" onclick="setTheme('light')">LIGHT</button>
+          <button class="theme-btn theme-btn-dark" id="theme-dark" onclick="setTheme('dark')">DARK</button>
         </div>
       </div>
       <!-- Auto-save -->
