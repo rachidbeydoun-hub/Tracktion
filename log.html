@@ -1387,16 +1387,6 @@ function saveToLibrary(enc,btn){
   showToast(exists?'Already in My Foods':'⭐ Saved to My Foods');
 }
 
-function safeAddFood(encoded,btn){
-  try{
-    var f=JSON.parse(encoded);
-    btn.textContent='✓';
-    btn.classList.add('added');
-    btn.disabled=true;
-    quickAddFood(f);
-  }catch(e){showToast('Error adding food');}
-}
-
 function onSearchInput(val){
   var clear=document.getElementById('search-clear');
   if(clear)clear.classList.toggle('show',val.length>0);
@@ -1592,7 +1582,7 @@ function renderPyramid(){
 
 function pyramidRow(f){
   var enc=encodeURIComponent(JSON.stringify(f));
-  return '<div class="food-item" data-food="'+enc+'" onclick="expandFood(decodeURIComponent(this.dataset.food),this)">'
+  return '<div class="food-item">'
     +'<div class="fi-left">'
     +'<div class="fi-name">'+f.name+'</div>'
     +'<div class="fi-portion">'+f.portion+'</div>'
@@ -1602,7 +1592,7 @@ function pyramidRow(f){
     +'<span class="fi-num" style="color:#2d8fff;">C '+(f.carbs||0)+'g</span>'
     +'<span class="fi-num" style="color:#f5a623;">F '+f.fat+'g</span>'
     +'</div></div>'
-    +'<span style="font-size:18px;color:#1a1a2e;opacity:0.2;flex-shrink:0;">›</span>'
+    +'<button class="fi-add" onclick="event.stopPropagation();safeAddFood(decodeURIComponent(\''+enc+'\'),this)" aria-label="Add">+</button>'
     +'</div>';
 }
 
