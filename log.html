@@ -240,9 +240,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .pyramid-tip-text{font-size:12px;font-weight:500;color:#1a1a2e;line-height:1.55;flex:1;}
 .pyramid-sec{background:white;border-radius:14px;border:0.5px solid rgba(0,0,0,0.06);margin-bottom:8px;overflow:hidden;}
 .pyramid-sec-hdr{padding:10px 14px 8px;display:flex;align-items:center;gap:8px;}
+.pyramid-sec-hdr.expanded{border-bottom:0.5px solid rgba(0,0,0,0.05);padding-bottom:10px;}
 .pyramid-sec-icon{font-size:16px;}
 .pyramid-sec-title{font-size:11px;font-weight:800;color:#1a1a2e;letter-spacing:0.5px;text-transform:uppercase;flex:1;}
-.pyramid-sec-count{font-size:10px;font-weight:700;color:#1a1a2e;opacity:0.35;}
+.pyramid-sec-count{font-size:10px;font-weight:700;color:#1a1a2e;opacity:0.7;}
+.pyramid-sec-body{display:none;}
+.pyramid-sec-body.open{display:block;}
 
 /* Action strip */
 .ri-actions{display:flex;align-items:center;gap:2px;flex-shrink:0;align-self:center;}
@@ -1561,23 +1564,42 @@ function renderPyramid(){
   var prots=lib.filter(function(f){return(f.cat==='protein'||((f.prot||0)>=(f.carbs||0)&&(f.prot||0)>=(f.fat||0)));}).sort(function(a,b){return(freq[b.name]||0)-(freq[a.name]||0);}).slice(0,4);
   var protEl=document.getElementById('pyramid-proteins');
   if(prots.length){
-    protEl.innerHTML='<div class="pyramid-sec"><div class="pyramid-sec-hdr"><span class="pyramid-sec-icon">💪</span><span class="pyramid-sec-title">My proteins</span><span class="pyramid-sec-count">'+prots.length+' saved</span></div>'
-      +prots.map(function(f){return pyramidRow(f);}).join('')+'</div>';
+    protEl.innerHTML=pyramidSecBlock('💪','My proteins','protein',prots,true);
   } else { protEl.innerHTML=''; }
   // Top carbs
   var carbs=lib.filter(function(f){return(f.cat==='carb'||((f.carbs||0)>(f.prot||0)&&(f.carbs||0)>(f.fat||0)));}).sort(function(a,b){return(freq[b.name]||0)-(freq[a.name]||0);}).slice(0,4);
   var carbEl=document.getElementById('pyramid-carbs');
   if(carbs.length){
-    carbEl.innerHTML='<div class="pyramid-sec"><div class="pyramid-sec-hdr"><span class="pyramid-sec-icon">🌾</span><span class="pyramid-sec-title">My carbs</span><span class="pyramid-sec-count">'+carbs.length+' saved</span></div>'
-      +carbs.map(function(f){return pyramidRow(f);}).join('')+'</div>';
+    carbEl.innerHTML=pyramidSecBlock('🌾','My carbs','carb',carbs,false);
   } else { carbEl.innerHTML=''; }
   // Top fats
   var fats=lib.filter(function(f){return(f.cat==='fat'||((f.fat||0)>(f.prot||0)&&(f.fat||0)>(f.carbs||0)));}).sort(function(a,b){return(freq[b.name]||0)-(freq[a.name]||0);}).slice(0,4);
   var fatEl=document.getElementById('pyramid-fats');
   if(fats.length){
-    fatEl.innerHTML='<div class="pyramid-sec"><div class="pyramid-sec-hdr"><span class="pyramid-sec-icon">🥑</span><span class="pyramid-sec-title">My fats</span><span class="pyramid-sec-count">'+fats.length+' saved</span></div>'
-      +fats.map(function(f){return pyramidRow(f);}).join('')+'</div>';
+    fatEl.innerHTML=pyramidSecBlock('🥑','My fats','fat',fats,false);
   } else { fatEl.innerHTML=''; }
+}
+
+function pyramidSecBlock(icon,title,key,items,defaultOpen){
+  return '<div class="pyramid-sec">'
+    +'<div class="pyramid-sec-hdr'+(defaultOpen?' expanded':'')+'" style="cursor:pointer;" onclick="togglePyramidSec(\''+key+'\')" id="pyr-hdr-'+key+'">'
+    +'<span class="pyramid-sec-icon">'+icon+'</span><span class="pyramid-sec-title">'+title+'</span>'
+    +'<span class="pyramid-sec-count">'+items.length+' saved</span>'
+    +'<span class="photo-chev'+(defaultOpen?' open':'')+'" id="pyr-chev-'+key+'">▾</span>'
+    +'</div>'
+    +'<div class="pyramid-sec-body'+(defaultOpen?' open':'')+'" id="pyr-body-'+key+'">'+items.map(function(f){return pyramidRow(f);}).join('')+'</div>'
+    +'</div>';
+}
+
+function togglePyramidSec(key){
+  var body=document.getElementById('pyr-body-'+key);
+  var chev=document.getElementById('pyr-chev-'+key);
+  var hdr=document.getElementById('pyr-hdr-'+key);
+  if(!body)return;
+  var open=body.classList.contains('open');
+  body.classList.toggle('open',!open);
+  if(chev)chev.classList.toggle('open',!open);
+  if(hdr)hdr.classList.toggle('expanded',!open);
 }
 
 function pyramidRow(f){
