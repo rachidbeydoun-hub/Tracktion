@@ -246,6 +246,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .pyramid-sec-count{font-size:10px;font-weight:700;color:#1a1a2e;opacity:0.7;}
 .pyramid-sec-body{display:none;}
 .pyramid-sec-body.open{display:block;}
+.pyr-more-toggle{display:flex;align-items:center;justify-content:center;gap:6px;padding:9px 14px;font-size:11px;font-weight:700;color:#0066ff;cursor:pointer;border-top:0.5px solid rgba(0,0,0,0.05);-webkit-tap-highlight-color:transparent;}
+.pyr-more-toggle .photo-chev{color:#0066ff;}
 
 /* Action strip */
 .ri-actions{display:flex;align-items:center;gap:2px;flex-shrink:0;align-self:center;}
@@ -1547,12 +1549,6 @@ function renderPyramid(){
   try{foods=JSON.parse(localStorage.getItem('tracktion_foods')||'[]');}catch(e){}
   var lib=[];
   try{lib=JSON.parse(localStorage.getItem('tracktion_food_library')||'[]');}catch(e){}
-  var hist={};
-  try{hist=JSON.parse(localStorage.getItem('tracktion_history')||'{}');}catch(e){}
-  // Build frequency map from history + today
-  var freq={};
-  Object.values(hist).forEach(function(d){(d.foods||[]).forEach(function(f){freq[f.name]=(freq[f.name]||0)+1;});});
-  foods.forEach(function(f){freq[f.name]=(freq[f.name]||0)+1;});
   // Recent — last 5 unique foods logged today
   var recentEl=document.getElementById('pyramid-recent');
   var recent=foods.slice(-5).reverse().filter(function(f,i,a){return a.findIndex(function(x){return x.name===f.name;})==i;});
@@ -1560,34 +1556,48 @@ function renderPyramid(){
     recentEl.innerHTML='<div class="pyramid-sec"><div class="pyramid-sec-hdr"><span class="pyramid-sec-icon">🕐</span><span class="pyramid-sec-title">Recently logged</span></div>'
       +recent.map(function(f){return pyramidRow(f);}).join('')+'</div>';
   } else { recentEl.innerHTML=''; }
-  // Top proteins from library
-  var prots=lib.filter(function(f){return(f.cat==='protein'||((f.prot||0)>=(f.carbs||0)&&(f.prot||0)>=(f.fat||0)));}).sort(function(a,b){return(freq[b.name]||0)-(freq[a.name]||0);}).slice(0,4);
+  // Top proteins from library — sorted by most recently added, newest always visible
+  var prots=lib.filter(function(f){return(f.cat==='protein'||((f.prot||0)>=(f.carbs||0)&&(f.prot||0)>=(f.fat||0)));}).sort(bySavedAtDesc);
   var protEl=document.getElementById('pyramid-proteins');
   if(prots.length){
-    protEl.innerHTML=pyramidSecBlock('💪','My proteins','protein',prots,true);
+    protEl.innerHTML=pyramidSecBlock('💪','My proteins','protein',prots);
   } else { protEl.innerHTML=''; }
   // Top carbs
-  var carbs=lib.filter(function(f){return(f.cat==='carb'||((f.carbs||0)>(f.prot||0)&&(f.carbs||0)>(f.fat||0)));}).sort(function(a,b){return(freq[b.name]||0)-(freq[a.name]||0);}).slice(0,4);
+  var carbs=lib.filter(function(f){return(f.cat==='carb'||((f.carbs||0)>(f.prot||0)&&(f.carbs||0)>(f.fat||0)));}).sort(bySavedAtDesc);
   var carbEl=document.getElementById('pyramid-carbs');
   if(carbs.length){
-    carbEl.innerHTML=pyramidSecBlock('🌾','My carbs','carb',carbs,false);
+    carbEl.innerHTML=pyramidSecBlock('🌾','My carbs','carb',carbs);
   } else { carbEl.innerHTML=''; }
   // Top fats
-  var fats=lib.filter(function(f){return(f.cat==='fat'||((f.fat||0)>(f.prot||0)&&(f.fat||0)>(f.carbs||0)));}).sort(function(a,b){return(freq[b.name]||0)-(freq[a.name]||0);}).slice(0,4);
+  var fats=lib.filter(function(f){return(f.cat==='fat'||((f.fat||0)>(f.prot||0)&&(f.fat||0)>(f.carbs||0)));}).sort(bySavedAtDesc);
   var fatEl=document.getElementById('pyramid-fats');
   if(fats.length){
-    fatEl.innerHTML=pyramidSecBlock('🥑','My fats','fat',fats,false);
+    fatEl.innerHTML=pyramidSecBlock('🥑','My fats','fat',fats);
   } else { fatEl.innerHTML=''; }
 }
 
-function pyramidSecBlock(icon,title,key,items,defaultOpen){
+function bySavedAtDesc(a,b){
+  return new Date(b.savedAt||0).getTime()-new Date(a.savedAt||0).getTime();
+}
+
+// Always shows the most recently added item; the rest sit behind an expand toggle
+function pyramidSecBlock(icon,title,key,items){
+  var latest=items[0];
+  var rest=items.slice(1);
+  var hasMore=rest.length>0;
   return '<div class="pyramid-sec">'
-    +'<div class="pyramid-sec-hdr'+(defaultOpen?' expanded':'')+'" style="cursor:pointer;" onclick="togglePyramidSec(\''+key+'\')" id="pyr-hdr-'+key+'">'
+    +'<div class="pyramid-sec-hdr">'
     +'<span class="pyramid-sec-icon">'+icon+'</span><span class="pyramid-sec-title">'+title+'</span>'
     +'<span class="pyramid-sec-count">'+items.length+' saved</span>'
-    +'<span class="photo-chev'+(defaultOpen?' open':'')+'" id="pyr-chev-'+key+'">▾</span>'
     +'</div>'
-    +'<div class="pyramid-sec-body'+(defaultOpen?' open':'')+'" id="pyr-body-'+key+'">'+items.map(function(f){return pyramidRow(f);}).join('')+'</div>'
+    +pyramidRow(latest)
+    +(hasMore?(
+      '<div class="pyr-more-toggle" onclick="togglePyramidSec(\''+key+'\')" id="pyr-hdr-'+key+'">'
+      +'<span>Show '+rest.length+' more</span>'
+      +'<span class="photo-chev" id="pyr-chev-'+key+'">▾</span>'
+      +'</div>'
+      +'<div class="pyramid-sec-body" id="pyr-body-'+key+'">'+rest.map(function(f){return pyramidRow(f);}).join('')+'</div>'
+    ):'')
     +'</div>';
 }
 
@@ -1596,10 +1606,13 @@ function togglePyramidSec(key){
   var chev=document.getElementById('pyr-chev-'+key);
   var hdr=document.getElementById('pyr-hdr-'+key);
   if(!body)return;
-  var open=body.classList.contains('open');
-  body.classList.toggle('open',!open);
-  if(chev)chev.classList.toggle('open',!open);
-  if(hdr)hdr.classList.toggle('expanded',!open);
+  var wasOpen=body.classList.contains('open');
+  body.classList.toggle('open',!wasOpen);
+  if(chev)chev.classList.toggle('open',!wasOpen);
+  if(hdr){
+    var lbl=hdr.querySelector('span');
+    if(lbl)lbl.textContent=wasOpen?'Show '+body.children.length+' more':'Hide';
+  }
 }
 
 function pyramidRow(f){
