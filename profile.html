@@ -1084,7 +1084,13 @@ function prCalc(){
   var job=parseFloat(document.getElementById('pr-job').value);
   var goal=parseFloat(document.getElementById('pr-goal').value);
   if(!dob||!h||!w||!act||isNaN(goal)){updateTargetsDisplay();return;}
-  var age=new Date().getFullYear()-new Date(dob).getFullYear();
+  var age=(function(){
+    var d=new Date(dob),today=new Date();
+    var a=today.getFullYear()-d.getFullYear();
+    var m=today.getMonth()-d.getMonth();
+    if(m<0||(m===0&&today.getDate()<d.getDate()))a--;
+    return a;
+  })();
   if(age<10||age>100){updateTargetsDisplay();return;}
   var bmr=pState.gender==='m'?(10*w)+(6.25*h)-(5*age)+5:(10*w)+(6.25*h)-(5*age)-161;
   var stepsN=isNaN(steps)?0:steps;
