@@ -931,25 +931,23 @@ async function analyzePhoto(){
   btn.innerHTML='<span>⏳</span> Analyzing...';btn.disabled=true;
   var chips=[...document.querySelectorAll('.chip.on')].map(function(c){return c.textContent;}).join(', ');
   var desc=document.getElementById('description').value;
-  var chipsTxt=chips?'\nPreparation: '+chips+'.':'';
-  var descTxt=desc?'\nUser notes: '+desc+'.':'';
   var hasDesc=desc.trim().length>0;
-  var prompt='You are a professional nutritionist analyzing a meal.'
+  var prompt='You are a professional nutritionist analyzing a meal photo.'
+    +'\n\nPHOTO IS THE PRIMARY SOURCE OF TRUTH. Analyze what is visibly on the plate first — identify each food item and estimate realistic portions based on what you actually see (browning, oil sheen, skin-on/off, sauce coverage, etc.).'
     +(hasDesc
-      ? '\n\nSOURCE OF TRUTH — USER DESCRIPTION (highest priority):\n"'+desc.trim()+'"'
-        +'\nThe user has explicitly named these foods. Treat every item they named as CONFIRMED — set confidence:"High" for those items. Do NOT downgrade confidence on items the user explicitly named, even if the photo is unclear.'
-        +'\nThe photo supplements the description: use it to catch additional items the user did NOT mention, and to help estimate portion sizes.'
-        +(chips?'\nPreparation context: '+chips+'.':'')
-      : '\nThe photo is the primary source. Analyze carefully.'
-        +(chips?'\nPreparation context: '+chips+'.':'')
-        +(desc?'\nAdditional notes: '+desc+'.':'')
+      ? '\n\nThe user also added this note: "'+desc.trim()+'"'
+        +'\nTreat this note as a MODIFIER layer on top of the photo, not a replacement for it. Use it to:'
+        +'\n- Identify items the photo cannot show (off-camera food, ingredients mixed inside a dish, invisible seasoning or oil)'
+        +'\n- Clarify preparation details the photo cannot reveal (e.g. "egg whites not whole eggs", "no added oil")'
+        +'\n- Adjust quantity when the photo does not clearly show total amount'
+        +'\nIf the note conflicts with something clearly visible in the photo (e.g. user calls it "grilled chicken breast" but the photo clearly shows a thigh with skin), trust the PHOTO for identity and portion — do not silently override visible evidence — but set that item\'s confidence to "Medium" so the user can confirm or correct it themselves. Only mark an item "High" confidence when the photo and note agree, or when the note adds detail about something the photo genuinely could not show.'
+      : '\nNo user description was provided — rely entirely on the photo.'
     )
+    +(chips?'\nPreparation context: '+chips+'.':'')
     +'\n\nRules:'
-    +'\n- Items explicitly named by the user → confidence:"High"'
-    +'\n- Items spotted in photo but NOT named by user → confidence:"Medium" or "Low" depending on certainty'
-    +'\n- Portion size uncertainty is acceptable but does NOT lower confidence on food identity'
-    +'\n- Overall confidence is "High" if all user-named items are confirmed and photo adds no surprises'
-    +'\n- Be specific, realistic portions, no conservative bias'
+    +'\n- Portion size uncertainty is acceptable but does NOT by itself lower confidence on food identity'
+    +'\n- Overall confidence is "High" only if every item is High confidence'
+    +'\n- Be specific, use realistic portions, no conservative bias'
     +'\nRespond ONLY in this exact JSON (no markdown):\n{"confidence":"High|Medium|Low","confidence_reason":"brief","items":[{"name":"","portion":"","kcal":0,"prot":0,"carbs":0,"fat":0,"confidence":"High|Medium|Low","confidence_note":""}],"total":{"kcal":0,"prot":0,"carbs":0,"fat":0},"tip":""}';
   try{
     var res=await fetch('https://api.anthropic.com/v1/messages',{
