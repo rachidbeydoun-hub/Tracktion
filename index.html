@@ -106,6 +106,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .log-header{font-size:10px;font-weight:800;color:#1a1a2e;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:8px;}
 .empty-log{text-align:center;padding:12px 0;color:#1a1a2e;font-size:13px;font-weight:600;}
 
+/* MEAL GROUP — consolidated same-meal-type entries */
+.meal-group{margin-bottom:8px;}
+.meal-group:last-child{margin-bottom:0;}
+.meal-group .meal{margin-bottom:0;}
+.group-items{display:none;padding-top:6px;}
+.group-items.open{display:block;}
+.group-items .meal{margin-bottom:6px;margin-left:10px;}
+
 /* MEAL CARD */
 .meal{background:white;border-radius:14px;margin-bottom:8px;border:0.5px solid rgba(0,0,0,0.06);box-shadow:0 1px 4px rgba(0,0,0,0.04);position:relative;overflow:hidden;transition:transform 0.1s;cursor:pointer;-webkit-tap-highlight-color:transparent;}
 .meal:active{transform:scale(0.99);}
@@ -125,6 +133,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .star-btn.starred{filter:drop-shadow(0 0 4px rgba(255,179,0,0.7));}
 .del-btn{background:none;border:none;cursor:pointer;color:rgba(26,26,46,0.3);font-size:18px;font-weight:700;padding:4px 6px;line-height:1;transition:color 0.15s;-webkit-tap-highlight-color:transparent;}
 .del-btn:active{color:#ff2244;}
+
+/* SAVE DRAWER — category picker, matches log.html save flow */
+.save-drawer{display:none;padding:10px 16px 12px;border-top:0.5px solid rgba(0,0,0,0.06);background:#fafafa;}
+.save-drawer.show{display:block;}
+.save-drawer-lbl{font-size:9px;font-weight:700;color:#1a1a2e;opacity:0.5;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;}
+.cat-grid{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;}
+.cat-btn{display:flex;align-items:center;gap:5px;padding:7px 11px;border-radius:9px;border:1px solid rgba(0,0,0,0.1);background:white;font-size:11px;font-weight:700;color:#1a1a2e;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.cat-btn.on{background:#0066ff;border-color:#0066ff;color:white;}
+.save-confirm-btn{width:100%;padding:9px;background:#0066ff;color:white;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent;}
 
 /* MEAL EXPANDED */
 .meal-expand{display:none;border-top:0.5px solid rgba(0,0,0,0.05);padding:14px 16px;}
@@ -204,7 +221,31 @@ a[href]{transition:opacity 0.1s ease;}
     </div>
   </div>
 
-  <!-- AI COACH DRAWER — hidden by default, header button controls visibility -->
+  <!-- MACRO BARS (acts as the color legend for the rings above — kept locked together, nothing can wedge between them) -->
+  <div class="card">
+    <div class="mrow">
+      <span class="mlbl" style="color:#ff0000;">KCAL</span>
+      <div class="btrack"><div id="bar-kcal" class="bfill" style="width:0%;background:#ff0000;"></div></div>
+      <div class="mval" style="color:#ff0000;"><span id="val-kcal">0 / 2500</span><span id="over-kcal" class="over"></span></div>
+    </div>
+    <div class="mrow">
+      <span class="mlbl" style="color:#34c97a;">PROT</span>
+      <div class="btrack"><div id="bar-prot" class="bfill" style="width:0%;background:#34c97a;"></div></div>
+      <div class="mval" style="color:#34c97a;"><span id="val-prot">0 / 168g</span><span id="over-prot" class="over"></span></div>
+    </div>
+    <div class="mrow">
+      <span class="mlbl" style="color:#2d8fff;">CARBS</span>
+      <div class="btrack"><div id="bar-carb" class="bfill" style="width:0%;background:#2d8fff;"></div></div>
+      <div class="mval" style="color:#2d8fff;"><span id="val-carb">0 / 260g</span><span id="over-carb" class="over"></span></div>
+    </div>
+    <div class="mrow">
+      <span class="mlbl" style="color:#f5a623;">FAT</span>
+      <div class="btrack"><div id="bar-fat" class="bfill" style="width:0%;background:#f5a623;"></div></div>
+      <div class="mval" style="color:#f5a623;"><span id="val-fat">0 / 68g</span><span id="over-fat" class="over"></span></div>
+    </div>
+  </div>
+
+  <!-- AI COACH DRAWER — moved below the rings+legend block so it can never insert itself between them -->
   <div class="coach-drawer" id="coach-drawer" style="display:none;">
     <div class="coach-toggle" onclick="toggleCoach()">
       <div class="coach-toggle-left">
@@ -240,30 +281,6 @@ a[href]{transition:opacity 0.1s ease;}
     </div>
   </div>
 
-  <!-- MACRO BARS -->
-  <div class="card">
-    <div class="mrow">
-      <span class="mlbl" style="color:#ff0000;">KCAL</span>
-      <div class="btrack"><div id="bar-kcal" class="bfill" style="width:0%;background:#ff0000;"></div></div>
-      <div class="mval" style="color:#ff0000;"><span id="val-kcal">0 / 2500</span><span id="over-kcal" class="over"></span></div>
-    </div>
-    <div class="mrow">
-      <span class="mlbl" style="color:#34c97a;">PROT</span>
-      <div class="btrack"><div id="bar-prot" class="bfill" style="width:0%;background:#34c97a;"></div></div>
-      <div class="mval" style="color:#34c97a;"><span id="val-prot">0 / 168g</span><span id="over-prot" class="over"></span></div>
-    </div>
-    <div class="mrow">
-      <span class="mlbl" style="color:#2d8fff;">CARBS</span>
-      <div class="btrack"><div id="bar-carb" class="bfill" style="width:0%;background:#2d8fff;"></div></div>
-      <div class="mval" style="color:#2d8fff;"><span id="val-carb">0 / 260g</span><span id="over-carb" class="over"></span></div>
-    </div>
-    <div class="mrow">
-      <span class="mlbl" style="color:#f5a623;">FAT</span>
-      <div class="btrack"><div id="bar-fat" class="bfill" style="width:0%;background:#f5a623;"></div></div>
-      <div class="mval" style="color:#f5a623;"><span id="val-fat">0 / 68g</span><span id="over-fat" class="over"></span></div>
-    </div>
-  </div>
-
   <!-- EMPTY STATE -->
   <div class="empty-state" id="empty-state">
     <div class="empty-state-title">Log your first meal</div>
@@ -292,7 +309,6 @@ a[href]{transition:opacity 0.1s ease;}
 
 <script>
 const MEAL_COLORS={Breakfast:'#2d8fff',Lunch:'#34c97a',Dinner:'#ff2244',Snack:'#ffb300'};
-const MEAL_ICONS={Breakfast:'🌅',Lunch:'☀️',Dinner:'🌙',Snack:'🍎'};
 
 // 4 FIXED RINGS — locked colors, locked identity
 // outer=red=kcal, r2=green=prot, r3=blue=carbs, inner=gold=fat
@@ -341,7 +357,7 @@ let coachQuestionCount=0, coachQuestionDate='';
 function init(){
   checkRollover();
   try{loggedFoods=JSON.parse(localStorage.getItem('tracktion_foods')||'[]');}catch(e){loggedFoods=[];}
-  try{favMeals=JSON.parse(localStorage.getItem('tracktion_favs')||'[]');}catch(e){favMeals=[];}
+  try{favMeals=JSON.parse(localStorage.getItem('tracktion_food_library')||'[]');}catch(e){favMeals=[];}
   try{coachHistory=JSON.parse(localStorage.getItem('tracktion_coach_history')||'[]');}catch(e){coachHistory=[];}
   // Clean any stuck Thinking... messages from previous sessions
   coachHistory=coachHistory.filter(function(m){return m.text!=='Thinking...';});
@@ -414,14 +430,14 @@ function render(){
   const t=targets[day];
   let k=0,p=0,c=0,f=0;
   loggedFoods.forEach(m=>{k+=m.kcal||0;p+=m.prot||0;c+=m.carbs||0;f+=m.fat||0;});
-  [{id:'kcal',v:k,tg:t.kcal,u:''},{id:'prot',v:p,tg:t.prot,u:'g'},{id:'carb',v:c,tg:t.carb,u:'g'},{id:'fat',v:f,tg:t.fat,u:'g'}]
+  [{id:'kcal',v:Math.round(k),tg:Math.round(t.kcal),u:''},{id:'prot',v:Math.round(p),tg:Math.round(t.prot),u:'g'},{id:'carb',v:Math.round(c),tg:Math.round(t.carb),u:'g'},{id:'fat',v:Math.round(f),tg:Math.round(t.fat),u:'g'}]
   .forEach(function(o){
     document.getElementById('val-'+o.id).textContent=o.v+' / '+o.tg+o.u;
     document.getElementById('bar-'+o.id).style.width=Math.min(100,o.tg>0?Math.round(o.v/o.tg*100):0)+'%';
     var barColors={kcal:'#ff0000',prot:'#34c97a',carb:'#2d8fff',fat:'#f5a623'};
     if(o.v>o.tg){document.getElementById('bar-'+o.id).style.background='#ff2244';}else{document.getElementById('bar-'+o.id).style.background=barColors[o.id]||'';}
     var oel=document.getElementById('over-'+o.id);
-    if(o.v>o.tg){oel.textContent='+'+(o.v-o.tg)+o.u+' over';oel.style.display='block';}
+    if(o.v>o.tg){oel.textContent='+'+Math.round(o.v-o.tg)+o.u+' over';oel.style.display='block';}
     else oel.style.display='none';
   });
   updateRings(k,p,c,f,t);
@@ -433,7 +449,7 @@ function renderMainMetric(k,p,c,f,t){
   const m=METRICS[metricIdx];
   const vals={kcal:k,prot:p,carb:c,fat:f};
   const tgs={kcal:t.kcal,prot:t.prot,carb:t.carb,fat:t.fat};
-  const rem=tgs[m.key]-vals[m.key];
+  const rem=Math.round(tgs[m.key]-vals[m.key]);
   const el=document.getElementById('rem-num');
   const sub=document.getElementById('rem-sub');
   if(rem>0){
@@ -755,6 +771,9 @@ function normalizeTag(tag){
   if(t.includes('dinner'))return'Dinner';
   return'Snack';
 }
+const MEAL_ICONS={Breakfast:'🌅',Lunch:'☀️',Dinner:'🌙',Snack:'🍎'};
+const MEAL_ORDER=['Breakfast','Lunch','Dinner','Snack'];
+let openGroups={}; // tag -> bool, which meal-type groups are expanded
 
 function renderLog(){
   const list=document.getElementById('log-list');
@@ -762,8 +781,45 @@ function renderLog(){
   if(!loggedFoods.length){list.innerHTML='';emptyState.classList.add('show');return;}
   emptyState.classList.remove('show');
   const favNames=new Set(favMeals.map(function(f){return f.name;}));
-  list.innerHTML=loggedFoods.map(function(m,i){
+  // Group indices by meal type
+  const groups={};
+  loggedFoods.forEach(function(m,i){
     const tag=normalizeTag(m.mealTag);
+    if(!groups[tag])groups[tag]=[];
+    groups[tag].push(i);
+  });
+  list.innerHTML=MEAL_ORDER.filter(function(tag){return groups[tag]&&groups[tag].length;}).map(function(tag){
+    const idxs=groups[tag];
+    // single entry — render directly, no group wrapper needed
+    if(idxs.length===1){
+      return renderMealItem(loggedFoods[idxs[0]],idxs[0],favNames);
+    }
+    const totals=idxs.reduce(function(s,i){const m=loggedFoods[i];return{kcal:s.kcal+(m.kcal||0),prot:s.prot+(m.prot||0),carbs:s.carbs+(m.carbs||0),fat:s.fat+(m.fat||0)};},{kcal:0,prot:0,carbs:0,fat:0});
+    const isGroupOpen=!!openGroups[tag];
+    const itemsHtml=idxs.map(function(i){return renderMealItem(loggedFoods[i],i,favNames);}).join('');
+    return '<div class="meal-group">'
+      +'<div class="meal group-header" onclick="toggleGroup(\''+tag+'\')">'
+      +'<div class="meal-accent" style="background:'+(MEAL_COLORS[tag]||'#0066ff')+';"></div>'
+      +'<div class="meal-main">'
+      +'<div class="meal-left">'
+      +'<div class="meal-line1"><span class="meal-name">'+MEAL_ICONS[tag]+' '+tag+' \u00b7 '+idxs.length+' items</span><span class="meal-kcal-lbl">'+Math.round(totals.kcal)+' kcal</span></div>'
+      +'<div class="meal-line2"><span style="font-size:11px;"><span style="color:#34c97a;font-weight:700;">P'+Math.round(totals.prot)+'</span> \u00b7 <span style="color:#2d8fff;font-weight:700;">C'+Math.round(totals.carbs)+'</span> \u00b7 <span style="color:#f5a623;font-weight:700;">F'+Math.round(totals.fat)+'</span></span></div>'
+      +'</div></div>'
+      +'<div class="meal-actions"><span class="coach-chev'+(isGroupOpen?' open':'')+'" style="font-size:14px;">▾</span></div>'
+      +'</div>'
+      +'<div class="group-items'+(isGroupOpen?' open':'')+'">'+itemsHtml+'</div>'
+      +'</div>';
+  }).join('');
+}
+
+function toggleGroup(tag){
+  openGroups[tag]=!openGroups[tag];
+  renderLog();
+}
+
+function renderMealItem(m,i,favNames){
+    const tag=normalizeTag(m.mealTag);
+    const color=MEAL_COLORS[tag]||'#0066ff';
     const isFav=favNames.has(m.name);
     const isOpen=expandedIdx===i;
     const isEditing=editingIdx===i;
@@ -791,24 +847,85 @@ function renderLog(){
         +'</div>'
         +'<div class="exp-acts">'
         +'<button class="edit-btn" onclick="event.stopPropagation();startEdit('+i+')">EDIT</button>'
-        +'<button class="star-btn'+(isFav?' starred':'')+'" onclick="event.stopPropagation();toggleFav('+i+')">'+(isFav?'⭐':'☆')+'</button>'
+        +'<button class="star-btn'+(isFav?' starred':'')+'" onclick="event.stopPropagation();handleStarTap('+i+')">'+(isFav?'⭐':'☆')+'</button>'
         +'<button class="del-btn" onclick="event.stopPropagation();removeMeal('+i+')">×</button>'
         +'</div>';
     }
+    var sugCat=classifyFoodIndex(m);
+    var drawerHtml='<div class="save-drawer" id="save-drawer-'+i+'">'
+      +'<div class="save-drawer-lbl">Save to my library</div>'
+      +'<div class="cat-grid">'
+      +SAVE_CATS.map(function(cat){return'<button class="cat-btn'+(cat.key===sugCat?' on':'')+'" onclick="event.stopPropagation();selectSaveCat(this,'+i+',\''+cat.key+'\')">'
+        +'<span>'+cat.ico+'</span><span>'+cat.lbl+'</span></button>';}).join('')
+      +'</div>'
+      +'<button class="save-confirm-btn" id="save-confirm-'+i+'" onclick="event.stopPropagation();confirmSaveFav('+i+')">Save to '+getCatLabel(sugCat)+' ★</button>'
+      +'</div>';
     return '<div class="meal" onclick="toggleMealExpand('+i+')">'
+      +'<div class="meal-accent" style="background:'+color+';"></div>'
       +'<div class="meal-main">'
       +'<div class="meal-left">'
-      +'<div class="meal-line1"><span style="font-size:14px;">'+(MEAL_ICONS[tag]||'🌙')+'</span><span class="meal-name">'+escapeHtml(m.name||'')+'</span><span class="meal-kcal-lbl">'+(m.kcal||0)+' kcal</span></div>'
-      +'<div class="meal-line2" style="padding-left:20px;"><span class="meal-tag-lbl">'+tag+' \u00b7 '+(m.time||'')+'</span><div class="meal-dot"></div>'
+      +'<div class="meal-line1"><span class="meal-name">'+escapeHtml(m.name||'')+'</span><span class="meal-kcal-lbl">'+(m.kcal||0)+' kcal</span></div>'
+      +'<div class="meal-line2"><span class="meal-tag-lbl">'+tag+' \u00b7 '+(m.time||'')+'</span><div class="meal-dot"></div>'
       +'<span style="font-size:11px;"><span style="color:#34c97a;font-weight:700;">P'+(m.prot||0)+'</span> \u00b7 <span style="color:#2d8fff;font-weight:700;">C'+(m.carbs||0)+'</span> \u00b7 <span style="color:#f5a623;font-weight:700;">F'+(m.fat||0)+'</span></span>'
       +'</div></div>'
       +'<div class="meal-actions">'
-      +'<button class="star-btn'+(isFav?' starred':'')+'" onclick="event.stopPropagation();toggleFav('+i+')">'+(isFav?'⭐':'☆')+'</button>'
+      +'<button class="star-btn'+(isFav?' starred':'')+'" onclick="event.stopPropagation();handleStarTap('+i+')">'+(isFav?'⭐':'☆')+'</button>'
       +'<button class="del-btn" onclick="event.stopPropagation();removeMeal('+i+')">×</button>'
       +'</div></div>'
+      +drawerHtml
       +'<div class="meal-expand'+(isOpen?' open':'')+'">'+expandHtml+'</div>'
       +'</div>';
-  }).join('');
+}
+
+// Save categories — matches log.html's library categories
+const SAVE_CATS=[{key:'meal',ico:'🍽',lbl:'Meal'},{key:'protein',ico:'🥩',lbl:'Protein'},{key:'carb',ico:'🍞',lbl:'Carb'},{key:'fat',ico:'🥑',lbl:'Fat'}];
+function getCatLabel(k){var c=SAVE_CATS.find(function(x){return x.key===k;});return c?c.lbl:'Meal';}
+function classifyFoodIndex(m){
+  var p=m.prot||0,c=m.carbs||0,f=m.fat||0;
+  if(p>=c&&p>=f)return'protein';
+  if(c>=p&&c>=f)return'carb';
+  if(f>=p&&f>=c)return'fat';
+  return'meal';
+}
+
+function handleStarTap(i){
+  const m=loggedFoods[i];if(!m)return;
+  const favNames=new Set(favMeals.map(function(f){return f.name;}));
+  if(favNames.has(m.name)){
+    // already saved — remove
+    favMeals=favMeals.filter(function(f){return f.name!==m.name;});
+    try{localStorage.setItem('tracktion_food_library',JSON.stringify(favMeals));}catch(e){}
+    showToast('Removed from library');
+    renderLog();
+    return;
+  }
+  // not saved — open category drawer
+  const drawer=document.getElementById('save-drawer-'+i);if(!drawer)return;
+  const isOpen=drawer.classList.contains('show');
+  document.querySelectorAll('.save-drawer.show').forEach(function(d){d.classList.remove('show');});
+  if(!isOpen)drawer.classList.add('show');
+}
+
+function selectSaveCat(btn,i,catKey){
+  const drawer=document.getElementById('save-drawer-'+i);
+  if(drawer)drawer.querySelectorAll('.cat-btn').forEach(function(b){b.classList.remove('on');});
+  btn.classList.add('on');
+  const sb=document.getElementById('save-confirm-'+i);
+  if(sb){sb.textContent='Save to '+getCatLabel(catKey)+' ★';sb.dataset.cat=catKey;}
+}
+
+function confirmSaveFav(i){
+  const m=loggedFoods[i];if(!m)return;
+  const sb=document.getElementById('save-confirm-'+i);
+  const catKey=sb&&sb.dataset.cat?sb.dataset.cat:classifyFoodIndex(m);
+  const exists=favMeals.some(function(x){return x.name===m.name;});
+  if(!exists){
+    favMeals.unshift({name:m.name,portion:m.portion||'',kcal:m.kcal||0,prot:m.prot||0,carbs:m.carbs||0,fat:m.fat||0,cat:catKey,savedAt:new Date().toISOString()});
+    try{localStorage.setItem('tracktion_food_library',JSON.stringify(favMeals));}catch(e){}
+  }
+  const drawer=document.getElementById('save-drawer-'+i);if(drawer)drawer.classList.remove('show');
+  showToast(exists?'Already saved':'⭐ Saved to '+getCatLabel(catKey));
+  renderLog();
 }
 
 function toggleMealExpand(i){
@@ -836,20 +953,6 @@ function saveEdit(i){
   editingIdx=null;
   showToast('Meal updated');
   render();
-}
-
-function toggleFav(i){
-  const m=loggedFoods[i];if(!m)return;
-  const idx=favMeals.findIndex(function(f){return f.name===m.name;});
-  if(idx===-1){
-    favMeals.unshift({name:m.name,kcal:m.kcal,prot:m.prot||0,carbs:m.carbs||0,fat:m.fat||0,portion:m.portion||''});
-    showToast('⭐ Saved to My Meals');
-  }else{
-    favMeals.splice(idx,1);
-    showToast('Removed from My Meals');
-  }
-  try{localStorage.setItem('tracktion_favs',JSON.stringify(favMeals));}catch(e){}
-  renderLog();
 }
 
 function removeMeal(i){
@@ -903,7 +1006,7 @@ init();
 document.addEventListener('visibilitychange',function(){
   if(document.visibilityState==='visible'){
     try{loggedFoods=JSON.parse(localStorage.getItem('tracktion_foods')||'[]');}catch(e){loggedFoods=[];}
-    try{favMeals=JSON.parse(localStorage.getItem('tracktion_favs')||'[]');}catch(e){favMeals=[];}
+    try{favMeals=JSON.parse(localStorage.getItem('tracktion_food_library')||'[]');}catch(e){favMeals=[];}
     render();
   }
 });
