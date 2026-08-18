@@ -118,8 +118,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .meal{background:white;border-radius:14px;margin-bottom:8px;border:0.5px solid rgba(0,0,0,0.06);box-shadow:0 1px 4px rgba(0,0,0,0.04);position:relative;overflow:hidden;transition:transform 0.1s;cursor:pointer;-webkit-tap-highlight-color:transparent;}
 .meal:active{transform:scale(0.99);}
 .meal:last-child{margin-bottom:0;}
-.meal-accent{width:4px;position:absolute;left:0;top:0;bottom:0;}
-.meal-main{display:flex;align-items:center;justify-content:space-between;padding:13px 12px 13px 18px;}
+.meal-main{display:flex;align-items:center;justify-content:space-between;padding:13px 14px;}
 .meal-left{flex:1;min-width:0;}
 .meal-line1{display:flex;align-items:baseline;gap:8px;margin-bottom:4px;}
 .meal-name{font-size:14px;font-weight:700;color:#1a1a2e;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:175px;}
@@ -154,6 +153,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .exp-acts{display:flex;justify-content:flex-end;gap:14px;align-items:center;}
 .edit-btn{background:none;border:none;cursor:pointer;color:#0066ff;font-size:11px;font-weight:800;letter-spacing:0.5px;padding:4px 6px;-webkit-tap-highlight-color:transparent;}
 .exp-name-input{width:100%;font-size:14px;font-weight:700;color:#1a1a2e;border:1px solid rgba(0,0,0,0.1);border-radius:8px;padding:8px 10px;margin-bottom:10px;font-family:inherit;}
+.edit-tag-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;}
+.edit-tag-pill{padding:7px 11px;border-radius:9px;border:1px solid rgba(0,0,0,0.1);background:white;font-size:11px;font-weight:700;color:#1a1a2e;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.edit-tag-pill.on{background:#0066ff;border-color:#0066ff;color:white;}
 .exp-stat input{width:100%;background:none;border:none;text-align:center;font-family:monospace;font-size:20px;font-weight:700;padding:0;}
 .exp-stat input:focus{outline:none;}
 .save-btn{background:#0066ff;color:white;border:none;border-radius:10px;padding:8px 16px;font-size:11px;font-weight:800;letter-spacing:0.5px;cursor:pointer;-webkit-tap-highlight-color:transparent;}
@@ -799,7 +801,6 @@ function renderLog(){
     const itemsHtml=idxs.map(function(i){return renderMealItem(loggedFoods[i],i,favNames);}).join('');
     return '<div class="meal-group">'
       +'<div class="meal group-header" onclick="toggleGroup(\''+tag+'\')">'
-      +'<div class="meal-accent" style="background:'+(MEAL_COLORS[tag]||'#0066ff')+';"></div>'
       +'<div class="meal-main">'
       +'<div class="meal-left">'
       +'<div class="meal-line1"><span class="meal-name">'+MEAL_ICONS[tag]+' '+tag+' \u00b7 '+idxs.length+' items</span><span class="meal-kcal-lbl">'+Math.round(totals.kcal)+' kcal</span></div>'
@@ -826,7 +827,9 @@ function renderMealItem(m,i,favNames){
     var expandHtml='';
     if(isEditing){
       expandHtml='<input class="exp-name-input" id="edit-name-'+i+'" value="'+escapeHtml(m.name||'')+'">'
-        +'<div class="exp-meta">'+tag+' \u00b7 Logged '+(m.time||'')+'</div>'
+        +'<div class="edit-tag-row">'
+        +MEAL_ORDER.map(function(t){return'<button class="edit-tag-pill'+(t===tag?' on':'')+'" id="edit-tag-'+i+'-'+t+'" onclick="event.stopPropagation();setEditTag('+i+',\''+t+'\')">'+MEAL_ICONS[t]+' '+t+'</button>';}).join('')
+        +'</div>'
         +'<div class="exp-grid">'
         +'<div class="exp-stat"><input type="number" id="edit-kcal-'+i+'" style="color:#ff0000;" value="'+(m.kcal||0)+'"><div class="exp-lbl">kcal</div></div>'
         +'<div class="exp-stat"><input type="number" id="edit-prot-'+i+'" style="color:#34c97a;" value="'+(m.prot||0)+'"><div class="exp-lbl">protein</div></div>'
@@ -861,7 +864,6 @@ function renderMealItem(m,i,favNames){
       +'<button class="save-confirm-btn" id="save-confirm-'+i+'" onclick="event.stopPropagation();confirmSaveFav('+i+')">Save to '+getCatLabel(sugCat)+' ★</button>'
       +'</div>';
     return '<div class="meal" onclick="toggleMealExpand('+i+')">'
-      +'<div class="meal-accent" style="background:'+color+';"></div>'
       +'<div class="meal-main">'
       +'<div class="meal-left">'
       +'<div class="meal-line1"><span class="meal-name">'+escapeHtml(m.name||'')+'</span><span class="meal-kcal-lbl">'+(m.kcal||0)+' kcal</span></div>'
@@ -878,13 +880,23 @@ function renderMealItem(m,i,favNames){
 }
 
 // Save categories — matches log.html's library categories
-const SAVE_CATS=[{key:'meal',ico:'🍽',lbl:'Meal'},{key:'protein',ico:'🥩',lbl:'Protein'},{key:'carb',ico:'🍞',lbl:'Carb'},{key:'fat',ico:'🥑',lbl:'Fat'}];
+const SAVE_CATS=[
+  {key:'protein',ico:'💪',lbl:'Protein'},
+  {key:'carbs',ico:'🌾',lbl:'Carbs'},
+  {key:'salads',ico:'🥗',lbl:'Salads'},
+  {key:'fibers',ico:'🥦',lbl:'Fibers'},
+  {key:'fats',ico:'🥑',lbl:'Fats'},
+  {key:'snack',ico:'🍎',lbl:'Snack'},
+  {key:'meal',ico:'🍽',lbl:'Full meal'},
+  {key:'top',ico:'🏆',lbl:'Top meals'},
+  {key:'drink',ico:'🥤',lbl:'Drink'}
+];
 function getCatLabel(k){var c=SAVE_CATS.find(function(x){return x.key===k;});return c?c.lbl:'Meal';}
 function classifyFoodIndex(m){
   var p=m.prot||0,c=m.carbs||0,f=m.fat||0;
   if(p>=c&&p>=f)return'protein';
-  if(c>=p&&c>=f)return'carb';
-  if(f>=p&&f>=c)return'fat';
+  if(c>=p&&c>=f)return'carbs';
+  if(f>=p&&f>=c)return'fats';
   return'meal';
 }
 
@@ -934,8 +946,16 @@ function toggleMealExpand(i){
   renderLog();
 }
 
-function startEdit(i){editingIdx=i;renderLog();}
-function cancelEdit(){editingIdx=null;renderLog();}
+let editingTag=null;
+function startEdit(i){editingIdx=i;editingTag=normalizeTag(loggedFoods[i]&&loggedFoods[i].mealTag);renderLog();}
+function cancelEdit(){editingIdx=null;editingTag=null;renderLog();}
+function setEditTag(i,t){
+  editingTag=t;
+  MEAL_ORDER.forEach(function(mt){
+    var btn=document.getElementById('edit-tag-'+i+'-'+mt);
+    if(btn)btn.classList.toggle('on',mt===t);
+  });
+}
 
 function saveEdit(i){
   const m=loggedFoods[i];if(!m)return;
@@ -949,8 +969,10 @@ function saveEdit(i){
   if(protEl)m.prot=parseInt(protEl.value)||0;
   if(carbsEl)m.carbs=parseInt(carbsEl.value)||0;
   if(fatEl)m.fat=parseInt(fatEl.value)||0;
+  if(editingTag)m.mealTag=editingTag;
   try{localStorage.setItem('tracktion_foods',JSON.stringify(loggedFoods));}catch(e){}
   editingIdx=null;
+  editingTag=null;
   showToast('Meal updated');
   render();
 }
